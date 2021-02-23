@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="primaryColor">#1a237e</color>
+    <color name="primaryLightColor">#534bae</color>
+    <color name="primaryDarkColor">#000051</color>
+    <color name="secondaryColor">#eeeeee</color>
+    <color name="secondaryLightColor">#ffffff</color>
+    <color name="secondaryDarkColor">#bcbcbc</color>
+    <color name="primaryTextColor">#ffffff</color>
+    <color name="secondaryTextColor">#000000</color>
+
+
+    <color name="calendar_selected_day_bg">#629bd1</color>
+    <color name="calendar_selected_range_bg">#629bd1</color>
+    <color name="colorYellow">#FFBF27</color>
+    <color name="colorPromoBg">#829191</color>
+    <color name="colorLightYellow">#EAE3CE</color>
+    <color name="colorMiddleYellow">#FFD377</color>
+    <color name="colorDeepBlue">#274F60</color>
+
+    <color name="black_overlay">#66000000</color>
+    <color name="grayOverlay">#ED4D4744</color>
+    <color name="lightOverlay">#4F6E6E6E</color>
+    <color name="titleOverlay">#94DDDDDD</color>
+
+    <color name="bg">#D6D4CF</color>
+    <color name="reportBg">#E6E6E4</color>
+    <color name="reportTitle">#F3F3F3F3</color>
+    <color name="lightBg">#F8F6F5</color>
+    <color name="lightYellowBg">#FBF9F5</color>
+    <color name="cartBg">#EAEAEA</color>
+    <color name="colorWhite">#FFFFFF</color>
+
+    <color name="colorSecondText">#75716D</color>
+    <color name="colorLightGray2">#C5C5C5</color>
+    <color name="colorLightGray1">#A6A6A6</color>
+    <color name="colorLightGray">#818181</color>
+    <color name="colorGray">#6E6E6E</color>
+    <color name="colorDeepGray">#454545</color>
+    <color name="colorNoImage">#F3F4F4</color>
+    <color name="colorWarning">#790F0F</color>
+    <color name="colorWarningLight">#6C4B4B</color>
+    <color name="colorDeepOrange">#75451E</color>
+    <color name="colorPrimaryText">#53504A</color>
+
+    <color name="divider">#E1CFC2B8</color>
+    <color name="colorLightGreen">#E2EDB8</color>
+    <color name="colorLightOrange">#EAD0B3</color>
+    <color name="colorLightBlue">#B8DCED</color>
+
+    <color name="gray">#f5f5f5</color>
+    <color name="deepGray">#a4a4a4</color>
+
+    <color name="gray_blue">#2F3F4D</color>
+    <color name="light_blue">#54697A</color>
+
+
+    <color name="reservationHeader">#f5f5f5</color>
+</resources>

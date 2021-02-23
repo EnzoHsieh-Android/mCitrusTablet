@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 按壓時 -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="2dp" />
+            <gradient android:angle="-90" android:endColor="#d1515151" android:startColor="#d1515151" />
+        </shape>
+    </item>
+
+    <item>
+        <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="#d3585858" />
+                    <corners android:radius="10dp" />
+                </shape>
+            </item>
+
+            <item android:bottom="2dp"
+                android:left="0dp"
+                android:right="0dp"
+                android:top="0dp">
+                <shape android:shape="rectangle">
+                    <solid android:color="#004271" />
+                    <corners android:radius="10dp" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+
+</selector>

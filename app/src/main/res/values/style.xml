@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.Bridge">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/gray</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorAccent">@color/secondaryDarkColor</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="fontFamily">@font/montserrat</item>
+        <item name="android:textColorHighlight">@color/primaryLightColor</item>
+        <item name="android:listDivider">@drawable/my_divider</item>
+    </style>
+
+    <style name="MyTabStyle" parent="Base.Widget.Design.TabLayout">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="MenuTextStyle">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">50sp</item>
+    </style>
+
+    <style name="BaseCustomDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:clipToPadding">false</item>
+        <item name="android:theme">@style/AppTheme</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowBackground">@drawable/custom_dialog_bg</item>
+        <item name="android:textColorHighlight">@color/primaryLightColor</item>
+        <item name="android:windowFrame">@null</item>
+        <!--        <item name="android:windowContentOverlay">@null</item>-->
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+    </style>
+
+    <style name="CustomDialogTheme" parent="@style/BaseCustomDialog">
+        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
+    </style>
+
+    <style name="CustomProgressDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
+
+</resources>

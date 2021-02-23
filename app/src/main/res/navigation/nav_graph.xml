@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/reservationFragment">
+
+    <fragment
+        android:id="@+id/reservationFragment"
+        android:name="com.citrus.mCitrusTablet.view.reservation.ReservationFragment"
+        android:label="fragment_reservation"
+        tools:layout="@layout/fragment_reservation"
+        >
+        <action
+            android:id="@+id/action_reservationFragment_to_waitFragment"
+            app:destination="@id/waitFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/waitFragment"
+        android:name="com.citrus.mCitrusTablet.view.wait.WaitFragment"
+        android:label="fragment_wait"
+        tools:layout="@layout/fragment_wait" />
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.citrus.mCitrusTablet.view.setting.SettingFragment"
+        android:label="fragment_setting"
+        tools:layout="@layout/fragment_setting" />
+</navigation>

@@ -1,0 +1,8 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:color="@color/primaryLightColor" android:state_enabled="true" android:state_window_focused="false"/>
+    <item android:color="@color/primaryLightColor" android:state_enabled="false"/>
+    <item android:color="@color/primaryDarkColor" android:state_pressed="true"/>
+    <item android:color="@color/primaryDarkColor" android:state_focused="true"/>
+
+</selector>
