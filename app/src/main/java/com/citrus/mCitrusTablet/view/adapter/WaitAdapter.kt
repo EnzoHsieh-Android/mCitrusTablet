@@ -56,7 +56,6 @@ class WaitAdapter(@ApplicationContext val context: Context, private val listener
 
                 btnCheck.setOnClickListener { listener.onItemClick(wait) }
             }
-
         }
     }
 

@@ -1,6 +1,7 @@
 package com.citrus.mCitrusTablet.view.wait
 
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -20,6 +21,10 @@ import kotlinx.coroutines.launch
 
 class WaitViewModel @ViewModelInject constructor(private val model: Repository, private val sharedPreferences: SharedPreferences):
     ViewModel(){
+
+    private var serverDomain =
+        "https://" + sharedPreferences.getString(Constants.KEY_SERVER_DOMAIN, "")
+
     private var delayTime = sharedPreferences.getLong(
         Constants.KEY_DELAY_INTERVAL,
         Constants.DEFAULT_TIME
@@ -42,13 +47,13 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository, 
         }
     }
 
-    fun stopJob() {
+    private fun stopJob() {
         scope.cancel()
     }
 
     private suspend fun fetchAllData(startTime: String, endTime: String) {
         var dataOutput = FetchAllData("S00096", startTime, endTime)
-        model.fetchAllData("wait",dataOutput, onCusCount = { cusCount ->
+        model.fetchAllData(serverDomain + Constants.GET_ALL_DATA,"wait",dataOutput, onCusCount = { cusCount ->
             _cusCount.postValue(cusCount)
         }).collect { list ->
             if (list.isNotEmpty()) {
@@ -57,6 +62,12 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository, 
                 _allData.postValue(mutableListOf())
             }
         }
+    }
+
+
+    override fun onCleared() {
+        super.onCleared()
+        stopJob()
     }
 
 

@@ -54,7 +54,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Reservation"
+                android:text="@string/Reservation"
                 android:textSize="@dimen/sp_6"
                 android:textColor="@color/white"
                 android:gravity="center"
@@ -87,7 +87,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Wait"
+                android:text="@string/Waiting"
                 android:textSize="@dimen/sp_6"
                 android:textColor="@color/white"
                 android:gravity="center"
@@ -158,7 +158,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Setting"
+                android:text="@string/setting"
                 android:textSize="@dimen/sp_6"
                 android:textColor="@color/white"
                 android:gravity="center"

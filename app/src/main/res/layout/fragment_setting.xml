@@ -6,310 +6,173 @@
     android:layout_height="match_parent"
     tools:context=".view.setting.SettingFragment">
 
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@color/gray"
-        android:clickable="true"
-        android:layout_margin="@dimen/dp_10"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:cardBackgroundColor="@color/gray"
-        app:cardCornerRadius="@dimen/dp_20"
-        app:layout_constraintBottom_toBottomOf="@id/guideline33"
-        app:layout_constraintEnd_toEndOf="@id/guideline75"
-        app:layout_constraintStart_toStartOf="@+id/spread_part"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardView"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_200"
+        android:layout_margin="@dimen/dp_20"
+        android:background="@color/black"
+        app:cardCornerRadius="@dimen/dp_35"
+        app:layout_constraintBottom_toBottomOf="@id/horizontalBottomGuideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:weightSum="10">
+            android:layout_margin="@dimen/dp_5"
+            android:orientation="vertical">
 
-            <com.airbnb.lottie.LottieAnimationView
-                android:layout_marginTop="@dimen/dp_3"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="3"
-                android:scaleType="centerCrop"
-                app:lottie_autoPlay="true"
-                app:lottie_fileName="basicSetting.json"
-                app:lottie_loop="false" />
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="7"
-                android:gravity="top|center"
-                android:text="Store Setting"
-                android:textSize="@dimen/sp_15"
-                android:textStyle="bold" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-        </LinearLayout>
+                    <TextView
+                        android:layout_marginTop="@dimen/dp_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_5"
+                        android:layout_marginRight="@dimen/dp_5"
+                        android:text="@string/rsno"
+                        android:textSize="@dimen/sp_13"
+                        android:textStyle="bold" />
 
+                    <EditText
+                        android:id="@+id/etRsno"
+                        android:layout_width="@dimen/dp_200"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:background="@null"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:textColor="@color/primaryDarkColor"
+                        android:textSize="@dimen/sp_16"
+                        android:textStyle="bold" />
 
-    </androidx.cardview.widget.CardView>
+                </LinearLayout>
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@color/gray"
-        android:clickable="true"
-        android:layout_margin="@dimen/dp_10"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:cardBackgroundColor="@color/gray"
-        app:cardCornerRadius="@dimen/dp_20"
-        app:layout_constraintBottom_toBottomOf="@id/guideline33"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/guideline75"
-        app:layout_constraintTop_toTopOf="parent">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:weightSum="10">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_5"
+                        android:layout_marginRight="@dimen/dp_5"
+                        android:text="Server IP:"
+                        android:textSize="@dimen/sp_13"
+                        android:textStyle="bold" />
 
-            <com.airbnb.lottie.LottieAnimationView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/dp_3"
-                android:layout_weight="3"
-                android:scaleType="centerCrop"
-                app:lottie_autoPlay="true"
-                app:lottie_fileName="basicSetting.json"
-                app:lottie_loop="false" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="7"
-                android:gravity="top|center"
-                android:text="Basic Setting"
-                android:textSize="@dimen/sp_15"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-
-    </androidx.cardview.widget.CardView>
+                    <EditText
+                        android:id="@+id/etServerIp"
+                        android:background="@null"
+                        android:layout_width="@dimen/dp_200"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:textColor="@color/primaryDarkColor"
+                        android:textSize="@dimen/sp_16"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@color/gray"
-        android:clickable="true"
-        android:layout_margin="@dimen/dp_10"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:cardBackgroundColor="@color/gray"
-        app:cardCornerRadius="@dimen/dp_20"
-        app:layout_constraintBottom_toBottomOf="@id/guideline66"
-        app:layout_constraintEnd_toEndOf="@id/guideline75"
-        app:layout_constraintStart_toStartOf="@+id/spread_part"
-        app:layout_constraintTop_toTopOf="@id/guideline33">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:weightSum="10">
-
-            <com.airbnb.lottie.LottieAnimationView
-                android:layout_marginTop="@dimen/dp_3"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="3"
-                android:scaleType="centerCrop"
-                app:lottie_autoPlay="true"
-                app:lottie_fileName="basicSetting.json"
-                app:lottie_loop="false" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="7"
-                android:gravity="top|center"
-                android:text="Basic Setting"
-                android:textSize="@dimen/sp_15"
-                android:textStyle="bold" />
-
-        </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_5"
+                        android:text="@string/language"
+                        android:textSize="@dimen/sp_13"
+                        android:textStyle="bold" />
 
 
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@color/gray"
-        android:clickable="true"
-        android:layout_margin="@dimen/dp_10"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:cardBackgroundColor="@color/gray"
-        app:cardCornerRadius="@dimen/dp_20"
-        app:layout_constraintBottom_toBottomOf="@id/guideline66"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/guideline75"
-        app:layout_constraintTop_toTopOf="@id/guideline33">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:weightSum="10">
-
-            <com.airbnb.lottie.LottieAnimationView
-                android:layout_marginTop="@dimen/dp_3"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="3"
-                android:scaleType="centerCrop"
-                app:lottie_autoPlay="true"
-                app:lottie_fileName="basicSetting.json"
-                app:lottie_loop="false" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="7"
-                android:gravity="top|center"
-                android:text="Basic Setting"
-                android:textSize="@dimen/sp_15"
-                android:textStyle="bold" />
-
-        </LinearLayout>
+                        <com.shawnlin.numberpicker.NumberPicker
+                            android:layout_gravity="center"
+                            android:id="@+id/language_picker"
+                            android:layout_width="@dimen/dp_120"
+                            android:layout_height="@dimen/dp_60"
+                            android:layout_centerInParent="true"
+                            android:layout_margin="@dimen/dp_10"
+                            app:np_selectedTextColor="@color/primaryDarkColor"
+                            app:np_selectedTextSize="@dimen/sp_15"
+                            app:np_textColor="@color/black"
+                            app:np_dividerColor="@color/gray"
+                            app:np_textSize="@dimen/sp_10"
+                            app:np_value="1" />
 
 
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@color/gray"
-        android:clickable="true"
-        android:layout_margin="@dimen/dp_10"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:cardBackgroundColor="@color/gray"
-        app:cardCornerRadius="@dimen/dp_20"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/guideline75"
-        app:layout_constraintTop_toTopOf="@id/guideline66">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:weightSum="10">
-
-            <com.airbnb.lottie.LottieAnimationView
-                android:layout_marginTop="@dimen/dp_3"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="3"
-                android:scaleType="centerCrop"
-                app:lottie_autoPlay="true"
-                app:lottie_fileName="basicSetting.json"
-                app:lottie_loop="false" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="7"
-                android:gravity="top|center"
-                android:text="Basic Setting"
-                android:textSize="@dimen/sp_15"
-                android:textStyle="bold" />
-
-        </LinearLayout>
 
 
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@color/gray"
-        android:clickable="true"
-        android:layout_margin="@dimen/dp_10"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:cardBackgroundColor="@color/gray"
-        app:cardCornerRadius="@dimen/dp_20"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/guideline75"
-        app:layout_constraintStart_toStartOf="@id/spread_part"
-        app:layout_constraintTop_toTopOf="@id/guideline66">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:weightSum="10">
-
-            <com.airbnb.lottie.LottieAnimationView
-                android:layout_marginTop="@dimen/dp_3"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="3"
-                android:scaleType="centerCrop"
-                app:lottie_autoPlay="true"
-                app:lottie_fileName="basicSetting.json"
-                app:lottie_loop="false" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="7"
-                android:gravity="top|center"
-                android:text="Basic Setting"
-                android:textSize="@dimen/sp_15"
-                android:textStyle="bold" />
-
-        </LinearLayout>
+                </LinearLayout>
 
 
-    </androidx.cardview.widget.CardView>
 
-    <View
-        android:id="@+id/viewLine"
-        android:layout_width="2dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/dp_50"
-        android:layout_marginBottom="@dimen/dp_50"
-        android:background="@color/gray"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/spread_part"
-        app:layout_constraintStart_toStartOf="@+id/spread_part"
-        app:layout_constraintTop_toTopOf="parent" />
+            </LinearLayout>
+        </ScrollView>
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/spread_part"
+    </com.google.android.material.card.MaterialCardView>
+
+
+    <Button
+        android:id="@+id/btnOK"
+        android:layout_marginTop="@dimen/dp_5"
+        android:text="@string/sure"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardView"
+        app:layout_constraintBottom_toTopOf="@id/versionBlock"
+        />
+
+
+    <LinearLayout
+        android:id="@+id/versionBlock"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/dp_5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/horizontalBottomGuideline"
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
+
+        <TextView
+            android:id="@+id/tvVersion"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="1234"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textSize="@dimen/sp_8"
+            android:textStyle="bold"
+            />
+    </LinearLayout>
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline75"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.75" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline33"
+        android:id="@+id/horizontalBottomGuideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.33" />
+        app:layout_constraintGuide_percent="0.9" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline66"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.66" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

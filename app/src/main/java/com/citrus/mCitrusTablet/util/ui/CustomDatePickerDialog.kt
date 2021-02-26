@@ -81,7 +81,7 @@ class CustomDatePickerDialog(
 
         val calendar = Calendar.getInstance()
         val minDate = calendar.time
-        calendar.add(Calendar.DAY_OF_MONTH, 31)
+        calendar.add(Calendar.DAY_OF_MONTH, 90)
         val maxDate = calendar.time
         calendarView.init(minDate, maxDate).inMode(mode)
 
@@ -198,7 +198,7 @@ class CustomDatePickerDialog(
                 val now = Calendar.getInstance()
                 var timePickerDialog = TimePickerDialog.newInstance({ _, hourOfDay, minute, _ ->
                     v.text = "${String.format("%02d", hourOfDay)}:${String.format("%02d", minute)}"
-                },now[Calendar.MINUTE],now[Calendar.MINUTE],false)
+                },now[Calendar.MINUTE],now[Calendar.MINUTE],true)
                 timePickerDialog.setTimeInterval(1,15)
                 timePickerDialog.setMinTime(Timepoint(10))
                 timePickerDialog.setMaxTime(Timepoint(21))

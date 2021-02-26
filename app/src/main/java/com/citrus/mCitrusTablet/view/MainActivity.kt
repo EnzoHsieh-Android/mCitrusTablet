@@ -1,15 +1,17 @@
 package com.citrus.mCitrusTablet.view
 
+import android.annotation.TargetApi
 import android.app.Activity
 import android.app.Dialog
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -17,25 +19,33 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.citrus.mCitrusTablet.BuildConfig
 import com.citrus.mCitrusTablet.R
-import com.citrus.mCitrusTablet.util.DownloadTask
+import com.citrus.mCitrusTablet.di.prefs
+import com.citrus.mCitrusTablet.util.*
+import com.citrus.mCitrusTablet.util.Constants.KEY_LANGUAGE
 import com.citrus.mCitrusTablet.util.ui.CustomAlertDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
-import timber.log.Timber
 import java.io.File
 import java.util.*
+import javax.inject.Inject
+
 
 @AndroidEntryPoint
 @Suppress("DEPRECATED_IDENTITY_EQUALS", "DEPRECATION")
 class MainActivity : AppCompatActivity() {
     private var currentApiVersion: Int = 0
     private val sharedViewModel: SharedViewModel by viewModels()
+
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
 
     override fun onResume() {
         super.onResume()
@@ -57,26 +67,35 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        updateLanguage(this)
         setContentView(R.layout.activity_main)
+
+        val navController: NavController
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.navHost) as NavHostFragment?
+        navController = navHostFragment!!.navController
+
+
+        val RSNO = sharedPreferences.getString(Constants.KEY_RSNO, "")
+        val server =  sharedPreferences.getString(Constants.KEY_SERVER_DOMAIN, "")
+        if(RSNO==""||server==""){
+            navController.navigate(R.id.settingFragment)
+        }
+
 
         reservation_block.setOnClickListener{
             wait_block.setBackgroundResource(0)
-            setting_block.setBackgroundResource(0)
             reservation_block.setBackgroundResource(R.drawable.bg_menu_select)
             navigateToTarget(R.id.reservationFragment)
         }
 
         wait_block.setOnClickListener{
             reservation_block.setBackgroundResource(0)
-            setting_block.setBackgroundResource(0)
             wait_block.setBackgroundResource(R.drawable.bg_menu_select)
             navigateToTarget(R.id.waitFragment)
         }
 
         setting_block.setOnClickListener {
-            reservation_block.setBackgroundResource(0)
-            wait_block.setBackgroundResource(0)
-            setting_block.setBackgroundResource(R.drawable.bg_menu_select)
             navigateToTarget(R.id.settingFragment)
         }
 
@@ -84,12 +103,83 @@ class MainActivity : AppCompatActivity() {
             findViewById<TextView>(R.id.tvTime).text = TimeStr
         })
 
+        sharedViewModel.versionUpdateTrigger.observe(this, {
+            updateDialog()
+        })
+
+        sharedViewModel.setLanguageTrigger.observe(this, {
+            val intent = intent
+            finish()
+            startActivity(intent)
+        })
+
     }
 
-    private fun navigateToTarget(id:Int){
-        if (!findNavController(R.id.navHost).popBackStack(id,false)){
+    private fun navigateToTarget(id: Int){
+        if (!findNavController(R.id.navHost).popBackStack(id, false)){
             findNavController(R.id.navHost).navigate(id)
         }
+    }
+
+    override fun attachBaseContext(newBase: Context?) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            var newLocale = Locale.getDefault()
+            when (prefs.languagePos) {
+                0 -> newLocale = Locale.US
+                1 -> newLocale = Locale.TRADITIONAL_CHINESE
+                2 -> newLocale = Locale.SIMPLIFIED_CHINESE
+            }
+            newBase?.let {
+                val context: Context = MyContextWrapper.wrap(it, newLocale)
+                super.attachBaseContext(context)
+            }
+        } else {
+            super.attachBaseContext(newBase)
+        }
+    }
+
+    private fun updateLanguage(context: Context): Context {
+        val newLocale = when (prefs.languagePos) {
+            0 -> Locale.ENGLISH
+            1 -> Locale.TRADITIONAL_CHINESE
+            2 -> Locale.SIMPLIFIED_CHINESE
+            else -> {
+                when (Locale.getDefault().country) {
+                    "TW" -> {
+                        prefs.languagePos = 1
+                        Locale.TRADITIONAL_CHINESE
+                    }
+                    "CN" -> {
+                        prefs.languagePos = 2
+                        Locale.SIMPLIFIED_CHINESE
+                    }
+                    else -> {
+                        prefs.languagePos = 0
+                        Locale.ENGLISH
+                    }
+                }
+            }
+        }
+        Locale.setDefault(newLocale)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            updateResourcesLocale(context, newLocale)
+        } else updateResourcesLocaleLegacy(context, newLocale)
+    }
+
+    @TargetApi(Build.VERSION_CODES.N)
+    private fun updateResourcesLocale(context: Context, locale: Locale): Context {
+        val configuration = context.resources.configuration
+        configuration.setLocale(locale)
+        return context.createConfigurationContext(configuration)
+    }
+
+    @SuppressWarnings("deprecation")
+    private fun updateResourcesLocaleLegacy(context: Context, locale: Locale): Context {
+        val resources = context.resources
+        val configuration = resources.configuration
+        configuration.locale = locale
+        resources.updateConfiguration(configuration, resources.displayMetrics)
+        return context
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -128,7 +218,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateDialog() {
-        val item: View = LayoutInflater.from(this@MainActivity).inflate(R.layout.dialog_setting_code, null)
+        val item: View = LayoutInflater.from(this@MainActivity).inflate(
+            R.layout.dialog_setting_code,
+            null
+        )
         val etCode = item.findViewById<EditText>(R.id.etCode)
         val btnOk = item.findViewById<Button>(R.id.btn_ok)
         val btnCancel = item.findViewById<Button>(R.id.btn_cancel)
@@ -168,15 +261,21 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, getString(R.string.download_completed), Toast.LENGTH_SHORT).show()
                 val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
                 val file = File(path, "mOrderReady.apk")
-                val apkUri = FileProvider.getUriForFile(this@MainActivity, BuildConfig.APPLICATION_ID + ".provider", file)
+                val apkUri = FileProvider.getUriForFile(
+                    this@MainActivity,
+                    BuildConfig.APPLICATION_ID + ".provider",
+                    file
+                )
                 val install = Intent(Intent.ACTION_INSTALL_PACKAGE)
                 install.data = apkUri
                 install.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
                 startActivity(install)
             }
         }
-        mProgressDialog.setButton(Dialog.BUTTON_NEGATIVE, getString(R.string.cancel)) { dialog: DialogInterface?, which: Int -> downloadTask.cancel(true) }
-        downloadTask.execute("http://cms.citrus.tw/apk/mOrderReady_signed_v$name.apk")
+        mProgressDialog.setButton(Dialog.BUTTON_NEGATIVE, getString(R.string.cancel)) { dialog: DialogInterface?, which: Int -> downloadTask.cancel(
+            true
+        ) }
+        downloadTask.execute("http://cms.citrus.tw/apk/mCitrusTablet_signed_v$name.apk")
     }
 
 
@@ -211,17 +310,23 @@ class MainActivity : AppCompatActivity() {
     the fragment stack is empty.
      */
     override fun onBackPressed() {
-        var dialog = CustomAlertDialog(this, "Do you want to close the app?", "", R.drawable.ic_baseline_error_24,onConfirmListener = {
-            val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHost)!!
-            if(isTaskRoot
-                && navHostFragment.childFragmentManager.backStackEntryCount == 0
-                && supportFragmentManager.backStackEntryCount == 0
-                && Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
-                finishAfterTransition()
-            }else{
-                finish()
-            }
-        })
+        var dialog = CustomAlertDialog(
+            this,
+            "Do you want to close the app?",
+            "",
+            R.drawable.ic_baseline_error_24,
+            onConfirmListener = {
+                val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHost)!!
+                if (isTaskRoot
+                    && navHostFragment.childFragmentManager.backStackEntryCount == 0
+                    && supportFragmentManager.backStackEntryCount == 0
+                    && Build.VERSION.SDK_INT == Build.VERSION_CODES.Q
+                ) {
+                    finishAfterTransition()
+                } else {
+                    finish()
+                }
+            })
         dialog!!.show()
     }
 

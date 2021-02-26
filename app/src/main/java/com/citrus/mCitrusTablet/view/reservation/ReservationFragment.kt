@@ -1,14 +1,14 @@
 package com.citrus.mCitrusTablet.view.reservation
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.databinding.FragmentReservationBinding
+import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.model.vo.ReservationClass
 import com.citrus.mCitrusTablet.model.vo.ReservationGuests
 import com.citrus.mCitrusTablet.model.vo.ReservationUpload
@@ -24,11 +24,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 import kotlinx.android.synthetic.main.fragment_reservation.*
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 @AndroidEntryPoint
 class ReservationFragment : Fragment(R.layout.fragment_reservation),
@@ -48,14 +47,20 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation),
     private var timeTitle = mutableListOf<String>()
     private var reservationAdapter = SectionedRecyclerViewAdapter()
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentReservationBinding.bind(view)
 
         binding.apply {
             reservationRv.apply {
-
-                tvDate.text = reservationFragmentViewModel.dateRange.value?.get(0) ?: SimpleDateFormat("yyyy/MM/dd").format(Date())
+                laySwipe.setOnRefreshListener {
+                    reservationFragmentViewModel.reload()
+                    laySwipe.isRefreshing = false
+                }
+                tvDate.text = reservationFragmentViewModel.dateRange.value?.get(0) ?: SimpleDateFormat(
+                    "yyyy/MM/dd"
+                ).format(Date())
 
 
                 val glm = GridLayoutManager(activity, itemPerLine)
@@ -143,6 +148,11 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation),
                 tvDate.text = defaultTimeStr
             }
 
+
+            binding.seatPicker.setOnValueChangedListener { _, _, newVal ->
+                tempSeat = seatData[newVal-1]
+            }
+
             btReservation.onSafeClick {
                 var cusName = binding.name.text.toString().trim()
                 var cusPhone = binding.phone.text.toString().trim()
@@ -159,7 +169,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation),
                     tempTime, tempCount, "", cusName, cusPhone, cusMemo, "A", seat[0], seat[1]
                 )
 
-                var uploadData = ReservationUpload("S00096", data)
+                var uploadData = ReservationUpload(prefs.rsno, data)
 
                 reservationFragmentViewModel.uploadReservation(uploadData)
             }
@@ -181,6 +191,8 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation),
                 bt_reservation.visibility = View.VISIBLE
 
                 binding.seatPicker.visibility = View.VISIBLE
+                binding.tvSeat.visibility = View.VISIBLE
+
                 seatData.clear()
                 for (floor in floorList) {
                     seatData.add(floor.floorName + "-" + floor.roomName)
@@ -190,6 +202,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation),
                 binding.seatPicker.displayedValues = seatData.toTypedArray()
 
             } else {
+                binding.tvSeat.visibility = View.GONE
                 binding.seatPicker.visibility = View.GONE
                 binding.nameBlock.visibility = View.GONE
                 binding.phoneBlock.visibility = View.GONE
@@ -228,7 +241,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation),
         })
 
         reservationFragmentViewModel.cusCount.observe(viewLifecycleOwner, { cusCount ->
-            binding.tvTotal.text = resources.getString(R.string.TotalForTheDay)+" "+cusCount
+            binding.tvTotal.text = resources.getString(R.string.TotalForTheDay) + " " + cusCount
         })
 
 
@@ -244,6 +257,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation),
                         binding.name.text.clear()
                         binding.phone.text.clear()
                         binding.memo.text.clear()
+                        binding.tvSeat.visibility = View.INVISIBLE
                         binding.seatPicker.visibility = View.INVISIBLE
                         var dialog = activity?.let {
                             CustomAlertDialog(
@@ -271,6 +285,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation),
         }
 
     }
+
 
     override fun onItemClick(guest: ReservationGuests) {
         var dialog = activity?.let { CustomAlertDialog(it, "Memo", guest.memo.toString(), 0) }

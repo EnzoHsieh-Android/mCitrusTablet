@@ -126,7 +126,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:textStyle="bold"
-                        android:text="Waiting"
+                        android:text="@string/Waiting"
                         android:textSize="@dimen/sp_14"
                         android:textColor="@color/black"
                         android:gravity="center"
@@ -444,15 +444,25 @@
             android:gravity="center"
             >
 
-            <ImageView
+
+            <TextView
                 android:id="@+id/bt_reservation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/reserve_normal"
-                android:clickable="true"
-                android:background="@drawable/img_selector"
-                android:visibility="visible"
+                android:drawableStart="@drawable/reserve_normal"
+                android:text="@string/submit"
+                android:textSize="@dimen/sp_15"
+                android:textStyle="bold"
                 />
+<!--            <ImageView-->
+<!--                android:id="@+id/bt_reservation"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:src="@drawable/reserve_normal"-->
+<!--                android:clickable="true"-->
+<!--                android:background="@drawable/img_selector"-->
+<!--                android:visibility="visible"-->
+<!--                />-->
 
         </LinearLayout>
 
@@ -491,7 +501,6 @@
                 android:id="@+id/tv_total"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="當日總計： 0 組"
                 android:textStyle="bold"
                 android:textSize="@dimen/sp_14"
                 />
