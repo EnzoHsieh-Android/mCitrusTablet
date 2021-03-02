@@ -36,4 +36,8 @@
     <string name="checked">Checked</string>
     <string name="rsno">Store ID:</string>
     <string name="setting">Setting</string>
+    <string name="people">Seats</string>
+    <string name="slide">Slide to add</string>
+    <string name="apply">apply</string>
+    <string name="submitErrorMsg">Please fill out all the fields</string>
 </resources>

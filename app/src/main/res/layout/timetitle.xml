@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:text="17:00"
             android:textStyle="bold"
-            android:textSize="@dimen/sp_15" />
+            android:textSize="@dimen/sp_13" />
     </LinearLayout>
 
 

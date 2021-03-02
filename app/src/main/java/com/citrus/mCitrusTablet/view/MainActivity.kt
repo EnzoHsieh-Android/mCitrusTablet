@@ -44,9 +44,6 @@ class MainActivity : AppCompatActivity() {
     private var currentApiVersion: Int = 0
     private val sharedViewModel: SharedViewModel by viewModels()
 
-    @Inject
-    lateinit var sharedPreferences: SharedPreferences
-
     override fun onResume() {
         super.onResume()
         currentApiVersion = Build.VERSION.SDK_INT
@@ -76,12 +73,9 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment!!.navController
 
 
-        val RSNO = sharedPreferences.getString(Constants.KEY_RSNO, "")
-        val server =  sharedPreferences.getString(Constants.KEY_SERVER_DOMAIN, "")
-        if(RSNO==""||server==""){
+        if(prefs.rsno == ""|| prefs.severDomain == ""){
             navController.navigate(R.id.settingFragment)
         }
-
 
         reservation_block.setOnClickListener{
             wait_block.setBackgroundResource(0)
@@ -106,6 +100,7 @@ class MainActivity : AppCompatActivity() {
         sharedViewModel.versionUpdateTrigger.observe(this, {
             updateDialog()
         })
+
 
         sharedViewModel.setLanguageTrigger.observe(this, {
             val intent = intent

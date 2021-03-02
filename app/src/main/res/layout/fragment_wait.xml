@@ -18,32 +18,34 @@
         app:layout_constraintEnd_toEndOf="parent"
         >
 
-        <LinearLayout
+         <LinearLayout
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:id="@+id/llDate"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/dp_120"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/padding_18"
             android:layout_marginEnd="@dimen/padding_18"
             android:gravity="center"
             >
 
-            <ImageView
-                android:layout_width="@dimen/img20"
-                android:layout_height="@dimen/img20"
-                android:src="@drawable/ic_calendar"
-                app:tint="@color/selector_text" />
-
             <TextView
                 android:id="@+id/tvDate"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/dp_84"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/padding_5"
                 android:text="@string/selectDate"
-                android:textColor="@color/selector_text"
+                android:textAlignment="center"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvDay"
+                android:layout_width="@dimen/dp_36"
+                android:layout_height="wrap_content"
+                android:text="週三"
                 android:textAlignment="center"
                 android:textSize="@dimen/sp_14"
                 android:textStyle="bold" />
@@ -412,7 +414,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.90" />
+            app:layout_constraintGuide_percent="0.85" />
 
         <com.shawnlin.numberpicker.NumberPicker
             android:visibility="gone"
@@ -445,15 +447,19 @@
             >
 
 
-            <TextView
+
+            <ng.max.slideview.SlideView
                 android:id="@+id/bt_reservation"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/reserve_normal"
-                android:text="@string/submit"
-                android:textSize="@dimen/sp_15"
-                android:textStyle="bold"
-                />
+                android:layout_margin="@dimen/dp_12"
+                app:sv_buttonBackgroundColor="@android:color/white"
+                app:sv_buttonImage="@drawable/ic_chevron_double_right_purple"
+                app:sv_reverseSlide="false"
+                app:sv_slideTextSize="@dimen/sp_10"
+                app:sv_slideBackgroundColor="@color/primaryColor"
+                app:sv_slideText="@string/slide" />
+
 <!--            <ImageView-->
 <!--                android:id="@+id/bt_reservation"-->
 <!--                android:layout_width="wrap_content"-->
@@ -535,6 +541,7 @@
 
 
         <androidx.recyclerview.widget.RecyclerView
+            android:visibility="gone"
             android:id="@+id/reservation_rv"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -545,6 +552,21 @@
             app:layout_constraintEnd_toEndOf="@+id/reservation_block"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/totalBlock" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/animation_resultNotFound"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:scaleType="fitCenter"
+            android:layout_margin="@dimen/dp_60"
+            app:layout_constraintBottom_toBottomOf="@+id/reservation_block"
+            app:layout_constraintEnd_toEndOf="@+id/reservation_block"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/totalBlock"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="search.json"
+            app:lottie_loop="true"
+            />
 
 
 

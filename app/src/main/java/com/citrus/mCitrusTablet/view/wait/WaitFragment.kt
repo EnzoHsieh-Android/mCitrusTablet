@@ -9,10 +9,15 @@ import androidx.fragment.app.viewModels
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.databinding.FragmentReservationBinding
 import com.citrus.mCitrusTablet.databinding.FragmentWaitBinding
+import com.citrus.mCitrusTablet.di.prefs
+import com.citrus.mCitrusTablet.model.vo.ReservationClass
+import com.citrus.mCitrusTablet.model.vo.ReservationUpload
 import com.citrus.mCitrusTablet.model.vo.Wait
+import com.citrus.mCitrusTablet.util.ui.CustomAlertDialog
 import com.citrus.mCitrusTablet.view.adapter.WaitAdapter
 import com.citrus.mCitrusTablet.view.reservation.ReservationViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -30,9 +35,24 @@ class WaitFragment : Fragment(R.layout.fragment_wait),WaitAdapter.OnItemClickLis
         val waitAdapter = activity?.let { WaitAdapter(it,this) }
 
         binding.apply {
-            tvDate.text = SimpleDateFormat("yyyy/MM/dd").format(Date())
+            date2Day(SimpleDateFormat("yyyy/MM/dd").format(Date()))
 
 
+
+
+
+
+            btReservation.setOnSlideCompleteListener {
+                    var dialog = activity?.let {
+                        CustomAlertDialog(
+                            it,
+                            getString(R.string.submitErrorMsg),
+                            "",
+                            0
+                        )
+                    }
+                    dialog!!.show()
+            }
         }
 
         waitViewModel.allData.observe(viewLifecycleOwner,{ waitList ->
@@ -54,5 +74,14 @@ class WaitFragment : Fragment(R.layout.fragment_wait),WaitAdapter.OnItemClickLis
 
     override fun onItemClick(wait: Wait) {
 
+    }
+
+    @Throws(ParseException::class)
+    fun date2Day(dateString: String?) {
+        val dateStringFormat = SimpleDateFormat("yyyy/MM/dd")
+        val date = dateStringFormat.parse(dateString)
+        val date2DayFormat = SimpleDateFormat("E")
+        binding.tvDate.text = dateString
+        binding.tvDay.text = date2DayFormat.format(date)
     }
 }

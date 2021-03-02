@@ -84,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/primaryLightColor"
                 android:text="3"
-                android:textSize="@dimen/sp_20"
+                android:textSize="@dimen/sp_15"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -103,7 +103,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 android:text="A1-001"
-                android:textSize="@dimen/sp_16"
+                android:textSize="@dimen/sp_12"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -125,7 +125,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 android:text="15:30"
-                android:textSize="@dimen/sp_16"
+                android:textSize="@dimen/sp_12"
                 android:textStyle="bold" />
 
 

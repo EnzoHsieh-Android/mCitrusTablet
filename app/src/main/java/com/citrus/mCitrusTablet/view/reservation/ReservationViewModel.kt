@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat
 
 enum class SortOrder { BY_LESS, BY_TIME, BY_MORE }
 
-class ReservationViewModel @ViewModelInject constructor(private val model: Repository, private val sharedPreferences: SharedPreferences) :
+class ReservationViewModel @ViewModelInject constructor(private val model: Repository) :
     ViewModel() {
 
     private var serverDomain =
@@ -34,7 +34,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
 
     private var rsno = prefs.rsno
 
-    private var delayTime = sharedPreferences.getLong(KEY_DELAY_INTERVAL, DEFAULT_TIME)
+    private var delayTime = Constants.DEFAULT_TIME
     var storageList:MutableList<ReservationGuests> = mutableListOf()
     private val job = SupervisorJob()
 

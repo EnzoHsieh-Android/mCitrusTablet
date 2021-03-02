@@ -35,4 +35,8 @@
     <string name="checked">已入席</string>
     <string name="rsno">分店代號:</string>
     <string name="setting">設定</string>
+    <string name="people">人</string>
+    <string name="slide">滑動以新增</string>
+    <string name="apply">套用</string>
+    <string name="submitErrorMsg">請完善預約資料</string>
 </resources>

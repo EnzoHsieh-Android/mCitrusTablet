@@ -1,7 +1,10 @@
 package com.citrus.mCitrusTablet.view.reservation
 
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -10,7 +13,6 @@ import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.databinding.FragmentReservationBinding
 import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.model.vo.ReservationClass
-import com.citrus.mCitrusTablet.model.vo.ReservationGuests
 import com.citrus.mCitrusTablet.model.vo.ReservationUpload
 import com.citrus.mCitrusTablet.util.Constants.defaultTimeStr
 import com.citrus.mCitrusTablet.util.onSafeClick
@@ -30,8 +32,7 @@ import java.util.*
 
 
 @AndroidEntryPoint
-class ReservationFragment : Fragment(R.layout.fragment_reservation),
-    ReservationAdapter.OnItemClickListener {
+class ReservationFragment : Fragment(R.layout.fragment_reservation) {
 
     private val reservationFragmentViewModel: ReservationViewModel by viewModels()
     private var _binding: FragmentReservationBinding? = null
@@ -48,6 +49,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation),
     private var reservationAdapter = SectionedRecyclerViewAdapter()
 
 
+    @RequiresApi(Build.VERSION_CODES.N_MR1)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentReservationBinding.bind(view)
@@ -58,9 +60,12 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation),
                     reservationFragmentViewModel.reload()
                     laySwipe.isRefreshing = false
                 }
-                tvDate.text = reservationFragmentViewModel.dateRange.value?.get(0) ?: SimpleDateFormat(
-                    "yyyy/MM/dd"
-                ).format(Date())
+
+                date2Day(
+                    reservationFragmentViewModel.dateRange.value?.get(0) ?: SimpleDateFormat(
+                        "yyyy/MM/dd"
+                    ).format(Date())
+                )
 
 
                 val glm = GridLayoutManager(activity, itemPerLine)
@@ -78,11 +83,11 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation),
 
 
             btPrev.setOnClickListener {
-                tvDate.text = dateChange(tvDate.text as String, -1)
+                dateChange(tvDate.text as String, -1)
             }
 
             btNext.setOnClickListener {
-                tvDate.text = dateChange(tvDate.text as String, 1)
+                dateChange(tvDate.text as String, 1)
             }
 
             llDate.onSafeClick {
@@ -95,10 +100,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation),
                         reservationFragmentViewModel.dateRange.value?.get(1) ?: ""
                     ) { _, startTime, endTime, _ ->
                         reservationFragmentViewModel.setDateArray(arrayOf(startTime, endTime))
-                        tvDate.text = startTime
-
-                        //sharedViewModel.setTimeChangeStr(arrayOf(startTime, endTime))
-
+                        date2Day(startTime)
                     }.show(it.supportFragmentManager, "CustomDatePickerDialog")
                 }
             }
@@ -121,7 +123,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation),
                         tempTime = startTime
                         var date = startTime.split(" ")
                         reservationDate.text = date[0]
-                        reservationTime.text = date[1] + "  " + seat + "人"
+                        reservationTime.text = date[1] + "  " + seat + getString(R.string.people)
                         tempCount = seat.toInt()
                         syncChangeDate(date[0])
 
@@ -143,35 +145,41 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation),
             }
 
             animationReload.setOnClickListener {
-                animationReload.playAnimation()
                 reservationFragmentViewModel.setDateArray(arrayOf(defaultTimeStr, defaultTimeStr))
-                tvDate.text = defaultTimeStr
+                date2Day(defaultTimeStr)
             }
 
 
             binding.seatPicker.setOnValueChangedListener { _, _, newVal ->
-                tempSeat = seatData[newVal-1]
+                tempSeat = seatData[newVal - 1]
             }
 
-            btReservation.onSafeClick {
+
+            btReservation.setOnSlideCompleteListener {
                 var cusName = binding.name.text.toString().trim()
                 var cusPhone = binding.phone.text.toString().trim()
                 var cusMemo = binding.memo.text.toString().trim()
                 var seat = tempSeat.split("-")
 
                 if (cusName.isEmpty() || cusPhone.isEmpty()) {
-                    var dialog = activity?.let { CustomAlertDialog(it, "請完善預約資料", "", 0) }
+                    var dialog = activity?.let {
+                        CustomAlertDialog(
+                            it,
+                            getString(R.string.submitErrorMsg),
+                            "",
+                            0
+                        )
+                    }
                     dialog!!.show()
-                    return@onSafeClick
+                }else{
+                    var data = ReservationClass(
+                        tempTime, tempCount, "", cusName, cusPhone, cusMemo, "A", seat[0], seat[1]
+                    )
+
+                    var uploadData = ReservationUpload(prefs.rsno, data)
+
+                    reservationFragmentViewModel.uploadReservation(uploadData)
                 }
-
-                var data = ReservationClass(
-                    tempTime, tempCount, "", cusName, cusPhone, cusMemo, "A", seat[0], seat[1]
-                )
-
-                var uploadData = ReservationUpload(prefs.rsno, data)
-
-                reservationFragmentViewModel.uploadReservation(uploadData)
             }
         }
 
@@ -184,12 +192,6 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation),
 
         reservationFragmentViewModel.seatData.observe(viewLifecycleOwner, { floorList ->
             if (floorList != null && floorList.isNotEmpty()) {
-                binding.nameBlock.visibility = View.VISIBLE
-                binding.phoneBlock.visibility = View.VISIBLE
-                binding.memoBlock.visibility = View.VISIBLE
-                binding.noResultBlock.visibility = View.GONE
-                bt_reservation.visibility = View.VISIBLE
-
                 binding.seatPicker.visibility = View.VISIBLE
                 binding.tvSeat.visibility = View.VISIBLE
 
@@ -202,15 +204,15 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation),
                 binding.seatPicker.displayedValues = seatData.toTypedArray()
 
             } else {
-                binding.tvSeat.visibility = View.GONE
-                binding.seatPicker.visibility = View.GONE
-                binding.nameBlock.visibility = View.GONE
-                binding.phoneBlock.visibility = View.GONE
-                binding.memoBlock.visibility = View.GONE
-                binding.noResultBlock.visibility = View.VISIBLE
-                bt_reservation.visibility = View.GONE
-                binding.noResultAni.speed = 2f
-                binding.noResultAni.playAnimation()
+                var dialog = activity?.let {
+                    CustomAlertDialog(
+                        it,
+                        "選擇的區段查無空桌！",
+                        "",
+                       0
+                    )
+                }
+                dialog!!.show()
             }
         })
 
@@ -224,9 +226,22 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation),
                     for (index in 0 until timeTitle.size) {
                         reservationAdapter.addSection(
                             ReservationAdapter(
-                                this,
                                 timeTitle[index],
-                                guestsList[index]
+                                guestsList[index],
+                                onItemClick = { Guest ->
+                                    var dialog = activity?.let {
+                                        CustomAlertDialog(
+                                            it,
+                                            "Memo",
+                                            Guest.memo.toString(),
+                                            0
+                                        )
+                                    }
+                                    dialog!!.show()
+                                },
+                                onButtonClick = {
+                                    reservationFragmentViewModel.changeStatus(it)
+                                }
                             )
                         )
                     }
@@ -235,7 +250,6 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation),
                 binding.reservationRv.visibility = View.GONE
                 binding.animationResultNotFound.visibility = View.VISIBLE
                 reservationAdapter.removeAllSections()
-
             }
             binding.reservationRv.adapter = reservationAdapter
         })
@@ -247,13 +261,10 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation),
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             reservationFragmentViewModel.tasksEvent.collect { event ->
-
-
                 when (event) {
                     is ReservationViewModel.TasksEvent.ShowSuccessMessage -> {
                         showInformation.visibility = View.GONE
                         hintBlock.visibility = View.VISIBLE
-                        bt_reservation.visibility = View.GONE
                         binding.name.text.clear()
                         binding.phone.text.clear()
                         binding.memo.text.clear()
@@ -287,21 +298,12 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation),
     }
 
 
-    override fun onItemClick(guest: ReservationGuests) {
-        var dialog = activity?.let { CustomAlertDialog(it, "Memo", guest.memo.toString(), 0) }
-        dialog!!.show()
-    }
-
-    override fun onItemCheck(guest: ReservationGuests) {
-        reservationFragmentViewModel.changeStatus(guest)
-    }
-
     private fun syncChangeDate(dateString: String) {
         reservationFragmentViewModel.setDateArray(arrayOf(dateString, dateString))
-        binding.tvDate.text = dateString
+        date2Day(dateString)
     }
 
-    private fun dateChange(dateString: String, controlDate: Int): String {
+    private fun dateChange(dateString: String, controlDate: Int) {
         binding.searchView.setQuery("", false)
         val sdf = SimpleDateFormat("yyyy/MM/dd")
         var cal: Calendar? = null
@@ -313,11 +315,21 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation),
             cal.add(Calendar.DAY_OF_MONTH, controlDate)
 
             dateStr = sdf.format(cal.time)
+
+            date2Day(dateStr)
         } catch (e: ParseException) {
             println("Exception :$e")
         }
         reservationFragmentViewModel.setDateArray(arrayOf(dateStr, dateStr))
-        return dateStr
+    }
+
+    @Throws(ParseException::class)
+    fun date2Day(dateString: String?) {
+        val dateStringFormat = SimpleDateFormat("yyyy/MM/dd")
+        val date = dateStringFormat.parse(dateString)
+        val date2DayFormat = SimpleDateFormat("E")
+        binding.tvDate.text = dateString
+        binding.tvDay.text = date2DayFormat.format(date)
     }
 
     override fun onDestroyView() {

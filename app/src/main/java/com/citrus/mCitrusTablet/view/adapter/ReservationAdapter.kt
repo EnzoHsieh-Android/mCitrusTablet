@@ -18,9 +18,10 @@ import java.text.SimpleDateFormat
 
 
 class ReservationAdapter(
-        private val listener: OnItemClickListener,
     private val header: String,
-    private val item: List<ReservationGuests>
+    private val item: List<ReservationGuests>,
+        private val onItemClick:(ReservationGuests) -> Unit,
+    private val onButtonClick:(ReservationGuests) -> Unit
 ) :
     Section(
         SectionParameters.builder()
@@ -46,10 +47,6 @@ class ReservationAdapter(
         headerHolder.headerText.text = header
     }
 
-    interface OnItemClickListener {
-        fun onItemClick(guest: ReservationGuests)
-        fun onItemCheck(guest: ReservationGuests)
-    }
 
     override fun onBindItemViewHolder(holder: ViewHolder, position: Int) {
         val itemHolder = holder as ItemViewHolder
@@ -71,7 +68,7 @@ class ReservationAdapter(
         if(hasMemo){
             itemHolder.imgMemo.visibility = View.VISIBLE
             itemHolder.itemRoot.setOnClickListener {
-                listener.onItemClick(item[position])
+                onItemClick(item[position])
             }
         }else{
             itemHolder.imgMemo.visibility = View.INVISIBLE
@@ -85,7 +82,9 @@ class ReservationAdapter(
             itemHolder.tvCheck.visibility = View.VISIBLE
         }
 
-        itemHolder.btnCheck.setOnClickListener { listener.onItemCheck(item[position]) }
+        itemHolder.btnCheck.setOnClickListener {
+            onButtonClick(item[position])
+        }
 
     }
 

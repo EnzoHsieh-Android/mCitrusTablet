@@ -32,6 +32,7 @@ class SharedViewModel @ViewModelInject constructor(@ApplicationContext context: 
     val setLanguageTrigger: SingleLiveEvent<Boolean>
         get() = _setLanguageTrigger
 
+
     fun toWaitFragment(){
         _changePageTrigger.value = true
     }
@@ -51,6 +52,8 @@ class SharedViewModel @ViewModelInject constructor(@ApplicationContext context: 
     fun hasSetLanguage(){
         _setLanguageTrigger.value = true
     }
+
+
 
 }
 

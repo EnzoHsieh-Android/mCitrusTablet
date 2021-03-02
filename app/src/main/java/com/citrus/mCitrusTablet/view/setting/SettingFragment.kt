@@ -1,30 +1,22 @@
 package com.citrus.mCitrusTablet.view.setting
 
 import android.Manifest
-import android.content.SharedPreferences
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.citrus.mCitrusTablet.BuildConfig
 import com.citrus.mCitrusTablet.R
-import com.citrus.mCitrusTablet.databinding.FragmentReservationBinding
 import com.citrus.mCitrusTablet.databinding.FragmentSettingBinding
 import com.citrus.mCitrusTablet.di.prefs
-import com.citrus.mCitrusTablet.util.Constants.KEY_LANGUAGE
-import com.citrus.mCitrusTablet.util.Constants.KEY_RSNO
-import com.citrus.mCitrusTablet.util.Constants.KEY_SERVER_DOMAIN
-import com.citrus.mCitrusTablet.util.ui.CustomNumberPickerDialog
-import com.citrus.mCitrusTablet.util.ui.timeRangePicker.TimeRangePickerBottomSheet
 import com.citrus.mCitrusTablet.view.SharedViewModel
-import com.dylanc.viewbinding.bindView
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class SettingFragment : DialogFragment(R.layout.fragment_setting) {
@@ -35,6 +27,8 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
     var data = arrayOf("繁體中文", "English")
     var isLanChange = false
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSettingBinding.bind(view)
@@ -44,7 +38,10 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
           tvVersion.text = "2021 © Citrus Solutions Co., Ltd. Version " + BuildConfig.VERSION_NAME
             tvVersion.setOnClickListener {
                 val permissionCheck =
-                    activity?.let { it1 -> ContextCompat.checkSelfPermission(it1, Manifest.permission.WRITE_EXTERNAL_STORAGE) }
+                    activity?.let { it1 -> ContextCompat.checkSelfPermission(
+                        it1,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) }
 
                 if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
                     activity?.let { it1 ->
@@ -98,7 +95,7 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
 
 
     private fun loadFromSharedPref() {
-        val RSNO = prefs.rsno
+        val rsno = prefs.rsno
         val server =  prefs.severDomain
 
 
@@ -119,10 +116,10 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
             }
         }
 
-        if(RSNO==""||server==""){
+        if(rsno==""||server==""){
             isCancelable = false
         }
-        binding.etRsno!!.setText(RSNO)
+        binding.etRsno!!.setText(rsno)
         binding.etServerIp!!.setText(server)
     }
 
@@ -145,4 +142,13 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
         _binding = null
     }
 
+
+    override fun dismiss() {
+        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(requireActivity().window.decorView.windowToken, 0)
+        super.dismiss()
+    }
+
+
 }
+

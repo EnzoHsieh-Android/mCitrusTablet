@@ -27,8 +27,8 @@
         <Button
             android:id="@+id/bt_prev"
             app:layout_constraintEnd_toStartOf="@id/llDate"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@id/llDate"
+            app:layout_constraintBottom_toBottomOf="@id/llDate"
             android:layout_width="@dimen/dp_30"
             android:layout_height="@dimen/dp_30"
             android:background="@drawable/ic_left"
@@ -40,25 +40,28 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:id="@+id/llDate"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/dp_120"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/padding_18"
             android:layout_marginEnd="@dimen/padding_18"
             android:gravity="center"
             >
 
-            <ImageView
-                android:layout_width="@dimen/img20"
-                android:layout_height="@dimen/img20"
-                android:src="@drawable/ic_calendar"
-                app:tint="@color/selector_text" />
-
             <TextView
                 android:id="@+id/tvDate"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/dp_84"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/padding_5"
                 android:text="@string/selectDate"
+                android:textAlignment="center"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvDay"
+                android:layout_width="@dimen/dp_36"
+                android:layout_height="wrap_content"
+                android:text="週三"
                 android:textAlignment="center"
                 android:textSize="@dimen/sp_14"
                 android:textStyle="bold" />
@@ -68,24 +71,22 @@
         <Button
             android:id="@+id/bt_next"
             app:layout_constraintStart_toEndOf="@id/llDate"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@id/llDate"
+            app:layout_constraintBottom_toBottomOf="@id/llDate"
             android:layout_width="@dimen/dp_30"
             android:layout_height="@dimen/dp_30"
             android:background="@drawable/ic_right"
             />
 
-        <com.airbnb.lottie.LottieAnimationView
+        <ImageView
             android:id="@+id/animation_reload"
             android:layout_width="@dimen/dp_20"
             android:layout_height="@dimen/dp_20"
             android:scaleType="centerCrop"
+            android:src="@drawable/ic_baseline_today_24"
             app:layout_constraintStart_toEndOf="@id/bt_next"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:lottie_autoPlay="true"
-            app:lottie_fileName="reload.json"
-            app:lottie_loop="false"
             android:tooltipText="back to today"
             android:layout_marginStart="@dimen/dp_10"
             />
@@ -286,7 +287,7 @@
                 android:layout_marginRight="@dimen/dp_30"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="@color/deepGray"
+                android:background="@color/gray"
                 />
 
         </LinearLayout>
@@ -325,7 +326,7 @@
                 android:layout_marginRight="@dimen/dp_30"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="@color/deepGray"
+                android:background="@color/gray"
                 />
 
         </LinearLayout>
@@ -360,7 +361,7 @@
                 android:layout_marginRight="@dimen/dp_30"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="@color/deepGray"
+                android:background="@color/gray"
                 />
 
         </LinearLayout>
@@ -480,27 +481,19 @@
             >
 
 
-            <TextView
+
+            <ng.max.slideview.SlideView
                 android:id="@+id/bt_reservation"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/reserve_normal"
-                android:text="@string/submit"
-                android:clickable="true"
-                android:textSize="@dimen/sp_15"
-                android:textStyle="bold"
-                android:background="@color/gray"
-                android:visibility="invisible"
-                />
-<!--         <ImageView-->
-<!--             android:id="@+id/bt_reservation"-->
-<!--             android:layout_width="wrap_content"-->
-<!--             android:layout_height="wrap_content"-->
-<!--             android:src="@drawable/reserve_normal"-->
-<!--             android:clickable="true"-->
-<!--             android:background="@drawable/img_selector"-->
-<!--             android:visibility="invisible"-->
-<!--             />-->
+               android:layout_margin="@dimen/dp_12"
+                app:sv_buttonBackgroundColor="@android:color/white"
+                app:sv_buttonImage="@drawable/ic_chevron_double_right_purple"
+                app:sv_reverseSlide="false"
+                app:sv_slideTextSize="@dimen/sp_10"
+                app:sv_slideBackgroundColor="@color/primaryColor"
+                app:sv_slideText="@string/slide" />
+
 
         </LinearLayout>
 
