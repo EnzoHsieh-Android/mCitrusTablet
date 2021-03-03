@@ -42,7 +42,6 @@ class CustomDatePickerDialog(
 ) : BaseDialogFragment() {
 
     var count:String = "1"
-    var sharedPreferences: SharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
 
     override fun getLayoutId(): Int {
@@ -52,10 +51,6 @@ class CustomDatePickerDialog(
     override fun initView() {
         isCancelable = false
         setWindowWidthPercent()
-        val ip = sharedPreferences.getString(SHARED_PREFERENCES_NAME, "123")
-        if (ip != null) {
-            Log.e("--",ip)
-        }
 
         when(calendarType){
             is CalendarType.NoTimePickerForSearchReservation ->  {
@@ -94,21 +89,6 @@ class CustomDatePickerDialog(
             e.printStackTrace()
         }
 
-//        try {
-//            if(calendarType == CalendarType.NoTimePickerForSearchReservation) {
-//                     startTime = dateFormatSql.format(Calendar.getInstance().time) + " 00:00:00"
-//                     endTime = dateFormatSql.format(Calendar.getInstance().time) + " 23:59:59"
-//            }else if(calendarType == CalendarType.OneTimePickerForReservation){
-//                startTime = dateFormatSql.format(Calendar.getInstance().time) + " 00:00:00"
-//                tvStartTime.text = startTime.substring(11, 16)
-//            }
-//
-//            val date: Date? = dateFormatSql.parse(startTime)
-//            calendarView.selectDate(date, true)
-//
-//        } catch (e: ParseException) {
-//            e.printStackTrace()
-//        }
 
         when (mode) {
             SINGLE -> rgDateMode.check(R.id.rbSingle)
@@ -213,13 +193,6 @@ class CustomDatePickerDialog(
         }
     }
 
-    private fun showNumberPickerDialog(v: TextView){
-        var numberPicker = showNumberPickerDialog(v)
-
-
-
-
-    }
 
     private fun setWindowWidthPercent() {
         dialog?.window?.let {

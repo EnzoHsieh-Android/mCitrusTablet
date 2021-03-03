@@ -11,6 +11,7 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.telecom.Call
 import android.text.style.BackgroundColorSpan
 import android.util.Log
 import android.view.*
@@ -108,6 +109,7 @@ class MainActivity : AppCompatActivity() {
         sharedViewModel.setLanguageTrigger.observe(this, {
             val intent = intent
             finish()
+            overridePendingTransition(R.anim.nav_default_enter_anim, R.anim.nav_default_exit_anim)
             startActivity(intent)
         })
 
