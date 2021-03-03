@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_centerInParent="true"
+    android:layout_gravity="center_horizontal"
+    android:padding="@dimen/padding_15"
+    android:background="@drawable/dialog_rounded_bg"
+    android:backgroundTint="@color/lightBg"
+    android:elevation="@dimen/dp_4"
+    android:orientation="vertical"
+    android:clipToPadding="false">
+
+    <ImageView
+        android:id="@+id/ivIcon"
+        android:layout_width="@dimen/dp_20"
+        android:layout_height="@dimen/dp_20"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_baseline_error_outline_24"
+        android:contentDescription="@string/error_occurred" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/padding_10">
+
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/colorSecondText"
+                android:textSize="@dimen/sp_10"
+                android:gravity="center"
+                android:text="@string/name"
+                tools:text="姓名: Mark"
+                android:textStyle="bold"
+                tools:visibility="visible"
+                android:layout_margin="@dimen/dp_5"/>
+
+            <TextView
+                android:id="@+id/tv_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/colorSecondText"
+                android:textSize="@dimen/sp_10"
+                android:gravity="center"
+                tools:text="電話: 0910613882 "
+                android:textStyle="bold"
+                tools:visibility="visible"
+                android:layout_margin="@dimen/dp_5"/>
+
+            <TextView
+                android:id="@+id/tv_cusNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/colorSecondText"
+                android:textSize="@dimen/sp_10"
+                android:gravity="center"
+                tools:text="人數: 2"
+                android:textStyle="bold"
+                tools:visibility="visible"
+                android:layout_margin="@dimen/dp_5"/>
+
+            <TextView
+                android:id="@+id/tv_seat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/colorSecondText"
+                android:textSize="@dimen/sp_10"
+                android:gravity="center"
+                tools:text="座位: A-A1"
+                android:textStyle="bold"
+                tools:visibility="visible"
+                android:layout_margin="@dimen/dp_5"/>
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/colorSecondText"
+                android:textSize="@dimen/sp_10"
+                android:gravity="center"
+                tools:text="訂位時間: 13:30"
+                android:textStyle="bold"
+                tools:visibility="visible"
+                android:layout_margin="@dimen/dp_5"/>
+
+            <TextView
+                android:id="@+id/tv_memo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/colorSecondText"
+                android:textSize="@dimen/sp_10"
+                android:gravity="center"
+                tools:text="備註: HI"
+                android:textStyle="bold"
+                tools:visibility="visible"
+                android:layout_margin="@dimen/dp_5"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btnClose"
+        android:layout_margin="@dimen/dp_10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/close"
+        android:textSize="@dimen/sp_10"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:background="@color/primaryColor"
+        android:layout_gravity="center"
+        />
+
+</LinearLayout>

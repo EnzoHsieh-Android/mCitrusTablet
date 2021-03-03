@@ -2,7 +2,6 @@ package com.citrus.mCitrusTablet.view.reservation
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -19,6 +18,7 @@ import com.citrus.mCitrusTablet.util.onSafeClick
 import com.citrus.mCitrusTablet.util.ui.CalendarType
 import com.citrus.mCitrusTablet.util.ui.CustomAlertDialog
 import com.citrus.mCitrusTablet.util.ui.CustomDatePickerDialog
+import com.citrus.mCitrusTablet.util.ui.CustomGuestDetailDialog
 import com.citrus.mCitrusTablet.view.adapter.ReservationAdapter
 import com.citrus.util.onQueryTextChanged
 import com.savvi.rangedatepicker.CalendarPickerView
@@ -90,6 +90,8 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                 dateChange(tvDate.text as String, 1)
             }
 
+
+            /*上方日期按鈕*/
             llDate.onSafeClick {
                 activity?.let {
                     CustomDatePickerDialog(
@@ -105,6 +107,8 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                 }
             }
 
+
+            /*左側預約按鈕*/
             llDateReservation.onSafeClick {
                 activity?.let {
                     CustomDatePickerDialog(
@@ -131,10 +135,11 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                         hintBlock.visibility = View.GONE
 
 
-                        reservationFragmentViewModel.setSearchVal("", startTime, seat.toInt())
+                        reservationFragmentViewModel.setSearchVal(prefs.rsno, startTime, seat.toInt())
                     }.show(it.supportFragmentManager, "CustomDatePickerDialog")
                 }
             }
+
 
             searchView.onQueryTextChanged {
                 if (it.isEmpty()) {
@@ -167,7 +172,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                             it,
                             getString(R.string.submitErrorMsg),
                             "",
-                            0
+                            R.drawable.ic_baseline_error_24
                         )
                     }
                     dialog!!.show()
@@ -217,6 +222,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
         })
 
 
+
         reservationFragmentViewModel.allData.observe(viewLifecycleOwner, { guestsList ->
             if (guestsList.isNotEmpty()) {
                 binding.reservationRv.visibility = View.VISIBLE
@@ -230,11 +236,9 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                                 guestsList[index],
                                 onItemClick = { Guest ->
                                     var dialog = activity?.let {
-                                        CustomAlertDialog(
+                                        CustomGuestDetailDialog(
                                             it,
-                                            "Memo",
-                                            Guest.memo.toString(),
-                                            0
+                                            Guest,
                                         )
                                     }
                                     dialog!!.show()
@@ -273,7 +277,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                         var dialog = activity?.let {
                             CustomAlertDialog(
                                 it,
-                                "預約成功！",
+                                resources.getString(R.string.res_ok),
                                 "",
                                 R.drawable.ic_check
                             )
@@ -284,7 +288,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                         var dialog = activity?.let {
                             CustomAlertDialog(
                                 it,
-                                "預約失敗！",
+                                resources.getString(R.string.res_ng),
                                 "",
                                 R.drawable.ic_baseline_clear_24
                             )

@@ -1,28 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ds="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.setting.SettingFragment"
-    android:background="@android:color/transparent" >
+    android:background="@drawable/dialog_rounded_bg"
+    tools:ignore="MissingPrefix">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardView"
-        android:layout_width="@dimen/dp_300"
-        android:layout_height="@dimen/dp_200"
-        android:layout_margin="@dimen/dp_20"
-        android:background="@color/black"
-        app:cardCornerRadius="@dimen/dp_35"
-        app:layout_constraintBottom_toBottomOf="@id/horizontalBottomGuideline"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
 
         <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="@dimen/dp_5"
+            android:id="@+id/scView"
+            android:layout_width="@dimen/dp_300"
+            android:layout_height="@dimen/dp_200"
+            android:layout_margin="@dimen/dp_20"
+            app:layout_constraintBottom_toBottomOf="@id/horizontalBottomGuideline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             android:orientation="vertical">
 
             <LinearLayout
@@ -112,6 +108,7 @@
                             android:layout_width="@dimen/dp_120"
                             android:layout_height="@dimen/dp_60"
                             android:layout_centerInParent="true"
+                            android:background="@color/ds_list_bg"
                             android:layout_margin="@dimen/dp_10"
                             app:np_selectedTextColor="@color/primaryDarkColor"
                             app:np_selectedTextSize="@dimen/sp_15"
@@ -120,17 +117,11 @@
                             app:np_textSize="@dimen/sp_10"
                             app:np_value="1" />
 
-
-
-
                 </LinearLayout>
-
-
-
             </LinearLayout>
         </ScrollView>
 
-    </com.google.android.material.card.MaterialCardView>
+
 
 
     <Button
@@ -143,8 +134,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cardView"
+        app:layout_constraintTop_toBottomOf="@id/scView"
         app:layout_constraintBottom_toTopOf="@id/versionBlock"
+        app:bl_corners_radius="@dimen/dp_10"
         />
 
 

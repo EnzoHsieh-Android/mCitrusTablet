@@ -1,11 +1,17 @@
 package com.citrus.mCitrusTablet.view.setting
 
 import android.Manifest
+import android.app.Dialog
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.Rect
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.View
+import android.util.Log
+import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
@@ -16,6 +22,7 @@ import com.citrus.mCitrusTablet.databinding.FragmentSettingBinding
 import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.view.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_setting.*
 
 
 @AndroidEntryPoint
@@ -26,13 +33,30 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
     private val RequestStorageCode = 888
     var data = arrayOf("繁體中文", "English")
     var isLanChange = false
+    var hasChange = true
+    var chooseLan = prefs.languagePos
 
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        if (dialog != null && dialog?.window != null) {
+            dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog!!.window!!.requestFeature(Window.FEATURE_NO_TITLE)
+        }
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSettingBinding.bind(view)
         loadFromSharedPref()
+        isCancelable = false
+
+
 
         binding.apply {
           tvVersion.text = "2021 © Citrus Solutions Co., Ltd. Version " + BuildConfig.VERSION_NAME
@@ -58,7 +82,9 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
 
             binding.btnOK.setOnClickListener {
                 if(applyChangesToSharedPref()){
-                    sharedViewModel.hasSetLanguage()
+                    if(hasChange){
+                        sharedViewModel.hasSetLanguage()
+                    }
                     dismiss()
                 }
             }
@@ -77,10 +103,10 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
                         lang = 1
                     }
                     2 -> {
-                        lang = 0
+                        lang = 2
                     }
                 }
-               prefs.languagePos = lang
+                chooseLan = lang
             }
 
 
@@ -103,7 +129,7 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
             1 -> {
                 binding.languagePicker?.value = 1
             }
-            0 -> {
+            2 -> {
                 binding.languagePicker?.value = 2
             }
             else ->{
@@ -124,14 +150,19 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
     }
 
     private fun applyChangesToSharedPref(): Boolean {
+
         val rsnoText = binding.etRsno!!.text.trim().toString()
         val serverText = binding.etServerIp!!.text.trim().toString()
         if(rsnoText.isEmpty() || serverText.isEmpty() ) {
             return false
         }
 
+        hasChange =
+            !(rsnoText == prefs.rsno && serverText == prefs.severDomain && chooseLan == prefs.languagePos)
+
         prefs.rsno = rsnoText
         prefs.severDomain = serverText
+        prefs.languagePos = chooseLan
 
         return true
     }
@@ -149,6 +180,25 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
         super.dismiss()
     }
 
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return object : Dialog(requireContext(), theme) {
+            override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+                if (ev.action == MotionEvent.ACTION_DOWN) {
+                    val v = currentFocus
+                    if (v is EditText) {
+                        val outRect = Rect()
+                        v.getGlobalVisibleRect(outRect)
+                        if (!outRect.contains(ev.rawX.toInt(), ev.rawY.toInt())) {
+                            v.clearFocus()
+                            val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                            imm.hideSoftInputFromWindow(v.windowToken, 0)
+                        }
+                    }
+                }
+                return super.dispatchTouchEvent(ev)
+            }
+        }
+    }
 
 }
 

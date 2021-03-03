@@ -1,5 +1,6 @@
 package com.citrus.mCitrusTablet.model
 
+import android.util.Log
 import com.citrus.mCitrusTablet.model.api.ApiService
 import com.citrus.mCitrusTablet.model.vo.*
 import com.google.gson.Gson

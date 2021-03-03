@@ -1,6 +1,6 @@
 package com.citrus.mCitrusTablet.view.reservation
 
-import android.content.SharedPreferences
+
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,11 +10,9 @@ import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.model.Repository
 import com.citrus.mCitrusTablet.model.vo.*
 import com.citrus.mCitrusTablet.util.Constants
-import com.citrus.mCitrusTablet.util.Constants.DEFAULT_TIME
-import com.citrus.mCitrusTablet.util.Constants.KEY_DELAY_INTERVAL
-import com.citrus.mCitrusTablet.util.Constants.KEY_RSNO
 import com.citrus.mCitrusTablet.util.Constants.defaultTimeStr
 import com.citrus.mCitrusTablet.util.Constants.inputFormat
+import com.citrus.mCitrusTablet.util.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.Channel
@@ -40,8 +38,8 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
 
     private var guests = mutableListOf<ReservationGuests>()
 
-    private val _seatData = MutableLiveData<List<Floor>>()
-    val seatData: LiveData<List<Floor>>
+    private val _seatData = SingleLiveEvent<List<Floor>>()
+    val seatData: SingleLiveEvent<List<Floor>>
         get() = _seatData
 
     private val _titleData = MutableLiveData<List<String>>()

@@ -20,10 +20,6 @@ class SharedViewModel @ViewModelInject constructor(@ApplicationContext context: 
     val tvClock: LiveData<String>
         get() = _tvClock
 
-    private val _changePageTrigger = SingleLiveEvent<Boolean>()
-    val changePageTrigger: SingleLiveEvent<Boolean>
-        get() = _changePageTrigger
-
     private val _versionUpdateTrigger = SingleLiveEvent<Boolean>()
     val versionUpdateTrigger: SingleLiveEvent<Boolean>
         get() = _versionUpdateTrigger
@@ -33,17 +29,6 @@ class SharedViewModel @ViewModelInject constructor(@ApplicationContext context: 
         get() = _setLanguageTrigger
 
 
-    fun toWaitFragment(){
-        _changePageTrigger.value = true
-    }
-
-    fun toReservationFragment(){
-        _changePageTrigger.value = true
-    }
-
-    fun toSettingFragment(){
-        _changePageTrigger.value = true
-    }
 
     fun updateDialog() {
         _versionUpdateTrigger.value = true

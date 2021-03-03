@@ -11,7 +11,7 @@
     <string name="download_completed">Download Completed</string>
     <string name="enter_version_number">enter version number</string>
     <string name="title_file_download">Downloading updates</string>
-    <string name="today">today</string>
+    <string name="today">Today</string>
     <string name="seats">seats</string>
     <string name="Reservation">Reservation</string>
     <string name="TotalForTheDay">Total for the day :</string>
@@ -40,4 +40,11 @@
     <string name="slide">Slide to add</string>
     <string name="apply">apply</string>
     <string name="submitErrorMsg">Please fill out all the fields</string>
+    <string name="selectSeat">Seat</string>
+    <string name="time">Time</string>
+    <string name="close">close</string>
+    <string name="person">Person</string>
+    <string name="res_ok">Reservation Complete</string>
+    <string name="res_ng">Reservation Fail</string>
+    <string name="close_msg">Do you want to close the app?</string>
 </resources>

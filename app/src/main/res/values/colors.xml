@@ -11,6 +11,7 @@
     <color name="secondaryDarkColor">#bcbcbc</color>
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#000000</color>
+    <color name="lightGray">#efefef</color>
 
 
     <color name="calendar_selected_day_bg">#629bd1</color>
@@ -59,4 +60,8 @@
     <color name="color_4D000000">#4D000000</color>
 
     <color name="reservationHeader">#f5f5f5</color>
+
+    <color name="ds_picker_box_bg">#67f45959</color>
+    <color name="ds_list_selector_bg">#49067397</color>
+    <color name="ds_list_bg">#ffffff</color>
 </resources>

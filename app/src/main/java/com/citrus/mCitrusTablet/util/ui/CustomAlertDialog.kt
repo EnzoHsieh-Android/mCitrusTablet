@@ -24,16 +24,10 @@ class CustomAlertDialog(
     }
 
     override fun initView() {
-        btnCancel.visibility = View.GONE
         if (icon == R.drawable.ic_check) {
             setCancelable(false)
             setCanceledOnTouchOutside(false)
         }
-
-        if(icon == R.drawable.ic_baseline_error_24) {
-            btnCancel.visibility = View.VISIBLE
-        }
-
 
         if(icon !=0) {
             YoYo.with(Techniques.FlipInX).delay(100).duration(1200).pivot(YoYo.CENTER_PIVOT, YoYo.CENTER_PIVOT).playOn(ivIcon)
@@ -53,12 +47,5 @@ class CustomAlertDialog(
             onConfirmListener()
             dismiss()
         }
-        btnCancel.onSafeClick {
-            dismiss()
-        }
-    }
-
-    fun setCancelBtnVisible() {
-        btnCancel.visibility = View.VISIBLE
     }
 }

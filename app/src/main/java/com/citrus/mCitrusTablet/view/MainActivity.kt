@@ -11,6 +11,7 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.text.style.BackgroundColorSpan
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
@@ -31,6 +32,7 @@ import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.util.*
 import com.citrus.mCitrusTablet.util.Constants.KEY_LANGUAGE
 import com.citrus.mCitrusTablet.util.ui.CustomAlertDialog
+import com.noober.background.BackgroundLibrary
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
@@ -63,6 +65,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        BackgroundLibrary.inject(this)
         super.onCreate(savedInstanceState)
         updateLanguage(this)
         setContentView(R.layout.activity_main)
@@ -120,9 +123,8 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             var newLocale = Locale.getDefault()
             when (prefs.languagePos) {
-                0 -> newLocale = Locale.US
                 1 -> newLocale = Locale.TRADITIONAL_CHINESE
-                2 -> newLocale = Locale.SIMPLIFIED_CHINESE
+                2 -> newLocale = Locale.US
             }
             newBase?.let {
                 val context: Context = MyContextWrapper.wrap(it, newLocale)
@@ -135,9 +137,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateLanguage(context: Context): Context {
         val newLocale = when (prefs.languagePos) {
-            0 -> Locale.ENGLISH
             1 -> Locale.TRADITIONAL_CHINESE
-            2 -> Locale.SIMPLIFIED_CHINESE
+            2 -> Locale.ENGLISH
             else -> {
                 when (Locale.getDefault().country) {
                     "TW" -> {
@@ -145,11 +146,11 @@ class MainActivity : AppCompatActivity() {
                         Locale.TRADITIONAL_CHINESE
                     }
                     "CN" -> {
-                        prefs.languagePos = 2
+                        prefs.languagePos = 1
                         Locale.SIMPLIFIED_CHINESE
                     }
                     else -> {
-                        prefs.languagePos = 0
+                        prefs.languagePos = 2
                         Locale.ENGLISH
                     }
                 }
@@ -255,7 +256,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, getString(R.string.download_completed), Toast.LENGTH_SHORT).show()
                 val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                val file = File(path, "mOrderReady.apk")
+                val file = File(path, "mCitrusTablet.apk")
                 val apkUri = FileProvider.getUriForFile(
                     this@MainActivity,
                     BuildConfig.APPLICATION_ID + ".provider",
@@ -307,7 +308,7 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         var dialog = CustomAlertDialog(
             this,
-            "Do you want to close the app?",
+            resources.getString(R.string.close_msg),
             "",
             R.drawable.ic_baseline_error_24,
             onConfirmListener = {

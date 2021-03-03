@@ -39,4 +39,11 @@
     <string name="slide">滑動以新增</string>
     <string name="apply">套用</string>
     <string name="submitErrorMsg">請完善預約資料</string>
+    <string name="selectSeat">座位</string>
+    <string name="time">時間</string>
+    <string name="close">close</string>
+    <string name="person">人數</string>
+    <string name="res_ok">預約成功</string>
+    <string name="res_ng">預約失敗</string>
+    <string name="close_msg">確定要關閉應用程式嗎?</string>
 </resources>

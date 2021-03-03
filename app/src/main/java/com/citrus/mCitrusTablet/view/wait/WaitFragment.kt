@@ -2,20 +2,13 @@ package com.citrus.mCitrusTablet.view.wait
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.citrus.mCitrusTablet.R
-import com.citrus.mCitrusTablet.databinding.FragmentReservationBinding
 import com.citrus.mCitrusTablet.databinding.FragmentWaitBinding
-import com.citrus.mCitrusTablet.di.prefs
-import com.citrus.mCitrusTablet.model.vo.ReservationClass
-import com.citrus.mCitrusTablet.model.vo.ReservationUpload
 import com.citrus.mCitrusTablet.model.vo.Wait
 import com.citrus.mCitrusTablet.util.ui.CustomAlertDialog
 import com.citrus.mCitrusTablet.view.adapter.WaitAdapter
-import com.citrus.mCitrusTablet.view.reservation.ReservationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -36,10 +29,6 @@ class WaitFragment : Fragment(R.layout.fragment_wait),WaitAdapter.OnItemClickLis
 
         binding.apply {
             date2Day(SimpleDateFormat("yyyy/MM/dd").format(Date()))
-
-
-
-
 
 
             btReservation.setOnSlideCompleteListener {

@@ -39,7 +39,7 @@
                 android:gravity="center"
                 android:padding="@dimen/padding_10"
                 android:textColor="@color/colorPrimaryText"
-                android:textSize="@dimen/sp_22"
+                android:textSize="@dimen/sp_12"
                 android:textStyle="bold"
                 tools:text="Title" />
 
@@ -68,40 +68,38 @@
         android:paddingEnd="@dimen/padding_15"
         android:clipToPadding="false"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center">
+
+<!--        <Button-->
+<!--            android:id="@+id/btnCancel"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:textStyle="bold"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_margin="10dp"-->
+<!--            android:background="@drawable/button_white_45"-->
+<!--            android:textColor="@color/selector_text"-->
+<!--            android:padding="@dimen/padding_15"-->
+<!--            android:textSize="@dimen/sp_12"-->
+<!--            android:text="@string/no"-->
+<!--            android:visibility="visible"-->
+<!--            tools:visibility="visible" />-->
 
         <Button
-            android:id="@+id/btnCancel"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:textStyle="bold"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="10dp"
-            android:background="@drawable/button_white_45"
-            android:textColor="@color/selector_text"
-            android:padding="@dimen/padding_15"
-            android:textSize="@dimen/sp_12"
-            android:text="@string/no"
-            android:visibility="visible"
-            tools:visibility="visible" />
 
-        <Button
             android:id="@+id/btnOK"
-            android:layout_width="0dp"
+            android:layout_margin="@dimen/dp_10"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/padding_15"
-            android:layout_weight="1"
-            android:maxWidth="100dp"
+            android:text="@string/ok"
+            android:textSize="@dimen/sp_10"
             android:textStyle="bold"
-            android:background="@drawable/button_white_45"
-            android:textColor="@color/selector_text"
-            android:elevation="5dp"
-            android:padding="@dimen/padding_15"
-            android:textSize="@dimen/sp_12"
-            android:text="@string/sure"
-            android:visibility="visible" />
+            android:textColor="@color/white"
+            android:background="@color/primaryColor"
+            android:layout_gravity="center"
+            />
 
     </LinearLayout>
 
