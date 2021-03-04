@@ -2,6 +2,8 @@ package com.citrus.mCitrusTablet.util.ui
 
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.Point
+import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
@@ -18,17 +20,14 @@ import java.text.SimpleDateFormat
 class CustomGuestDetailDialog(
     private var mContext: Context,
     private var guest: ReservationGuests,
-    private val onConfirmListener: () -> Unit
-) : BaseAlertDialog(mContext, R.style.CustomDialogTheme) {
-
-
-    constructor( mContext: Context,  guest: ReservationGuests) : this( mContext, guest, {})
+) : BaseDialogFragment() {
 
     override fun getLayoutId(): Int {
         return R.layout.dialog_guest_detail
     }
 
     override fun initView() {
+        setWindowWidthPercent()
         tv_name.text =  mContext.resources.getString(R.string.name) + " : " +guest.mName
         tv_phone.text = mContext.resources.getString(R.string.phone_number) + " : " +guest.phone
         tv_cusNum.text = mContext.resources.getString(R.string.person) + " : " +guest.custNum.toString()
@@ -41,13 +40,23 @@ class CustomGuestDetailDialog(
         var timeStr = formattedDate.split(" ")
         tv_time.text = mContext.resources.getString(R.string.time) + " : " +timeStr[1]
         tv_memo.text = mContext.resources.getString(R.string.memo) + " : " +guest.memo.toString()
+    }
 
-
-        btnClose.setOnClickListener {
-            dismiss()
-        }
+    override fun initAction() {
     }
 
 
+    private fun setWindowWidthPercent() {
+        dialog?.window?.let {
+            val size = Point()
+            val display = it.windowManager.defaultDisplay
+            display.getSize(size)
 
+            val width = size.x
+            val height = size.y
+
+            it.setLayout((width * 0.65).toInt(), (height * 0.75).toInt())
+            it.setGravity(Gravity.CENTER)
+        }
+    }
 }

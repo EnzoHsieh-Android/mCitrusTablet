@@ -112,25 +112,24 @@
             android:id="@+id/btn_SearchTable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@id/btn_Today"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginStart="@dimen/dp_10"
+            android:gravity="center"
             android:orientation="vertical"
-            android:gravity="center">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_Today"
+            app:layout_constraintTop_toTopOf="parent">
+
             <ImageView
                 android:layout_width="@dimen/dp_20"
                 android:layout_height="@dimen/dp_20"
-                android:src="@drawable/ic_baseline_empty_24"
-                />
+                android:src="@drawable/ic_baseline_empty_24" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="查找空桌"
                 android:textColor="@color/primaryColor"
-                android:textStyle="bold"
-                />
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -169,7 +168,7 @@
             android:id="@+id/animation_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -585,10 +584,10 @@
                 android:layout_weight="0"
                 android:id="@+id/searchView"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/dp_22"
                 android:background="@drawable/button_overlay_45"
                 android:iconifiedByDefault="true"
-                android:maxWidth="@dimen/dp_100"
+                android:maxWidth="@dimen/dp_150"
                 android:minWidth="@dimen/dp_10"
                 android:queryBackground="@android:color/transparent"
                 app:defaultQueryHint="@string/phone_number"

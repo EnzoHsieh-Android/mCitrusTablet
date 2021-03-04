@@ -2,7 +2,6 @@ package com.citrus.mCitrusTablet.view.reservation
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -58,7 +57,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                     "yyyy/MM/dd"
                 ).format(Date())
             )
-            
+
             reservationRv.apply {
                 val glm = GridLayoutManager(activity, itemPerLine)
                 glm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -88,15 +87,14 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
 
 
             btnSearchTable.setOnClickListener {
-                var dialog = activity?.let {
+               activity?.let {
                     CustomSearchTableDialog(
-                        it,
+                        requireActivity(),
                         onConfirmListener = {
 
                         }
-                    )
+                    ).show(it.supportFragmentManager, "CustomSearchTableDialog")
                 }
-                dialog!!.show()
             }
 
             /*上方日期按鈕*/
@@ -243,13 +241,12 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                                 timeTitle[index],
                                 guestsList[index],
                                 onItemClick = { Guest ->
-                                    var dialog = activity?.let {
+                                    activity?.let {
                                         CustomGuestDetailDialog(
                                             it,
-                                            Guest,
-                                        )
+                                            Guest
+                                        ).show(it.supportFragmentManager,"CustomGuestDetailDialog")
                                     }
-                                    dialog!!.show()
                                 },
                                 onButtonClick = {
                                     reservationFragmentViewModel.changeStatus(it)
