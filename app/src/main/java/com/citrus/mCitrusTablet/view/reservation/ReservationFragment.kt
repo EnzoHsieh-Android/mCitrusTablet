@@ -2,6 +2,7 @@ package com.citrus.mCitrusTablet.view.reservation
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -15,10 +16,7 @@ import com.citrus.mCitrusTablet.model.vo.ReservationClass
 import com.citrus.mCitrusTablet.model.vo.ReservationUpload
 import com.citrus.mCitrusTablet.util.Constants.defaultTimeStr
 import com.citrus.mCitrusTablet.util.onSafeClick
-import com.citrus.mCitrusTablet.util.ui.CalendarType
-import com.citrus.mCitrusTablet.util.ui.CustomAlertDialog
-import com.citrus.mCitrusTablet.util.ui.CustomDatePickerDialog
-import com.citrus.mCitrusTablet.util.ui.CustomGuestDetailDialog
+import com.citrus.mCitrusTablet.util.ui.*
 import com.citrus.mCitrusTablet.view.adapter.ReservationAdapter
 import com.citrus.util.onQueryTextChanged
 import com.savvi.rangedatepicker.CalendarPickerView
@@ -55,19 +53,13 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
         _binding = FragmentReservationBinding.bind(view)
 
         binding.apply {
+            date2Day(
+                reservationFragmentViewModel.dateRange.value?.get(0) ?: SimpleDateFormat(
+                    "yyyy/MM/dd"
+                ).format(Date())
+            )
+            
             reservationRv.apply {
-                laySwipe.setOnRefreshListener {
-                    reservationFragmentViewModel.reload()
-                    laySwipe.isRefreshing = false
-                }
-
-                date2Day(
-                    reservationFragmentViewModel.dateRange.value?.get(0) ?: SimpleDateFormat(
-                        "yyyy/MM/dd"
-                    ).format(Date())
-                )
-
-
                 val glm = GridLayoutManager(activity, itemPerLine)
                 glm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                     override fun getSpanSize(position: Int): Int {
@@ -81,6 +73,10 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                 this.layoutManager = glm
             }
 
+            laySwipe.setOnRefreshListener {
+                reservationFragmentViewModel.reload()
+                laySwipe.isRefreshing = false
+            }
 
             btPrev.setOnClickListener {
                 dateChange(tvDate.text as String, -1)
@@ -90,6 +86,18 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                 dateChange(tvDate.text as String, 1)
             }
 
+
+            btnSearchTable.setOnClickListener {
+                var dialog = activity?.let {
+                    CustomSearchTableDialog(
+                        it,
+                        onConfirmListener = {
+
+                        }
+                    )
+                }
+                dialog!!.show()
+            }
 
             /*上方日期按鈕*/
             llDate.onSafeClick {

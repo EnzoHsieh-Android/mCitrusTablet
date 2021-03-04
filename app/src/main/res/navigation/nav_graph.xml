@@ -25,4 +25,5 @@
         android:name="com.citrus.mCitrusTablet.view.setting.SettingFragment"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_setting" />
+
 </navigation>

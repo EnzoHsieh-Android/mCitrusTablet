@@ -109,6 +109,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/btn_SearchTable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@id/btn_Today"
@@ -121,7 +122,6 @@
                 android:layout_width="@dimen/dp_20"
                 android:layout_height="@dimen/dp_20"
                 android:src="@drawable/ic_baseline_empty_24"
-                android:tooltipText="back to today"
                 />
 
             <TextView

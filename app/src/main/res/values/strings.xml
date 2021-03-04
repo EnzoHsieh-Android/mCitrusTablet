@@ -47,4 +47,6 @@
     <string name="res_ok">Reservation Complete</string>
     <string name="res_ng">Reservation Fail</string>
     <string name="close_msg">Do you want to close the app?</string>
+    <!-- TODO: Remove or change this placeholder text -->
+
 </resources>
