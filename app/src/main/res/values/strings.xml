@@ -36,7 +36,7 @@
     <string name="checked">Checked</string>
     <string name="rsno">Store ID:</string>
     <string name="setting">Setting</string>
-    <string name="people">Seats</string>
+    <string name="people">People</string>
     <string name="slide">Slide to add</string>
     <string name="apply">apply</string>
     <string name="submitErrorMsg">Please fill out all the fields</string>
@@ -47,6 +47,7 @@
     <string name="res_ok">Reservation Complete</string>
     <string name="res_ng">Reservation Fail</string>
     <string name="close_msg">Do you want to close the app?</string>
+    <string name="otherSeat">There is no free seat in the selected time period, the adjacent time period available is：</string>
     <!-- TODO: Remove or change this placeholder text -->
 
 </resources>

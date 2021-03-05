@@ -2,6 +2,7 @@ package com.citrus.mCitrusTablet.util.ui
 
 import android.graphics.Point
 import android.view.Gravity
+import android.view.View
 import androidx.fragment.app.FragmentActivity
 import com.citrus.mCitrusTablet.R
 import com.savvi.rangedatepicker.CalendarPickerView
@@ -20,6 +21,21 @@ class CustomSearchTableDialog(
     override fun initView() {
         setWindowWidthPercent()
 
+
+
+        rb_group.setOnCheckedChangeListener { _, i ->
+            when(i){
+                R.id.rb_people -> {
+                    et_people.visibility = View.VISIBLE
+                    et_seat.visibility = View.GONE
+                }
+                R.id.rb_seat -> {
+                    et_people.visibility = View.GONE
+                    et_seat.visibility = View.VISIBLE
+                }
+            }
+        }
+
         llDate.setOnClickListener {
             mContext?.let {
                 CustomDatePickerDialog(
@@ -33,6 +49,13 @@ class CustomSearchTableDialog(
                 }.show(it.supportFragmentManager, "CustomDatePickerDialog")
             }
         }
+
+
+
+
+
+
+
     }
 
     override fun initAction() {

@@ -1,18 +1,10 @@
 package com.citrus.mCitrusTablet.util.ui
 
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Point
 import android.view.Gravity
-import android.view.MotionEvent
-import android.view.View
-import android.widget.EditText
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.model.vo.ReservationGuests
-import com.citrus.mCitrusTablet.util.onSafeClick
-import com.daimajia.androidanimations.library.Techniques
-import com.daimajia.androidanimations.library.YoYo
-import kotlinx.android.synthetic.main.dialog_alert.*
 import kotlinx.android.synthetic.main.dialog_guest_detail.*
 import java.text.SimpleDateFormat
 

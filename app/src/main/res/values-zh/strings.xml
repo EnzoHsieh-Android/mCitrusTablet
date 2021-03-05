@@ -46,4 +46,5 @@
     <string name="res_ok">預約成功</string>
     <string name="res_ng">預約失敗</string>
     <string name="close_msg">確定要關閉應用程式嗎?</string>
+    <string name="otherSeat">所選時段查無空桌，鄰近可選擇的時段為：</string>
 </resources>

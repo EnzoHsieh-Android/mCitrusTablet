@@ -1,76 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix">
 
 
-    <TextView
+    <LinearLayout
         android:layout_margin="@dimen/dp_5"
         android:id="@+id/select_day_hint"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="選擇查詢日期:"
-        android:textSize="@dimen/sp_10"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/llDate"
-        android:layout_margin="@dimen/dp_5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dp_5"
-        android:text="2021/03/23"
-        android:textSize="@dimen/sp_10"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/select_day_hint"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <RadioGroup
-        android:layout_margin="@dimen/dp_5"
-        android:id="@+id/choseType"
-        app:layout_constraintTop_toBottomOf="@+id/select_day_hint"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        app:layout_constraintEnd_toEndOf="parent"
+        >
 
-        <RadioButton
-            android:id="@+id/radioButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/sp_10"
-            android:text="依人數" />
-
-        <EditText
+        <TextView
+            android:layout_margin="@dimen/dp_5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/name"
-            android:inputType="none"/>
+            android:text="查詢日期:"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold" />
 
-        <RadioButton
-            android:id="@+id/radioButton2"
+        <TextView
+            android:gravity="center"
+            android:id="@+id/llDate"
+            android:layout_margin="@dimen/dp_5"
+            android:layout_width="@dimen/dp_100"
+            android:layout_height="@dimen/dp_20"
+            android:layout_marginStart="@dimen/dp_5"
+            android:background="@drawable/button_overlay_15"
+            android:textColor="@color/selector_text"
+            android:text="@string/select_time"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+          />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/choseType"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/select_day_hint"
+        app:layout_constraintStart_toStartOf="@+id/select_day_hint"
+        app:layout_constraintEnd_toEndOf="@+id/select_day_hint"
+        android:gravity="center"
+        >
+
+        <TextView
+            android:layout_margin="@dimen/dp_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="查詢條件:"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold" />
+
+        <RadioGroup
+            android:id="@+id/rb_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:layout_margin="@dimen/dp_2"
+                android:checked="true"
+                android:id="@+id/rb_people"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/sp_10"
+                android:text="依人數" />
+
+            <RadioButton
+                android:layout_margin="@dimen/dp_2"
+                android:id="@+id/rb_seat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/sp_10"
+                android:text="指定座位" />
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+
+    <View
+        android:layout_marginTop="@dimen/dp_4"
+        android:layout_marginBottom="@dimen/dp_4"
+        app:layout_constraintTop_toBottomOf="@id/choseType"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/spread_part"
+        app:layout_constraintStart_toStartOf="@+id/spread_part"
+        android:id="@+id/viewLine"
+        android:layout_width="2dp"
+        android:layout_height="0dp"
+        android:background="@color/deepGray"/>
+
+
+    <LinearLayout
+        android:id="@+id/searchBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/choseType"
+        app:layout_constraintStart_toStartOf="@+id/select_day_hint"
+        app:layout_constraintEnd_toEndOf="@+id/select_day_hint"
+        android:gravity="center"
+        >
+
+        <TextView
+            android:layout_margin="@dimen/dp_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="輸入:"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/et_people"
+            android:gravity="center"
+            android:layout_margin="@dimen/dp_5"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="wrap_content"
+            android:hint="人數"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/et_seat"
+            android:gravity="center"
+            android:visibility="gone"
+            android:layout_margin="@dimen/dp_5"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="wrap_content"
+            android:hint="座位"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textColor="@color/white"
             android:textSize="@dimen/sp_10"
-            android:text="指定座位" />
+            android:text="Search"
+            app:bl_corners_radius="@dimen/dp_10"/>
 
-    </RadioGroup>
-
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:visibility="gone"
         android:layout_margin="@dimen/dp_5"
-        app:layout_constraintTop_toBottomOf="@+id/choseType"
+        app:layout_constraintTop_toBottomOf="@+id/searchBtn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_width="0dp"
-        android:layout_height="@dimen/dp_300"
-        android:background="@color/primaryColor"
+        android:layout_height="0dp"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

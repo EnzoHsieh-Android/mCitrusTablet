@@ -2,15 +2,12 @@ package com.citrus.mCitrusTablet.util.ui
 
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.graphics.Point
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.RadioGroup
 import android.widget.TextView
 import com.citrus.mCitrusTablet.R
-import com.citrus.mCitrusTablet.util.Constants.SHARED_PREFERENCES_NAME
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog
 import com.citrus.mCitrusTablet.util.Constants.dateFormatSql
 import com.citrus.mCitrusTablet.util.exhaustive

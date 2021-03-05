@@ -46,7 +46,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
     private var reservationAdapter = SectionedRecyclerViewAdapter()
 
 
-    @RequiresApi(Build.VERSION_CODES.N_MR1)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentReservationBinding.bind(view)
@@ -124,6 +124,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                         reservationFragmentViewModel.dateRange.value?.get(0) ?: "",
                         reservationFragmentViewModel.dateRange.value?.get(1) ?: ""
                     ) { seat, startTime, endTime, _ ->
+                        clearSubmitText()
                         reservationFragmentViewModel.setDateArrayReservation(
                             arrayOf(
                                 startTime,
@@ -172,7 +173,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                 var cusMemo = binding.memo.text.toString().trim()
                 var seat = tempSeat.split("-")
 
-                if (cusName.isEmpty() || cusPhone.isEmpty()) {
+                if (cusName.isEmpty() || cusPhone.isEmpty()|| tempSeat == "") {
                     var dialog = activity?.let {
                         CustomAlertDialog(
                             it,
@@ -215,15 +216,11 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                 binding.seatPicker.displayedValues = seatData.toTypedArray()
 
             } else {
-                var dialog = activity?.let {
-                    CustomAlertDialog(
-                        it,
-                        "選擇的區段查無空桌！",
-                        "",
-                       0
-                    )
+                activity?.let {
+                    CustomOtherSeatDialog(
+                        requireActivity()
+                    ).show(it.supportFragmentManager, "CustomOtherSeatDialog")
                 }
-                dialog!!.show()
             }
         })
 
@@ -274,11 +271,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                     is ReservationViewModel.TasksEvent.ShowSuccessMessage -> {
                         showInformation.visibility = View.GONE
                         hintBlock.visibility = View.VISIBLE
-                        binding.name.text.clear()
-                        binding.phone.text.clear()
-                        binding.memo.text.clear()
-                        binding.tvSeat.visibility = View.INVISIBLE
-                        binding.seatPicker.visibility = View.INVISIBLE
+                        clearSubmitText()
                         var dialog = activity?.let {
                             CustomAlertDialog(
                                 it,
@@ -303,7 +296,6 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                 }
             }
         }
-
     }
 
 
@@ -339,6 +331,16 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
         val date2DayFormat = SimpleDateFormat("E")
         binding.tvDate.text = dateString
         binding.tvDay.text = date2DayFormat.format(date)
+    }
+
+
+    private fun clearSubmitText(){
+        binding.name.text.clear()
+        binding.phone.text.clear()
+        binding.memo.text.clear()
+        tempSeat=""
+        binding.tvSeat.visibility = View.INVISIBLE
+        binding.seatPicker.visibility = View.INVISIBLE
     }
 
     override fun onDestroyView() {

@@ -8,7 +8,6 @@ import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -22,7 +21,6 @@ import com.citrus.mCitrusTablet.databinding.FragmentSettingBinding
 import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.view.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_setting.*
 
 
 @AndroidEntryPoint
@@ -30,7 +28,7 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
     private val sharedViewModel: SharedViewModel by activityViewModels()
     private var _binding: FragmentSettingBinding? = null
     private val binding get() = _binding!!
-    private val RequestStorageCode = 888
+    private val requestStorageCode = 888
     var data = arrayOf("繁體中文", "English")
     var isLanChange = false
     var hasChange = true
@@ -59,20 +57,22 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
 
 
         binding.apply {
-          tvVersion.text = "2021 © Citrus Solutions Co., Ltd. Version " + BuildConfig.VERSION_NAME
+            tvVersion.text = "2021 © Citrus Solutions Co., Ltd. Version " + BuildConfig.VERSION_NAME
             tvVersion.setOnClickListener {
                 val permissionCheck =
-                    activity?.let { it1 -> ContextCompat.checkSelfPermission(
-                        it1,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    ) }
+                    activity?.let { it1 ->
+                        ContextCompat.checkSelfPermission(
+                            it1,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        )
+                    }
 
                 if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
                     activity?.let { it1 ->
                         ActivityCompat.requestPermissions(
                             it1,
                             arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                            RequestStorageCode
+                            requestStorageCode
                         )
                     }
                 } else {
@@ -81,8 +81,8 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
             }
 
             binding.btnOK.setOnClickListener {
-                if(applyChangesToSharedPref()){
-                    if(hasChange){
+                if (applyChangesToSharedPref()) {
+                    if (hasChange) {
                         sharedViewModel.hasSetLanguage()
                     }
                     dismiss()
@@ -98,7 +98,7 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
             languagePicker!!.setOnValueChangedListener { _, _, newVal ->
                 var lang = -1
                 isLanChange = true
-                when(newVal){
+                when (newVal) {
                     1 -> {
                         lang = 1
                     }
@@ -108,41 +108,33 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
                 }
                 chooseLan = lang
             }
-
-
-
-
         }
-
-
-
-
     }
 
 
     private fun loadFromSharedPref() {
         val rsno = prefs.rsno
-        val server =  prefs.severDomain
+        val server = prefs.severDomain
 
 
-        when(prefs.languagePos){
+        when (prefs.languagePos) {
             1 -> {
                 binding.languagePicker?.value = 1
             }
             2 -> {
                 binding.languagePicker?.value = 2
             }
-            else ->{
-              var lanStr =   resources.configuration.locale.language
-                if(lanStr == "zh"){
+            else -> {
+                var lanStr = resources.configuration.locale.language
+                if (lanStr == "zh") {
                     binding.languagePicker?.value = 1
-                }else{
+                } else {
                     binding.languagePicker?.value = 2
                 }
             }
         }
 
-        if(rsno==""||server==""){
+        if (rsno == "" || server == "") {
             isCancelable = false
         }
         binding.etRsno!!.setText(rsno)
@@ -153,7 +145,7 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
 
         val rsnoText = binding.etRsno!!.text.trim().toString()
         val serverText = binding.etServerIp!!.text.trim().toString()
-        if(rsnoText.isEmpty() || serverText.isEmpty() ) {
+        if (rsnoText.isEmpty() || serverText.isEmpty()) {
             return false
         }
 
@@ -175,7 +167,8 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
 
 
     override fun dismiss() {
-        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(requireActivity().window.decorView.windowToken, 0)
         super.dismiss()
     }
@@ -190,7 +183,8 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
                         v.getGlobalVisibleRect(outRect)
                         if (!outRect.contains(ev.rawX.toInt(), ev.rawY.toInt())) {
                             v.clearFocus()
-                            val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                            val imm =
+                                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                             imm.hideSoftInputFromWindow(v.windowToken, 0)
                         }
                     }
@@ -199,6 +193,5 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
             }
         }
     }
-
 }
 
