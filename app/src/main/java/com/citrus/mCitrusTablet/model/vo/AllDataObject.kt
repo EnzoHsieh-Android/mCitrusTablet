@@ -5,7 +5,7 @@ import java.io.Serializable
 
 
 /*output*/
-data class FetchAllData(var RSNO:String , var startDate:String , var endDate:String):Serializable
+data class PostToGetAllData(var RSNO:String, var startDate:String, var endDate:String):Serializable
 
 
 /*input*/
@@ -28,7 +28,7 @@ data class ReservationGuests(
     val tkey: String,
 
     @SerializedName("StoreID")
-    val storeID: Long,
+    val storeID: Int,
 
     @SerializedName("ReservationTime")
     val reservationTime: String,
@@ -79,7 +79,7 @@ data class Wait (
     val memo: String,
 
     @SerializedName("Status")
-    val status: String,
+    var status: String,
 
     @SerializedName("MaleCount")
     val maleCount: Long,
@@ -100,7 +100,19 @@ data class Wait (
     val gender: String,
 
     @SerializedName("WaitNumber")
-    val waitNumber: Long
-):Serializable
+    val waitNumber: Int,
+
+    @SerializedName("OrderNO")
+    val orderNo: String
+):Serializable{
+    fun isSame(other: Wait): Boolean {
+        return tkey == other.tkey
+    }
+
+    fun isContentSame(other: Wait): Boolean {
+        return this === other
+    }
+}
+
 
 

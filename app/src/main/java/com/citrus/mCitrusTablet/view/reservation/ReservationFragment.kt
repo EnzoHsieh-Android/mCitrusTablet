@@ -1,9 +1,7 @@
 package com.citrus.mCitrusTablet.view.reservation
 
-import android.os.Build
 import android.os.Bundle
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -12,11 +10,11 @@ import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.databinding.FragmentReservationBinding
 import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.model.vo.ReservationClass
-import com.citrus.mCitrusTablet.model.vo.ReservationUpload
+import com.citrus.mCitrusTablet.model.vo.PostToSetReservation
 import com.citrus.mCitrusTablet.util.Constants.defaultTimeStr
 import com.citrus.mCitrusTablet.util.onSafeClick
-import com.citrus.mCitrusTablet.util.ui.*
 import com.citrus.mCitrusTablet.view.adapter.ReservationAdapter
+import com.citrus.mCitrusTablet.view.dialog.*
 import com.citrus.util.onQueryTextChanged
 import com.savvi.rangedatepicker.CalendarPickerView
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,7 +41,8 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
 
     private var seatData = mutableListOf<String>()
     private var timeTitle = mutableListOf<String>()
-    private var reservationAdapter = SectionedRecyclerViewAdapter()
+    private val reservationAdapter by lazy{ SectionedRecyclerViewAdapter() }
+
 
 
 
@@ -90,10 +89,10 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                activity?.let {
                     CustomSearchTableDialog(
                         requireActivity(),
-                        onConfirmListener = {
+                        reservationFragmentViewModel
+                    ) { jsonStr ->
 
-                        }
-                    ).show(it.supportFragmentManager, "CustomSearchTableDialog")
+                    }.show(it.supportFragmentManager, "CustomSearchTableDialog")
                 }
             }
 
@@ -124,7 +123,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                         reservationFragmentViewModel.dateRange.value?.get(0) ?: "",
                         reservationFragmentViewModel.dateRange.value?.get(1) ?: ""
                     ) { seat, startTime, endTime, _ ->
-                        clearSubmitText()
+                        clearSubmitText(true)
                         reservationFragmentViewModel.setDateArrayReservation(
                             arrayOf(
                                 startTime,
@@ -162,7 +161,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
             }
 
 
-            binding.seatPicker.setOnValueChangedListener { _, _, newVal ->
+            seatPicker.setOnValueChangedListener { _, _, newVal ->
                 tempSeat = seatData[newVal - 1]
             }
 
@@ -188,7 +187,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                         tempTime, tempCount, "", cusName, cusPhone, cusMemo, "A", seat[0], seat[1]
                     )
 
-                    var uploadData = ReservationUpload(prefs.rsno, data)
+                    var uploadData = PostToSetReservation(prefs.rsno, data)
 
                     reservationFragmentViewModel.uploadReservation(uploadData)
                 }
@@ -202,28 +201,56 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
             }
         })
 
-        reservationFragmentViewModel.seatData.observe(viewLifecycleOwner, { floorList ->
-            if (floorList != null && floorList.isNotEmpty()) {
+
+        reservationFragmentViewModel.seatData.observe(viewLifecycleOwner, { dataList ->
+            if (dataList != null && dataList.isNotEmpty()) {
                 binding.seatPicker.visibility = View.VISIBLE
                 binding.tvSeat.visibility = View.VISIBLE
 
                 seatData.clear()
-                for (floor in floorList) {
+                for (floor in dataList) {
                     seatData.add(floor.floorName + "-" + floor.roomName)
                 }
                 tempSeat = seatData[0]
                 binding.seatPicker.maxValue = seatData.size
                 binding.seatPicker.displayedValues = seatData.toTypedArray()
-
-            } else {
+            }else{
                 activity?.let {
-                    CustomOtherSeatDialog(
-                        requireActivity()
-                    ).show(it.supportFragmentManager, "CustomOtherSeatDialog")
+                    CustomAlertDialog(
+                        requireActivity(),
+                        resources.getString(R.string.noSeat),
+                        "",
+                        0,
+                        onConfirmListener = {
+
+                        }
+                    ).show()
                 }
             }
         })
 
+
+        reservationFragmentViewModel.datumData.observe(viewLifecycleOwner,{ datumList ->
+            activity?.let {
+                CustomOtherSeatDialog(
+                    requireActivity(),
+                    datumList,
+                    onBtnClick = { seat,date ->
+                        var date = date.split(" ")
+                        reservationDate.text = date[0]
+                        reservationTime.text = date[1] + "  " + tempCount + getString(R.string.people)
+
+                        seatData.clear()
+                        seatData.add(seat)
+                        tempSeat = seatData[0]
+                        binding.seatPicker.maxValue = seatData.size
+                        binding.seatPicker.displayedValues = seatData.toTypedArray()
+                        clearSubmitText(false)
+
+                    }
+                ).show(it.supportFragmentManager, "CustomOtherSeatDialog")
+            }
+        })
 
 
         reservationFragmentViewModel.allData.observe(viewLifecycleOwner, { guestsList ->
@@ -268,10 +295,10 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             reservationFragmentViewModel.tasksEvent.collect { event ->
                 when (event) {
-                    is ReservationViewModel.TasksEvent.ShowSuccessMessage -> {
+                    is TasksEvent.ShowSuccessMessage -> {
                         showInformation.visibility = View.GONE
                         hintBlock.visibility = View.VISIBLE
-                        clearSubmitText()
+                        clearSubmitText(true)
                         var dialog = activity?.let {
                             CustomAlertDialog(
                                 it,
@@ -282,7 +309,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                         }
                         dialog!!.show()
                     }
-                    is ReservationViewModel.TasksEvent.ShowFailMessage -> {
+                    is TasksEvent.ShowFailMessage -> {
                         var dialog = activity?.let {
                             CustomAlertDialog(
                                 it,
@@ -334,13 +361,18 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
     }
 
 
-    private fun clearSubmitText(){
+    private fun clearSubmitText(isHideSeat:Boolean){
         binding.name.text.clear()
         binding.phone.text.clear()
         binding.memo.text.clear()
-        tempSeat=""
-        binding.tvSeat.visibility = View.INVISIBLE
-        binding.seatPicker.visibility = View.INVISIBLE
+        if(isHideSeat) {
+            tempSeat=""
+            binding.tvSeat.visibility = View.INVISIBLE
+            binding.seatPicker.visibility = View.INVISIBLE
+        }else{
+            binding.tvSeat.visibility = View.VISIBLE
+            binding.seatPicker.visibility = View.VISIBLE
+        }
     }
 
     override fun onDestroyView() {

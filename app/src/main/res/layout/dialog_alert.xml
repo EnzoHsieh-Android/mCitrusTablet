@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_centerInParent="true"
     android:layout_gravity="center_horizontal"
     android:padding="@dimen/padding_15"
@@ -69,7 +70,8 @@
         android:clipToPadding="false"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        tools:ignore="MissingPrefix">
 
 <!--        <Button-->
 <!--            android:id="@+id/btnCancel"-->
@@ -88,7 +90,6 @@
 <!--            tools:visibility="visible" />-->
 
         <Button
-
             android:id="@+id/btnOK"
             android:layout_margin="@dimen/dp_10"
             android:layout_width="wrap_content"
@@ -99,6 +100,7 @@
             android:textColor="@color/white"
             android:background="@color/primaryColor"
             android:layout_gravity="center"
+            app:bl_corners_radius="@dimen/dp_10"
             />
 
     </LinearLayout>

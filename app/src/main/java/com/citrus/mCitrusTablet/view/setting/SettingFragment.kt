@@ -113,7 +113,7 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
 
 
     private fun loadFromSharedPref() {
-        val rsno = prefs.rsno
+        val storeId = prefs.storeId
         val server = prefs.severDomain
 
 
@@ -134,25 +134,25 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
             }
         }
 
-        if (rsno == "" || server == "") {
+        if (storeId == "" || server == "") {
             isCancelable = false
         }
-        binding.etRsno!!.setText(rsno)
+        binding.etStoreId!!.setText(storeId)
         binding.etServerIp!!.setText(server)
     }
 
     private fun applyChangesToSharedPref(): Boolean {
 
-        val rsnoText = binding.etRsno!!.text.trim().toString()
+        val storeIdText = binding.etStoreId!!.text.trim().toString()
         val serverText = binding.etServerIp!!.text.trim().toString()
-        if (rsnoText.isEmpty() || serverText.isEmpty()) {
+        if (storeIdText.isEmpty() || serverText.isEmpty()) {
             return false
         }
 
         hasChange =
-            !(rsnoText == prefs.rsno && serverText == prefs.severDomain && chooseLan == prefs.languagePos)
+            !(storeIdText == prefs.storeId && serverText == prefs.severDomain && chooseLan == prefs.languagePos)
 
-        prefs.rsno = rsnoText
+        prefs.storeId = storeIdText
         prefs.severDomain = serverText
         prefs.languagePos = chooseLan
 

@@ -5,7 +5,7 @@ import java.io.Serializable
 
 
 /*output*/
-data class BookingPostData (
+data class PostToGetSeats (
         @SerializedName("RSNO")
         val rsno: String,
 

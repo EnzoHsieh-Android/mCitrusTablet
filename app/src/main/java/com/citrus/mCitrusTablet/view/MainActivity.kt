@@ -7,13 +7,9 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.telecom.Call
-import android.text.style.BackgroundColorSpan
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -31,14 +27,12 @@ import com.citrus.mCitrusTablet.BuildConfig
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.util.*
-import com.citrus.mCitrusTablet.util.Constants.KEY_LANGUAGE
-import com.citrus.mCitrusTablet.util.ui.CustomAlertDialog
+import com.citrus.mCitrusTablet.view.dialog.CustomAlertDialog
 import com.noober.background.BackgroundLibrary
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import java.util.*
-import javax.inject.Inject
 
 
 @AndroidEntryPoint

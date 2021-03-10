@@ -92,13 +92,14 @@
             android:gravity="center">
             <ImageView
                 android:id="@+id/animation_reload"
+                android:scaleType="fitCenter"
                 android:layout_width="@dimen/dp_20"
                 android:layout_height="@dimen/dp_20"
-                android:src="@drawable/ic_baseline_today_24"
-                android:tooltipText="back to today"
+                android:src="@drawable/check"
                 />
 
             <TextView
+                android:layout_marginTop="@dimen/dp_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/today"
@@ -115,16 +116,18 @@
             android:layout_marginStart="@dimen/dp_10"
             android:gravity="center"
             android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/btn_Today"
             app:layout_constraintStart_toEndOf="@id/btn_Today"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="@id/btn_Today">
 
             <ImageView
+                android:scaleType="centerCrop"
                 android:layout_width="@dimen/dp_20"
                 android:layout_height="@dimen/dp_20"
-                android:src="@drawable/ic_baseline_empty_24" />
+                android:src="@drawable/table" />
 
             <TextView
+                android:layout_marginTop="@dimen/dp_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="查找空桌"
@@ -500,7 +503,7 @@
             android:layout_centerInParent="true"
             app:np_selectedTextColor="@color/primaryColor"
             app:np_selectedTextSize="@dimen/sp_13"
-            app:np_textColor="@color/primaryLightColor"
+            app:np_textColor="@color/white"
             app:np_textSize="@dimen/sp_12"
             app:np_dividerColor="@color/gray"
             app:layout_constraintEnd_toEndOf="parent"

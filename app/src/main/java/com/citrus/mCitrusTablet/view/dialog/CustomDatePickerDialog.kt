@@ -1,4 +1,4 @@
-package com.citrus.mCitrusTablet.util.ui
+package com.citrus.mCitrusTablet.view.dialog
 
 
 import android.content.Context
@@ -12,6 +12,8 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog
 import com.citrus.mCitrusTablet.util.Constants.dateFormatSql
 import com.citrus.mCitrusTablet.util.exhaustive
 import com.citrus.mCitrusTablet.util.onSafeClick
+import com.citrus.mCitrusTablet.util.ui.BaseDialogFragment
+import com.citrus.mCitrusTablet.util.ui.TimePickerFragment
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.savvi.rangedatepicker.CalendarPickerView

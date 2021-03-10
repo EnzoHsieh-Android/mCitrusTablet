@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 /*output*/
-data class ChangeStatus( @SerializedName("Reservation") var reservation: Reservation):Serializable
+data class PostToChangeStatus(@SerializedName("Reservation") var reservation: Reservation):Serializable
 data class Reservation(var tkey:String,@SerializedName("Status") var status:String):Serializable
 
 

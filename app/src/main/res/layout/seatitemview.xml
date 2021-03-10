@@ -1,36 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:gravity="center">
 
 
-    <CheckBox
-        android:id="@+id/check_box_completed"
+    <Button
+        android:layout_margin="@dimen/dp_3"
+        android:id="@+id/btn_Seat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:minWidth="0dp"
-        android:minHeight="0dp"
-        android:scaleX="2"
-        android:scaleY="2"
-        />
-
-    <TextView
-        android:paddingStart="@dimen/dp_10"
-        android:id="@+id/tvSeat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/check_box_completed"
-        android:layout_alignBottom="@id/check_box_completed"
-        android:layout_toEndOf="@id/check_box_completed"
         android:ellipsize="end"
-        android:gravity="center_vertical"
+        android:gravity="center"
         android:maxLines="1"
-        android:textSize="@dimen/sp_20"
-        android:textColor="@color/black"
-        tools:text="Example item" />
+        android:textStyle="bold"
+        android:textSize="@dimen/sp_12"
+        android:textColor="@color/white"
+        tools:text="A-001" />
 
 </LinearLayout>

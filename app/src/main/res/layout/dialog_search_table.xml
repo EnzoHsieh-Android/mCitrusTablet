@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/select_day_hint"
         app:layout_constraintStart_toStartOf="@+id/select_day_hint"
-        app:layout_constraintEnd_toEndOf="@+id/select_day_hint"
+        app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center"
         >
 
@@ -107,8 +107,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/choseType"
         app:layout_constraintStart_toStartOf="@+id/select_day_hint"
-        app:layout_constraintEnd_toEndOf="@+id/select_day_hint"
-        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
         >
 
         <TextView
@@ -141,13 +140,16 @@
             android:textStyle="bold" />
 
         <Button
+            android:id="@+id/btn_Search"
+            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_10"
             android:text="Search"
-            app:bl_corners_radius="@dimen/dp_10"/>
+            app:bl_corners_radius="@dimen/dp_10"
+            />
 
     </LinearLayout>
 

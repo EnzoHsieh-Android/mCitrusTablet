@@ -44,10 +44,11 @@
     <string name="time">Time</string>
     <string name="close">close</string>
     <string name="person">Person</string>
-    <string name="res_ok">Reservation Complete</string>
-    <string name="res_ng">Reservation Fail</string>
+    <string name="res_ok">Add Complete</string>
+    <string name="res_ng">Add Fail</string>
     <string name="close_msg">Do you want to close the app?</string>
     <string name="otherSeat">There is no free seat in the selected time period, the adjacent time period available is：</string>
+    <string name="noSeat">There is no free seat in the selected and adjacent time period</string>
     <!-- TODO: Remove or change this placeholder text -->
 
 </resources>

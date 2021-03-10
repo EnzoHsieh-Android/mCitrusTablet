@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 
-data class ReservationUpload (
+data class PostToSetReservation (
         @SerializedName("RSNO")
         val rsno: String,
         @SerializedName("Reservation")

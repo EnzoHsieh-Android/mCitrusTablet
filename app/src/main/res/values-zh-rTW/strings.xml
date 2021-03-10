@@ -17,7 +17,7 @@
     <string name="submit">新增</string>
     <string name="startTime">開始</string>
     <string name="endTime">結束</string>
-    <string name="today">今日</string>
+    <string name="today">回到今日</string>
     <string name="seats">座位數</string>
     <string name="selectDate">選擇日期</string>
     <string name="language">語言</string>
@@ -43,8 +43,9 @@
     <string name="time">時間</string>
     <string name="close">close</string>
     <string name="person">人數</string>
-    <string name="res_ok">預約成功</string>
-    <string name="res_ng">預約失敗</string>
+    <string name="res_ok">新增成功</string>
+    <string name="res_ng">新增失敗</string>
     <string name="close_msg">確定要關閉應用程式嗎?</string>
     <string name="otherSeat">所選時段查無空桌，鄰近可選擇的時段為：</string>
+    <string name="noSeat">所選和相鄰時段皆查無空桌</string>
 </resources>

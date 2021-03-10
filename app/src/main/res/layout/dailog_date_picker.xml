@@ -126,11 +126,12 @@
         android:layout_centerInParent="true"
         app:np_max="10"
         app:np_min="1"
+        app:np_value="1"
         app:np_selectedTextColor="@color/primaryColor"
         app:np_selectedTextSize="@dimen/sp_10"
         app:np_textColor="@color/primaryLightColor"
         app:np_textSize="@dimen/sp_8"
-        app:np_value="1"
+        app:np_dividerColor="@color/gray"
         app:layout_constraintStart_toStartOf="@+id/tvEndTimeTitle"
         app:layout_constraintTop_toBottomOf="@+id/tv_seatCountTitle"/>
 

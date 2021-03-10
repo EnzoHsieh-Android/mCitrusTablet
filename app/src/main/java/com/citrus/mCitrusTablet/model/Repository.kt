@@ -6,6 +6,8 @@ import com.citrus.mCitrusTablet.model.vo.*
 import com.google.gson.Gson
 import com.skydoves.sandwich.suspendOnSuccess
 import kotlinx.coroutines.flow.flow
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,8 +16,8 @@ import javax.inject.Singleton
 class Repository @Inject constructor(private val apiService: ApiService) {
 
 
-    fun changeStatus(url: String, changeStatus: ChangeStatus) = flow {
-        val jsonString = Gson().toJson(changeStatus)
+    fun changeStatus(url: String, postToChangeStatus: PostToChangeStatus) = flow {
+        val jsonString = Gson().toJson(postToChangeStatus)
         apiService.changeStatus(url, jsonString)
             .suspendOnSuccess {
                 data?.let {
@@ -30,10 +32,10 @@ class Repository @Inject constructor(private val apiService: ApiService) {
     fun fetchAllData(
         url: String,
         fetchType: String,
-        fetchAllData: FetchAllData,
+        postToGetAllData: PostToGetAllData,
         onCusCount: (String) -> Unit
     ) = flow {
-        val jsonString = Gson().toJson(fetchAllData)
+        val jsonString = Gson().toJson(postToGetAllData)
         apiService.getAllData(url, jsonString)
             .suspendOnSuccess {
                 data?.let {
@@ -51,25 +53,34 @@ class Repository @Inject constructor(private val apiService: ApiService) {
     }
 
 
-    fun fetchReservationFloor(url: String, bookingPostData: BookingPostData, onEmpty: () -> Unit) =
+
+    fun fetchReservationFloor(url: String, postToGetSeats: PostToGetSeats, onEmpty: () -> Unit) =
         flow {
-            val jsonString = Gson().toJson(bookingPostData)
+            val jsonString = Gson().toJson(postToGetSeats)
             apiService.getReservationFloor(url, jsonString)
                 .suspendOnSuccess {
                     if (data?.status == 0) {
                         onEmpty()
-                    }
-                    data?.let { searchSeat ->
-                        searchSeat.data?.let { list ->
-                            emit(list[0].floor.filter { it.isLock != "Y" })
+                    } else {
+                        data?.let { searchSeat ->
+                            emit(searchSeat.data)
                         }
                     }
                 }
         }
 
 
-    fun uploadReservationData(url: String, reservationUpload: ReservationUpload) = flow {
-        val jsonString = Gson().toJson(reservationUpload)
+    fun fetchStoreInfo(url: String, storeId: String) = flow {
+        apiService.getStoreInfo(url, storeId).suspendOnSuccess {
+            if (data?.status != 0) {
+                emit(data!!.data)
+            }
+        }
+    }
+
+
+    fun uploadReservationData(url: String, postToSetReservation: PostToSetReservation) = flow {
+        val jsonString = Gson().toJson(postToSetReservation)
         apiService.setReservationData(url, jsonString)
             .suspendOnSuccess {
                 data?.let {
@@ -77,6 +88,38 @@ class Repository @Inject constructor(private val apiService: ApiService) {
                 }
             }
     }
+
+    fun sendSMS(url: String, project: String, phone: String, body: String) = flow {
+        apiService.sendSMS(url, project, phone, body)
+            .suspendOnSuccess {
+                data?.let {
+                    if (it.status == 1) {
+                        emit(1)
+                    }
+                }
+            }
+    }
+
+     fun fetchReservationTime(url: String, PostData:String) = flow {
+        Log.e("fetchOrdersDeliverDate",PostData)
+        apiService.getReservationTime(url,PostData)
+            .suspendOnSuccess {
+            if(data?.status != 0){
+                emit(data!!.data.filter { it.num != 0 })
+            }
+        }
+    }
+
+
+    fun setWaitData(url: String , postToSetWaiting: PostToSetWaiting) = flow {
+        val jsonString = Gson().toJson(postToSetWaiting)
+        apiService.setWaitData(url,jsonString).suspendOnSuccess {
+            if(data?.status != 0){
+                emit(data!!)
+            }
+        }
+    }
+
 
 
 }

@@ -1,35 +1,59 @@
 package com.citrus.mCitrusTablet.view.wait
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.databinding.FragmentWaitBinding
-import com.citrus.mCitrusTablet.model.vo.Wait
-import com.citrus.mCitrusTablet.util.ui.CustomAlertDialog
+import com.citrus.mCitrusTablet.di.prefs
+import com.citrus.mCitrusTablet.model.vo.*
+import com.citrus.mCitrusTablet.view.dialog.CustomAlertDialog
 import com.citrus.mCitrusTablet.view.adapter.WaitAdapter
+import com.citrus.mCitrusTablet.view.reservation.SearchViewStatus
+import com.citrus.mCitrusTablet.view.reservation.TasksEvent
+import com.citrus.util.onQueryTextChanged
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_reservation.*
+import kotlinx.coroutines.flow.collect
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
 
 @AndroidEntryPoint
-class WaitFragment : Fragment(R.layout.fragment_wait),WaitAdapter.OnItemClickListener {
+class WaitFragment : Fragment(R.layout.fragment_wait) {
     private val waitViewModel: WaitViewModel by viewModels()
     private var _binding: FragmentWaitBinding? = null
     private val binding get() = _binding!!
+    private var sortOrderByTime:SortOrder = SortOrder.BY_TIME_LESS
+    private var sortOrderByCount:SortOrder = SortOrder.BY_LESS
+
+
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentWaitBinding.bind(view)
-        val waitAdapter = activity?.let { WaitAdapter(it,this) }
+        var waitAdapter = WaitAdapter(requireActivity(),onItemClick = {
+
+
+        },onButtonClick = {
+            waitViewModel.changeStatus(it)
+        })
 
         binding.apply {
             date2Day(SimpleDateFormat("yyyy/MM/dd").format(Date()))
 
+            reservationRv.apply {
+                adapter = waitAdapter
+                layoutManager = LinearLayoutManager(requireContext())
+                setHasFixedSize(true)
+                waitAdapter.update(mutableListOf())
+            }
 
             btReservation.setOnSlideCompleteListener {
                     var dialog = activity?.let {
@@ -42,10 +66,74 @@ class WaitFragment : Fragment(R.layout.fragment_wait),WaitAdapter.OnItemClickLis
                     }
                     dialog!!.show()
             }
+
+
+
+            sortByCount.setOnClickListener {
+                sortOrderByCount = if(sortOrderByCount == SortOrder.BY_LESS){
+                    SortOrder.BY_MORE
+                }else{
+                    SortOrder.BY_LESS
+                }
+                waitViewModel.sortList(sortOrderByCount)
+            }
+
+            sortByTime.setOnClickListener {
+                sortOrderByTime = if(sortOrderByTime == SortOrder.BY_TIME_LESS){
+                    SortOrder.BY_TIME_MORE
+                }else{
+                    SortOrder.BY_TIME_LESS
+                }
+                waitViewModel.sortList(sortOrderByTime)
+            }
+
+            searchView.onQueryTextChanged {
+                if (it.isEmpty()) {
+                    waitViewModel.searchForStr(SearchViewStatus.IsEmpty)
+                } else {
+                    waitViewModel.searchForStr(SearchViewStatus.NeedChange(it))
+                }
+            }
+
+
+            btReservation.setOnSlideCompleteListener {
+                var cusName = binding.name.text.toString().trim()
+                var cusPhone = binding.phone.text.toString().trim()
+                var cusMemo = binding.memo.text.toString().trim()
+                var seat = binding.seat.text.toString().trim()
+
+                if (cusName.isEmpty() || cusPhone.isEmpty()|| seat.isEmpty() ) {
+                    var dialog = activity?.let {
+                        CustomAlertDialog(
+                            it,
+                            getString(R.string.submitErrorMsg),
+                            "",
+                            R.drawable.ic_baseline_error_24
+                        )
+                    }
+                    dialog!!.show()
+                }else{
+                    var data = PostToSetWaiting(
+                      WaitGuestData(prefs.storeId.toInt(),seat.toInt(),cusName,cusPhone,cusMemo,"A")
+                    )
+
+
+                    waitViewModel.uploadWait(data)
+                }
+            }
+
+
         }
 
         waitViewModel.allData.observe(viewLifecycleOwner,{ waitList ->
-            waitAdapter?.submitList(waitList.sortedBy { it.reservationTime})
+            if(waitList.isNotEmpty()) {
+                waitAdapter?.update(waitList)
+                binding.reservationRv.visibility = View.VISIBLE
+                binding.animationResultNotFound.visibility = View.GONE
+            }else{
+                binding.reservationRv.visibility = View.GONE
+                binding.animationResultNotFound.visibility = View.VISIBLE
+            }
         })
 
 
@@ -54,6 +142,38 @@ class WaitFragment : Fragment(R.layout.fragment_wait),WaitAdapter.OnItemClickLis
         })
 
 
+
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            waitViewModel.tasksEvent.collect { event ->
+                when (event) {
+                    is TasksEvent.ShowSuccessMessage -> {
+                        clearSubmitText(true)
+                        var dialog = activity?.let {
+                            CustomAlertDialog(
+                                it,
+                                resources.getString(R.string.res_ok),
+                                "",
+                                R.drawable.ic_check
+                            )
+                        }
+                        dialog!!.show()
+                    }
+                    is TasksEvent.ShowFailMessage -> {
+                        var dialog = activity?.let {
+                            CustomAlertDialog(
+                                it,
+                                resources.getString(R.string.res_ng),
+                                "",
+                                R.drawable.ic_baseline_clear_24
+                            )
+                        }
+                        dialog!!.show()
+                    }
+                }
+            }
+        }
+
     }
 
     override fun onDestroyView() {
@@ -61,8 +181,11 @@ class WaitFragment : Fragment(R.layout.fragment_wait),WaitAdapter.OnItemClickLis
         _binding = null
     }
 
-    override fun onItemClick(wait: Wait) {
-
+    private fun clearSubmitText(isHideSeat:Boolean){
+        binding.name.text.clear()
+        binding.phone.text.clear()
+        binding.memo.text.clear()
+        binding.seat.text.clear()
     }
 
     @Throws(ParseException::class)

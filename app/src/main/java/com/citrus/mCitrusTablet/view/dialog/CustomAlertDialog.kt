@@ -1,9 +1,10 @@
-package com.citrus.mCitrusTablet.util.ui
+package com.citrus.mCitrusTablet.view.dialog
 
 import android.content.Context
 import android.view.View
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.util.onSafeClick
+import com.citrus.mCitrusTablet.util.ui.BaseAlertDialog
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import kotlinx.android.synthetic.main.dialog_alert.*

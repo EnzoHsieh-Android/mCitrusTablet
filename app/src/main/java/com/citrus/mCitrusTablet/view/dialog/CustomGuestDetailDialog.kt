@@ -1,10 +1,11 @@
-package com.citrus.mCitrusTablet.util.ui
+package com.citrus.mCitrusTablet.view.dialog
 
 import android.content.Context
 import android.graphics.Point
 import android.view.Gravity
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.model.vo.ReservationGuests
+import com.citrus.mCitrusTablet.util.ui.BaseDialogFragment
 import kotlinx.android.synthetic.main.dialog_guest_detail.*
 import java.text.SimpleDateFormat
 

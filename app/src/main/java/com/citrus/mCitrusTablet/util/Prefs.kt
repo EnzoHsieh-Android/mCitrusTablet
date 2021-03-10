@@ -12,6 +12,13 @@ class Prefs(private val context: Context) {
         get() = prefs.getInt(Constants.KEY_LANGUAGE, -1)
         set(value) = prefs.edit().putInt(Constants.KEY_LANGUAGE, value).apply()
 
+    var storeId: String
+        get() = prefs.getString(Constants.KEY_STORE_ID, "")?: ""
+        set(value) = prefs.edit().putString(Constants.KEY_STORE_ID, value).apply()
+
+    var storeName: String
+        get() = prefs.getString(Constants.KEY_STORE_NAME, "")?: ""
+        set(value) = prefs.edit().putString(Constants.KEY_STORE_NAME, value).apply()
 
     var rsno:String
         get() = prefs.getString(Constants.KEY_RSNO, "")?: ""
@@ -20,5 +27,8 @@ class Prefs(private val context: Context) {
     var severDomain:String
         get() = prefs.getString(Constants.KEY_SERVER_DOMAIN, "")?: ""
         set(value) = prefs.edit().putString(Constants.KEY_SERVER_DOMAIN, value).apply()
+
+
+
 
 }
