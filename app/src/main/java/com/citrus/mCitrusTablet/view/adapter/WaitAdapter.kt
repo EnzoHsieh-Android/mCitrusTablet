@@ -60,16 +60,18 @@ class WaitAdapter(@ApplicationContext val context: Context,val onItemClick: (Wai
                     tvCheck.visibility = View.VISIBLE
                 }
 
-                var hasMemo = (wait.memo != null && wait.memo != "")
+                var hasDelivery = (wait.orderNo != null && wait.orderNo != "")
 
-//                if(hasMemo){
-//                    imgMemo.visibility = View.VISIBLE
-//                    root.setOnClickListener {
-//                        onItemClick(wait)
-//                    }
-//                }else{
-//                    imgMemo.visibility = View.INVISIBLE
-//                }
+
+                if(hasDelivery){
+                    imgDelivery.visibility = View.VISIBLE
+                    root.setOnClickListener {
+                        onItemClick(wait)
+                    }
+                }else{
+                    imgDelivery.visibility = View.INVISIBLE
+                }
+
 
                 if(wait.status == "A"){
                     btnCheck.visibility = View.VISIBLE

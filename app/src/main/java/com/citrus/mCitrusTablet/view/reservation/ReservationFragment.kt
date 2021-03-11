@@ -90,8 +90,8 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                     CustomSearchTableDialog(
                         requireActivity(),
                         reservationFragmentViewModel
-                    ) { jsonStr ->
-
+                    ) { time,cusCount,seat ->
+                        searchSeat(cusCount,time,seat, seat=="0")
                     }.show(it.supportFragmentManager, "CustomSearchTableDialog")
                 }
             }
@@ -122,26 +122,8 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                         mode,
                         reservationFragmentViewModel.dateRange.value?.get(0) ?: "",
                         reservationFragmentViewModel.dateRange.value?.get(1) ?: ""
-                    ) { seat, startTime, endTime, _ ->
-                        clearSubmitText(true)
-                        reservationFragmentViewModel.setDateArrayReservation(
-                            arrayOf(
-                                startTime,
-                                endTime
-                            )
-                        )
-                        tempTime = startTime
-                        var date = startTime.split(" ")
-                        reservationDate.text = date[0]
-                        reservationTime.text = date[1] + "  " + seat + getString(R.string.people)
-                        tempCount = seat.toInt()
-                        syncChangeDate(date[0])
-
-                        showInformation.visibility = View.VISIBLE
-                        hintBlock.visibility = View.GONE
-
-
-                        reservationFragmentViewModel.setSearchVal(prefs.rsno, startTime, seat.toInt())
+                    ) { cusCount, startTime, _, _ ->
+                        searchSeat(cusCount,startTime,"",true)
                     }.show(it.supportFragmentManager, "CustomDatePickerDialog")
                 }
             }
@@ -236,17 +218,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                     requireActivity(),
                     datumList,
                     onBtnClick = { seat,date ->
-                        var date = date.split(" ")
-                        reservationDate.text = date[0]
-                        reservationTime.text = date[1] + "  " + tempCount + getString(R.string.people)
-
-                        seatData.clear()
-                        seatData.add(seat)
-                        tempSeat = seatData[0]
-                        binding.seatPicker.maxValue = seatData.size
-                        binding.seatPicker.displayedValues = seatData.toTypedArray()
-                        clearSubmitText(false)
-
+                        searchSeat(tempCount.toString(),date.replace("-","/"),seat,false)
                     }
                 ).show(it.supportFragmentManager, "CustomOtherSeatDialog")
             }
@@ -325,6 +297,35 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
         }
     }
 
+    private fun searchSeat(cusCount:String,dateStr:String,seat:String,isSearch:Boolean){
+        clearSubmitText(isSearch)
+        reservationFragmentViewModel.setDateArrayReservation(
+            arrayOf(
+                dateStr,
+                dateStr
+            )
+        )
+        tempTime = dateStr
+        var date = dateStr.split(" ")
+        reservationDate.text = date[0]
+        reservationTime.text = date[1] + "  " + cusCount + getString(R.string.people)
+        tempCount = cusCount.toInt()
+        syncChangeDate(date[0])
+
+        showInformation.visibility = View.VISIBLE
+        hintBlock.visibility = View.GONE
+
+
+        if(isSearch) {
+            reservationFragmentViewModel.setSearchVal(prefs.rsno, dateStr, cusCount.toInt())
+        }else{
+            seatData.clear()
+            seatData.add(seat)
+            tempSeat = seatData[0]
+            binding.seatPicker.maxValue = seatData.size
+            binding.seatPicker.displayedValues = seatData.toTypedArray()
+        }
+    }
 
     private fun syncChangeDate(dateString: String) {
         reservationFragmentViewModel.setDateArray(arrayOf(dateString, dateString))

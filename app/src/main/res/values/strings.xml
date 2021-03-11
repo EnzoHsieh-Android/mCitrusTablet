@@ -49,6 +49,8 @@
     <string name="close_msg">Do you want to close the app?</string>
     <string name="otherSeat">There is no free seat in the selected time period, the adjacent time period available is：</string>
     <string name="noSeat">There is no free seat in the selected and adjacent time period</string>
+    <string name="noTime">No results, please re-enter the query conditions</string>
+    <string name="pick_time_hint">Choose a time to make an appointment</string>
     <!-- TODO: Remove or change this placeholder text -->
 
 </resources>

@@ -1,6 +1,7 @@
 package com.citrus.mCitrusTablet.view.reservation
 
 
+import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -37,8 +38,8 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     val seatData: SingleLiveEvent<List<Floor>>
         get() = _seatData
 
-    private val _orderDateDatum = MutableLiveData<List<OrderDateDatum>>()
-    val orderDateDatum: MutableLiveData<List<OrderDateDatum>>
+    private val _orderDateDatum = SingleLiveEvent<List<OrderDateDatum>>()
+    val orderDateDatum: SingleLiveEvent<List<OrderDateDatum>>
         get() = _orderDateDatum
 
     private val _datumData = SingleLiveEvent<List<Datum>>()
@@ -288,7 +289,9 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
 
 
     private suspend fun fetchReservationTimeData(postData: String) =
-        model.fetchReservationTime(serverDomain +Constants.GET_RESERVATION_TIME,postData).collect {
+        model.fetchReservationTime(serverDomain +Constants.GET_RESERVATION_TIME,postData,onEmpty = {
+            _orderDateDatum.postValue(mutableListOf())
+        }).collect {
                 _orderDateDatum.postValue(it)
         }
 

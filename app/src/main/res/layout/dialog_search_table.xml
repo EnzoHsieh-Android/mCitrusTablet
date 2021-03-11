@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="MissingPrefix">
 
@@ -102,7 +102,7 @@
 
 
     <LinearLayout
-        android:id="@+id/searchBtn"
+        android:id="@+id/searchBlock"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/choseType"
@@ -121,25 +121,40 @@
         <EditText
             android:id="@+id/et_people"
             android:gravity="center"
-            android:layout_margin="@dimen/dp_5"
-            android:layout_width="@dimen/dp_60"
+            android:layout_marginStart="@dimen/dp_5"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_width="@dimen/dp_30"
             android:layout_height="wrap_content"
             android:hint="人數"
             android:textSize="@dimen/sp_12"
             android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/et_seat"
-            android:gravity="center"
-            android:visibility="gone"
-            android:layout_margin="@dimen/dp_5"
-            android:layout_width="@dimen/dp_60"
-            android:layout_height="wrap_content"
-            android:hint="座位"
-            android:textSize="@dimen/sp_12"
-            android:textStyle="bold" />
+            <EditText
+                android:layout_marginStart="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_5"
+                android:id="@+id/et_floor"
+                android:gravity="center"
+                android:visibility="invisible"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="wrap_content"
+                android:hint="樓層"
+                android:textSize="@dimen/sp_12"
+                android:textStyle="bold" />
+
+            <EditText
+                android:layout_marginTop="@dimen/dp_5"
+                android:id="@+id/et_room"
+                android:gravity="center"
+                android:visibility="gone"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="wrap_content"
+                android:hint="座位"
+                android:textSize="@dimen/sp_12"
+                android:textStyle="bold" />
+
 
         <Button
+            android:layout_margin="@dimen/dp_5"
             android:id="@+id/btn_Search"
             android:layout_gravity="center"
             android:layout_width="wrap_content"
@@ -154,13 +169,31 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:visibility="gone"
+        android:id="@+id/searchTimeRv"
         android:layout_margin="@dimen/dp_5"
-        app:layout_constraintTop_toBottomOf="@+id/searchBtn"
+        app:layout_constraintTop_toBottomOf="@+id/searchBlock"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:visibility="visible"
+        android:id="@+id/animation_resultNotFound"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:scaleType="fitCenter"
+        android:layout_margin="@dimen/dp_30"
+        app:layout_constraintTop_toBottomOf="@+id/searchBlock"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="search.json"
+        app:lottie_loop="true"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

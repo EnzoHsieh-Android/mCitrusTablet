@@ -31,6 +31,7 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
     private val binding get() = _binding!!
     private var sortOrderByTime:SortOrder = SortOrder.BY_TIME_LESS
     private var sortOrderByCount:SortOrder = SortOrder.BY_LESS
+    private var isHideCheck = false
 
 
 
@@ -71,8 +72,10 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
 
             sortByCount.setOnClickListener {
                 sortOrderByCount = if(sortOrderByCount == SortOrder.BY_LESS){
+                    groupSortStatus.setImageDrawable(resources.getDrawable(R.drawable.up))
                     SortOrder.BY_MORE
                 }else{
+                    groupSortStatus.setImageDrawable(resources.getDrawable(R.drawable.down))
                     SortOrder.BY_LESS
                 }
                 waitViewModel.sortList(sortOrderByCount)
@@ -80,11 +83,24 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
 
             sortByTime.setOnClickListener {
                 sortOrderByTime = if(sortOrderByTime == SortOrder.BY_TIME_LESS){
+                    timeSortStatus.setImageDrawable(resources.getDrawable(R.drawable.up))
                     SortOrder.BY_TIME_MORE
                 }else{
+                    timeSortStatus.setImageDrawable(resources.getDrawable(R.drawable.down))
                     SortOrder.BY_TIME_LESS
                 }
                 waitViewModel.sortList(sortOrderByTime)
+            }
+
+
+            hideCheck.setOnClickListener {
+                if(isHideCheck){
+                    hideCheck.setImageDrawable(resources.getDrawable(R.drawable.blind))
+                }else{
+                    hideCheck.setImageDrawable(resources.getDrawable(R.drawable.show))
+                }
+                waitViewModel.hideChecked(isHideCheck)
+                isHideCheck = !isHideCheck
             }
 
             searchView.onQueryTextChanged {
@@ -99,7 +115,6 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
             btReservation.setOnSlideCompleteListener {
                 var cusName = binding.name.text.toString().trim()
                 var cusPhone = binding.phone.text.toString().trim()
-                var cusMemo = binding.memo.text.toString().trim()
                 var seat = binding.seat.text.toString().trim()
 
                 if (cusName.isEmpty() || cusPhone.isEmpty()|| seat.isEmpty() ) {
@@ -114,7 +129,7 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
                     dialog!!.show()
                 }else{
                     var data = PostToSetWaiting(
-                      WaitGuestData(prefs.storeId.toInt(),seat.toInt(),cusName,cusPhone,cusMemo,"A")
+                      WaitGuestData(prefs.storeId.toInt(),seat.toInt(),cusName,cusPhone,"","A")
                     )
 
 
@@ -134,6 +149,7 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
                 binding.reservationRv.visibility = View.GONE
                 binding.animationResultNotFound.visibility = View.VISIBLE
             }
+            binding.reservationRv.smoothScrollToPosition(0)
         })
 
 
@@ -184,7 +200,6 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
     private fun clearSubmitText(isHideSeat:Boolean){
         binding.name.text.clear()
         binding.phone.text.clear()
-        binding.memo.text.clear()
         binding.seat.text.clear()
     }
 

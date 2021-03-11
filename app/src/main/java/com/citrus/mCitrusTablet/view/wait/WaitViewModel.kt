@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 enum class SortOrder { BY_LESS, BY_TIME_MORE, BY_MORE,BY_TIME_LESS }
+enum class HideCheck { HIDE_TRUE, HIDE_FALSE}
 
 class WaitViewModel @ViewModelInject constructor(private val model: Repository):
     ViewModel(){
@@ -32,6 +33,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository):
         "https://" + prefs.severDomain
     var storageList:MutableList<Wait> = mutableListOf()
     var sortOrder:SortOrder = SortOrder.BY_TIME_LESS
+    var hideCheck:HideCheck = HideCheck.HIDE_FALSE
     private var delayTime = Constants.DEFAULT_TIME
     private val job = SupervisorJob()
 
@@ -48,8 +50,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository):
 
     private var scope = viewModelScope.launch(Dispatchers.IO + job) {
         while (true) {
-            fetchAllData(Constants.defaultTimeStr, Constants.defaultTimeStr)
-
+            fetchAllData()
             delay(delayTime * 60 * 1000)
         }
     }
@@ -58,8 +59,8 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository):
         scope.cancel()
     }
 
-    private suspend fun fetchAllData(startTime: String, endTime: String) {
-        var dataOutput = PostToGetAllData(prefs.rsno, startTime, endTime)
+    private suspend fun fetchAllData() {
+        var dataOutput = PostToGetAllData(prefs.rsno, Constants.defaultTimeStr, Constants.defaultTimeStr)
         model.fetchAllData(serverDomain + Constants.GET_ALL_DATA,"wait",dataOutput, onCusCount = { cusCount ->
             _cusCount.postValue(cusCount)
         }).collect { list ->
@@ -86,10 +87,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository):
 
         when(status){
             1 -> {
-                var index = storageList.indexOf(wait)
-                storageList[index].status = "C"
-                Log.e("test", storageList[index].status)
-                _allData.postValue(storageList)
+               fetchAllData()
             }
             0 -> {
 
@@ -107,10 +105,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository):
     private suspend fun uploadWaitData(dataPostToSet: PostToSetWaiting) =
     model.setWaitData(serverDomain + Constants.SET_WAIT , dataPostToSet).collect {
         if(it.status != 0){
-            var date = SimpleDateFormat(
-                "yyyy/MM/dd"
-            ).format(Date())
-            fetchAllData(date, date)
+            fetchAllData()
             tasksEventChannel.send(TasksEvent.ShowSuccessMessage)
         }else{
             tasksEventChannel.send(TasksEvent.ShowFailMessage)
@@ -139,8 +134,8 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository):
         sortStatus: SortOrder,
         originalList: List<Wait>
     ): MutableList<Wait> {
-        return when (sortStatus) {
 
+        return when (sortStatus) {
             SortOrder.BY_LESS -> originalList.sortedWith { first, second ->
                 when {
                     first.custNum == second.custNum -> {
@@ -211,6 +206,22 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository):
     fun sortList(sort: SortOrder) {
         sortOrder = sort
         _allData.postValue(getSortRequirement(sortOrder,storageList))
+    }
+
+    fun hideChecked(isHide:Boolean) {
+        hideCheck = if(isHide){
+            HideCheck.HIDE_TRUE
+        }else{
+            HideCheck.HIDE_FALSE
+        }
+
+
+        if(hideCheck != HideCheck.HIDE_TRUE){
+            _allData.postValue(getSortRequirement(sortOrder,storageList.filter { it.status == "A" }))
+        }else{
+            _allData.postValue(getSortRequirement(sortOrder,storageList))
+        }
+
     }
 
 

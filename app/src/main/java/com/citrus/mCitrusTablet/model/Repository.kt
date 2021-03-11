@@ -57,6 +57,7 @@ class Repository @Inject constructor(private val apiService: ApiService) {
     fun fetchReservationFloor(url: String, postToGetSeats: PostToGetSeats, onEmpty: () -> Unit) =
         flow {
             val jsonString = Gson().toJson(postToGetSeats)
+            Log.e("postValue",jsonString)
             apiService.getReservationFloor(url, jsonString)
                 .suspendOnSuccess {
                     if (data?.status == 0) {
@@ -100,12 +101,13 @@ class Repository @Inject constructor(private val apiService: ApiService) {
             }
     }
 
-     fun fetchReservationTime(url: String, PostData:String) = flow {
-        Log.e("fetchOrdersDeliverDate",PostData)
+     fun fetchReservationTime(url: String, PostData:String,onEmpty:() ->Unit) = flow {
         apiService.getReservationTime(url,PostData)
             .suspendOnSuccess {
             if(data?.status != 0){
                 emit(data!!.data.filter { it.num != 0 })
+            }else{
+                onEmpty()
             }
         }
     }

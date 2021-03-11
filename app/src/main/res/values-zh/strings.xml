@@ -48,4 +48,6 @@
     <string name="close_msg">確定要關閉應用程式嗎?</string>
     <string name="otherSeat">所選時段查無空桌，鄰近可選擇的時段為：</string>
     <string name="noSeat">所選和相鄰時段皆查無空桌</string>
+    <string name="noTime">沒有搜尋結果,請重新輸入查詢條件</string>
+    <string name="pick_time_hint">選擇時段進行預約</string>
 </resources>
