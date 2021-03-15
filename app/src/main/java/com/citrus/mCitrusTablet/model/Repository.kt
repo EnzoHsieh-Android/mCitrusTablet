@@ -34,7 +34,6 @@ class Repository @Inject constructor(private val apiService: ApiService) {
         postToGetAllData: PostToGetAllData,
         onCusCount: (String) -> Unit
     ) = flow {
-
         val jsonString = Gson().toJson(postToGetAllData)
         apiService.getAllData(url, jsonString)
             .suspendOnSuccess {

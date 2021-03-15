@@ -35,25 +35,30 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
     private var sortOrderByTime: SortOrder = SortOrder.BY_TIME_LESS
     private var sortOrderByCount: SortOrder = SortOrder.BY_LESS
     private var isHideCheck = false
+    private val waitAdapter by lazy{ WaitAdapter(requireActivity(),
+        onItemClick = { wait ->
+            activity?.let {
+                CustomOrderDeliveryDialog(
+                    wait,
+                    waitViewModel
+                ).show(it.supportFragmentManager, "CustomOrderDeliveryDialog")
+            }
+        }, onButtonClick = {
+            waitViewModel.changeStatus(it, Constants.CHECK)
+        }, onNoticeClick = {
+            waitViewModel.sendNotice(it)
+        }) }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentWaitBinding.bind(view)
-        var waitAdapter = WaitAdapter(requireActivity(),
-            onItemClick = { wait ->
-                activity?.let {
-                    CustomOrderDeliveryDialog(
-                        wait,
-                        waitViewModel
-                    ).show(it.supportFragmentManager, "CustomOrderDeliveryDialog")
-                }
-            }, onButtonClick = {
-                waitViewModel.changeStatus(it, Constants.CHECK)
-            }, onNoticeClick = {
-                waitViewModel.sendNotice(it)
-            })
+        initView()
+        initObserver()
+    }
 
+
+    private fun initView() {
         binding.apply {
             date2Day(SimpleDateFormat("yyyy/MM/dd").format(Date()))
 
@@ -177,10 +182,10 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
                     waitViewModel.uploadWait(data)
                 }
             }
-
-
         }
+    }
 
+    private fun initObserver() {
         waitViewModel.allData.observe(viewLifecycleOwner, { waitList ->
             if (waitList.isNotEmpty()) {
                 waitAdapter?.update(waitList)
@@ -233,8 +238,8 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
                 }
             }
         }
-
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

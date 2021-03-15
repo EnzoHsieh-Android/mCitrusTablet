@@ -1,7 +1,6 @@
 package com.citrus.mCitrusTablet.view.reservation
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -54,7 +53,11 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentReservationBinding.bind(view)
+        initView()
+        initObserver()
+    }
 
+    private fun initView() {
         binding.apply {
             date2Day(
                 reservationFragmentViewModel.dateRange.value?.get(0) ?: SimpleDateFormat(
@@ -219,13 +222,14 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                             seat[1]
                         )
                     )
-
                     reservationFragmentViewModel.uploadReservation(data)
                 }
             }
         }
+    }
 
 
+    private fun initObserver() {
         reservationFragmentViewModel.isFirst.observe(viewLifecycleOwner, {
             reservationFragmentViewModel.reload()
         })
