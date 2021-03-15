@@ -12,7 +12,7 @@ import com.citrus.mCitrusTablet.util.AsyncDiffUtil
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.text.SimpleDateFormat
 
-class WaitAdapter(@ApplicationContext val context: Context,val onItemClick: (Wait) -> Unit,val onButtonClick: (Wait) -> Unit) :RecyclerView.Adapter<WaitAdapter.TasksViewHolder>() {
+class WaitAdapter(@ApplicationContext val context: Context,val onItemClick: (Wait) -> Unit,val onButtonClick: (Wait) -> Unit,val onNoticeClick: (Wait) -> Unit) :RecyclerView.Adapter<WaitAdapter.TasksViewHolder>() {
     private val asyncDiffUtil: AsyncDiffUtil<Wait> = AsyncDiffUtil(this, object : DiffUtil.ItemCallback<Wait>() {
         override fun areItemsTheSame(oldItem: Wait, newItem: Wait) = oldItem.isSame(newItem)
 
@@ -29,8 +29,12 @@ class WaitAdapter(@ApplicationContext val context: Context,val onItemClick: (Wai
     override fun onBindViewHolder(holder: TasksViewHolder, position: Int) {
         if (position != RecyclerView.NO_POSITION) {
             val item = asyncDiffUtil.current()[position]
-            holder.bind(item,asyncDiffUtil.current())
+            holder.bind(item)
         }
+    }
+
+    fun getCurrentList(): List<Wait> {
+        return asyncDiffUtil.current()
     }
 
     fun update(items: List<Wait>) {
@@ -40,7 +44,7 @@ class WaitAdapter(@ApplicationContext val context: Context,val onItemClick: (Wai
     inner class TasksViewHolder(private val binding: RvWaitItemBinding) : RecyclerView.ViewHolder(
         binding.root
     ) {
-        fun bind(wait: Wait, currentList: List<Wait>) {
+        fun bind(wait: Wait) {
             binding.apply {
                 name.text = wait.mName
                 phone.text = wait.phone

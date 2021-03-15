@@ -71,17 +71,17 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment!!.navController
 
 
-        if(prefs.storeId == ""|| prefs.severDomain == ""){
+        if (prefs.storeId == "" || prefs.severDomain == "") {
             navController.navigate(R.id.settingFragment)
         }
 
-        reservation_block.setOnClickListener{
+        reservation_block.setOnClickListener {
             wait_block.setBackgroundResource(0)
             reservation_block.setBackgroundResource(R.drawable.bg_menu_select)
             navigateToTarget(R.id.reservationFragment)
         }
 
-        wait_block.setOnClickListener{
+        wait_block.setOnClickListener {
             reservation_block.setBackgroundResource(0)
             wait_block.setBackgroundResource(R.drawable.bg_menu_select)
             navigateToTarget(R.id.waitFragment)
@@ -109,8 +109,8 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun navigateToTarget(id: Int){
-        if (!findNavController(R.id.navHost).popBackStack(id, false)){
+    private fun navigateToTarget(id: Int) {
+        if (!findNavController(R.id.navHost).popBackStack(id, false)) {
             findNavController(R.id.navHost).navigate(id)
         }
     }
@@ -222,8 +222,10 @@ class MainActivity : AppCompatActivity() {
         etCode.requestFocus()
         //        etCode.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
         val dialog = SweetAlertDialog(this)
-        Objects.requireNonNull(dialog.window)?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        dialog.setTitleText(getString(R.string.enter_version_number)).setCustomView(item).hideConfirmButton().show()
+        Objects.requireNonNull(dialog.window)
+            ?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.setTitleText(getString(R.string.enter_version_number)).setCustomView(item)
+            .hideConfirmButton().show()
         btnOk.setOnClickListener {
             if (etCode.text.toString() != "") {
                 downloadApk(etCode.text.toString())
@@ -250,8 +252,10 @@ class MainActivity : AppCompatActivity() {
             if (o != null) {
                 showAlertDialog(this, getString(R.string.error_occurred), o.toString())
             } else {
-                Toast.makeText(this, getString(R.string.download_completed), Toast.LENGTH_SHORT).show()
-                val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                Toast.makeText(this, getString(R.string.download_completed), Toast.LENGTH_SHORT)
+                    .show()
+                val path =
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
                 val file = File(path, "mCitrusTablet.apk")
                 val apkUri = FileProvider.getUriForFile(
                     this@MainActivity,
@@ -264,9 +268,14 @@ class MainActivity : AppCompatActivity() {
                 startActivity(install)
             }
         }
-        mProgressDialog.setButton(Dialog.BUTTON_NEGATIVE, getString(R.string.cancel)) { dialog: DialogInterface?, which: Int -> downloadTask.cancel(
-            true
-        ) }
+        mProgressDialog.setButton(
+            Dialog.BUTTON_NEGATIVE,
+            getString(R.string.cancel)
+        ) { dialog: DialogInterface?, which: Int ->
+            downloadTask.cancel(
+                true
+            )
+        }
         downloadTask.execute("http://cms.citrus.tw/apk/mCitrusTablet_signed_v$name.apk")
     }
 
@@ -286,9 +295,9 @@ class MainActivity : AppCompatActivity() {
             true
         }
         sweetAlertDialog.setTitleText(title)
-                .setCustomView(item)
-                .hideConfirmButton()
-                .show()
+            .setCustomView(item)
+            .hideConfirmButton()
+            .show()
         btnSubmit.setOnClickListener { sweetAlertDialog.dismissWithAnimation() }
     }
 

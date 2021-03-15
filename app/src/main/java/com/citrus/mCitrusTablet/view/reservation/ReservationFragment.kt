@@ -7,11 +7,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.databinding.FragmentReservationBinding
 import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.model.vo.ReservationClass
 import com.citrus.mCitrusTablet.model.vo.PostToSetReservation
+import com.citrus.mCitrusTablet.model.vo.ReservationGuests
+import com.citrus.mCitrusTablet.util.Constants
 import com.citrus.mCitrusTablet.util.Constants.defaultTimeStr
 import com.citrus.mCitrusTablet.util.onSafeClick
 import com.citrus.mCitrusTablet.view.adapter.ReservationAdapter
@@ -41,11 +45,10 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
     private var tempCount: Int = 0
     private var isHideCheck = false
 
+    private var forDeleteData = mutableListOf<Any>()
     private var seatData = mutableListOf<String>()
     private var timeTitle = mutableListOf<String>()
-    private val reservationAdapter by lazy{ SectionedRecyclerViewAdapter() }
-
-
+    private val reservationAdapter by lazy { SectionedRecyclerViewAdapter() }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -71,7 +74,30 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                     }
                 }
                 this.layoutManager = glm
+
+                ItemTouchHelper(
+                    object : ItemTouchHelper.SimpleCallback(
+                        ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+                        ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+                    ) {
+                        override fun onMove(
+                            recyclerView: RecyclerView,
+                            viewHolder: RecyclerView.ViewHolder,
+                            target: RecyclerView.ViewHolder
+                        ): Boolean {
+                            return false
+                        }
+
+                        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                            var guest =
+                                forDeleteData[viewHolder.adapterPosition] as ReservationGuests
+                            reservationFragmentViewModel.changeStatus(guest, Constants.CANCEL)
+                        }
+
+                    }).attachToRecyclerView(this)
             }
+
+
 
             laySwipe.setOnRefreshListener {
                 reservationFragmentViewModel.reload()
@@ -89,10 +115,10 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
             btn_hideCheckBlock.setOnClickListener {
                 reservationFragmentViewModel.hideChecked(isHideCheck)
                 isHideCheck = !isHideCheck
-                if(isHideCheck){
+                if (isHideCheck) {
                     hideCheck.setImageDrawable(resources.getDrawable(R.drawable.eye))
                     tv_hideCheck.text = resources.getString(R.string.show_check)
-                }else{
+                } else {
                     hideCheck.setImageDrawable(resources.getDrawable(R.drawable.visibility))
                     tv_hideCheck.text = resources.getString(R.string.hide_check)
                 }
@@ -100,12 +126,12 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
 
 
             btnSearchTable.setOnClickListener {
-               activity?.let {
+                activity?.let {
                     CustomSearchTableDialog(
                         requireActivity(),
                         reservationFragmentViewModel
-                    ) { time,cusCount,seat ->
-                        searchSeat(cusCount,time,seat, seat=="0")
+                    ) { time, cusCount, seat ->
+                        searchSeat(cusCount, time, seat, seat == "0")
                     }.show(it.supportFragmentManager, "CustomSearchTableDialog")
                 }
             }
@@ -137,7 +163,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                         reservationFragmentViewModel.dateRange.value?.get(0) ?: "",
                         reservationFragmentViewModel.dateRange.value?.get(1) ?: ""
                     ) { cusCount, startTime, _, _ ->
-                        searchSeat(cusCount,startTime,"",true)
+                        searchSeat(cusCount, startTime, "", true)
                     }.show(it.supportFragmentManager, "CustomDatePickerDialog")
                 }
             }
@@ -168,7 +194,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                 var cusMemo = binding.memo.text.toString().trim()
                 var seat = tempSeat.split("-")
 
-                if (cusName.isEmpty() || cusPhone.isEmpty()|| tempSeat == "") {
+                if (cusName.isEmpty() || cusPhone.isEmpty() || tempSeat == "") {
                     var dialog = activity?.let {
                         CustomAlertDialog(
                             it,
@@ -178,11 +204,21 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                         )
                     }
                     dialog!!.show()
-                }else{
+                } else {
 
-                    var data = PostToSetReservation(prefs.rsno, ReservationClass(
-                        tempTime, tempCount, "", cusName, cusPhone, cusMemo, "A", seat[0], seat[1]
-                    ))
+                    var data = PostToSetReservation(
+                        prefs.rsno, ReservationClass(
+                            tempTime,
+                            tempCount,
+                            "",
+                            cusName,
+                            cusPhone,
+                            cusMemo,
+                            Constants.ADD,
+                            seat[0],
+                            seat[1]
+                        )
+                    )
 
                     reservationFragmentViewModel.uploadReservation(data)
                 }
@@ -190,7 +226,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
         }
 
 
-        reservationFragmentViewModel.isFirst.observe(viewLifecycleOwner,{
+        reservationFragmentViewModel.isFirst.observe(viewLifecycleOwner, {
             reservationFragmentViewModel.reload()
         })
 
@@ -215,7 +251,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                 tempSeat = seatData[0]
                 binding.seatPicker.maxValue = seatData.size
                 binding.seatPicker.displayedValues = seatData.toTypedArray()
-            }else{
+            } else {
                 activity?.let {
                     CustomAlertDialog(
                         requireActivity(),
@@ -231,13 +267,13 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
         })
 
 
-        reservationFragmentViewModel.datumData.observe(viewLifecycleOwner,{ datumList ->
+        reservationFragmentViewModel.datumData.observe(viewLifecycleOwner, { datumList ->
             activity?.let {
                 CustomOtherSeatDialog(
                     requireActivity(),
                     datumList,
-                    onBtnClick = { seat,date ->
-                        searchSeat(tempCount.toString(),date.replace("-","/"),seat,false)
+                    onBtnClick = { seat, date ->
+                        searchSeat(tempCount.toString(), date.replace("-", "/"), seat, false)
                     }
                 ).show(it.supportFragmentManager, "CustomOtherSeatDialog")
             }
@@ -260,11 +296,11 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                                         CustomGuestDetailDialog(
                                             it,
                                             Guest
-                                        ).show(it.supportFragmentManager,"CustomGuestDetailDialog")
+                                        ).show(it.supportFragmentManager, "CustomGuestDetailDialog")
                                     }
                                 },
                                 onButtonClick = {
-                                    reservationFragmentViewModel.changeStatus(it)
+                                    reservationFragmentViewModel.changeStatus(it, Constants.CHECK)
                                 }
                             )
                         )
@@ -276,6 +312,11 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                 reservationAdapter.removeAllSections()
             }
             binding.reservationRv.adapter = reservationAdapter
+        })
+
+
+        reservationFragmentViewModel.forDeleteData.observe(viewLifecycleOwner, {
+            forDeleteData = it as MutableList<Any>
         })
 
         reservationFragmentViewModel.cusCount.observe(viewLifecycleOwner, { cusCount ->
@@ -316,7 +357,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
         }
     }
 
-    private fun searchSeat(cusCount:String,dateStr:String,seat:String,isSearch:Boolean){
+    private fun searchSeat(cusCount: String, dateStr: String, seat: String, isSearch: Boolean) {
         clearSubmitText(isSearch)
         reservationFragmentViewModel.setDateArrayReservation(
             arrayOf(
@@ -335,9 +376,9 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
         hintBlock.visibility = View.GONE
 
 
-        if(isSearch) {
+        if (isSearch) {
             reservationFragmentViewModel.setSearchVal(prefs.rsno, dateStr, cusCount.toInt())
-        }else{
+        } else {
             seatData.clear()
             seatData.add(seat)
             tempSeat = seatData[0]
@@ -381,15 +422,15 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
     }
 
 
-    private fun clearSubmitText(isHideSeat:Boolean){
+    private fun clearSubmitText(isHideSeat: Boolean) {
         binding.name.text.clear()
         binding.phone.text.clear()
         binding.memo.text.clear()
-        if(isHideSeat) {
-            tempSeat=""
+        if (isHideSeat) {
+            tempSeat = ""
             binding.tvSeat.visibility = View.INVISIBLE
             binding.seatPicker.visibility = View.INVISIBLE
-        }else{
+        } else {
             binding.tvSeat.visibility = View.VISIBLE
             binding.seatPicker.visibility = View.VISIBLE
         }

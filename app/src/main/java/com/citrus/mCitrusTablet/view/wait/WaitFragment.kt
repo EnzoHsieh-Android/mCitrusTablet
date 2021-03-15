@@ -5,11 +5,14 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.databinding.FragmentWaitBinding
 import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.model.vo.*
+import com.citrus.mCitrusTablet.util.Constants
 import com.citrus.mCitrusTablet.view.adapter.WaitAdapter
 import com.citrus.mCitrusTablet.view.dialog.CustomAlertDialog
 import com.citrus.mCitrusTablet.view.dialog.CustomOrderDeliveryDialog
@@ -29,26 +32,27 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
     private val waitViewModel: WaitViewModel by viewModels()
     private var _binding: FragmentWaitBinding? = null
     private val binding get() = _binding!!
-    private var sortOrderByTime:SortOrder = SortOrder.BY_TIME_LESS
-    private var sortOrderByCount:SortOrder = SortOrder.BY_LESS
+    private var sortOrderByTime: SortOrder = SortOrder.BY_TIME_LESS
+    private var sortOrderByCount: SortOrder = SortOrder.BY_LESS
     private var isHideCheck = false
-
-
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentWaitBinding.bind(view)
-        var waitAdapter = WaitAdapter(requireActivity(), onItemClick = { wait ->
-            activity?.let {
-                CustomOrderDeliveryDialog(
-                    wait,
-                    waitViewModel
-                ).show(it.supportFragmentManager, "CustomOrderDeliveryDialog")
-            }
-        }, onButtonClick = {
-            waitViewModel.changeStatus(it)
-        })
+        var waitAdapter = WaitAdapter(requireActivity(),
+            onItemClick = { wait ->
+                activity?.let {
+                    CustomOrderDeliveryDialog(
+                        wait,
+                        waitViewModel
+                    ).show(it.supportFragmentManager, "CustomOrderDeliveryDialog")
+                }
+            }, onButtonClick = {
+                waitViewModel.changeStatus(it, Constants.CHECK)
+            }, onNoticeClick = {
+                waitViewModel.sendNotice(it)
+            })
 
         binding.apply {
             date2Day(SimpleDateFormat("yyyy/MM/dd").format(Date()))
@@ -62,27 +66,46 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
                 adapter = waitAdapter
                 layoutManager = LinearLayoutManager(requireContext())
                 waitAdapter.update(mutableListOf())
+
+
+                ItemTouchHelper(
+                    object : ItemTouchHelper.SimpleCallback(
+                        ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+                        ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+                    ) {
+                        override fun onMove(
+                            recyclerView: RecyclerView,
+                            viewHolder: RecyclerView.ViewHolder,
+                            target: RecyclerView.ViewHolder
+                        ): Boolean {
+                            return false
+                        }
+
+                        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+
+                        }
+
+                    }).attachToRecyclerView(this)
             }
 
             btReservation.setOnSlideCompleteListener {
-                    var dialog = activity?.let {
-                        CustomAlertDialog(
-                            it,
-                            getString(R.string.submitErrorMsg),
-                            "",
-                            0
-                        )
-                    }
-                    dialog!!.show()
+                var dialog = activity?.let {
+                    CustomAlertDialog(
+                        it,
+                        getString(R.string.submitErrorMsg),
+                        "",
+                        0
+                    )
+                }
+                dialog!!.show()
             }
 
 
-
             sortByCount.setOnClickListener {
-                sortOrderByCount = if(sortOrderByCount == SortOrder.BY_LESS){
+                sortOrderByCount = if (sortOrderByCount == SortOrder.BY_LESS) {
                     groupSortStatus.setImageDrawable(resources.getDrawable(R.drawable.up))
                     SortOrder.BY_MORE
-                }else{
+                } else {
                     groupSortStatus.setImageDrawable(resources.getDrawable(R.drawable.down))
                     SortOrder.BY_LESS
                 }
@@ -90,10 +113,10 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
             }
 
             sortByTime.setOnClickListener {
-                sortOrderByTime = if(sortOrderByTime == SortOrder.BY_TIME_LESS){
+                sortOrderByTime = if (sortOrderByTime == SortOrder.BY_TIME_LESS) {
                     timeSortStatus.setImageDrawable(resources.getDrawable(R.drawable.up))
                     SortOrder.BY_TIME_MORE
-                }else{
+                } else {
                     timeSortStatus.setImageDrawable(resources.getDrawable(R.drawable.down))
                     SortOrder.BY_TIME_LESS
                 }
@@ -105,10 +128,10 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
             hideCheckBlock.setOnClickListener {
                 waitViewModel.hideChecked(isHideCheck)
                 isHideCheck = !isHideCheck
-                if(isHideCheck){
+                if (isHideCheck) {
                     hideCheck.setImageDrawable(resources.getDrawable(R.drawable.eye))
                     tv_hideCheck.text = resources.getString(R.string.show_check)
-                }else{
+                } else {
                     hideCheck.setImageDrawable(resources.getDrawable(R.drawable.visibility))
                     tv_hideCheck.text = resources.getString(R.string.hide_check)
                 }
@@ -130,7 +153,7 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
                 var cusPhone = binding.phone.text.toString().trim()
                 var seat = binding.seat.text.toString().trim()
 
-                if (cusName.isEmpty() || cusPhone.isEmpty()|| seat.isEmpty() ) {
+                if (cusName.isEmpty() || cusPhone.isEmpty() || seat.isEmpty()) {
                     var dialog = activity?.let {
                         CustomAlertDialog(
                             it,
@@ -140,7 +163,7 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
                         )
                     }
                     dialog!!.show()
-                }else{
+                } else {
                     var data = PostToSetWaiting(
                         WaitGuestData(
                             prefs.storeId.toInt(),
@@ -148,7 +171,7 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
                             cusName,
                             cusPhone,
                             "",
-                            "A"
+                            Constants.ADD
                         )
                     )
                     waitViewModel.uploadWait(data)
@@ -215,10 +238,11 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.reservationRv.adapter = null
         _binding = null
     }
 
-    private fun clearSubmitText(isHideSeat: Boolean){
+    private fun clearSubmitText(isHideSeat: Boolean) {
         binding.name.text.clear()
         binding.phone.text.clear()
         binding.seat.text.clear()

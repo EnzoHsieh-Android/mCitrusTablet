@@ -47,6 +47,9 @@ class ReservationAdapter(
         headerHolder.headerText.text = header
     }
 
+    fun getCurrentList(): List<ReservationGuests> {
+        return item
+    }
 
     override fun onBindItemViewHolder(holder: ViewHolder, position: Int) {
         val itemHolder = holder as ItemViewHolder
@@ -74,12 +77,16 @@ class ReservationAdapter(
             itemHolder.imgMemo.visibility = View.INVISIBLE
         }
 
-        if(guest.status == "A"){
-            itemHolder.btnCheck.visibility = View.VISIBLE
-            itemHolder.tvCheck.visibility = View.GONE
-        }else{
-            itemHolder.btnCheck.visibility = View.GONE
-            itemHolder.tvCheck.visibility = View.VISIBLE
+        when(guest.status){
+            "A" -> {
+                itemHolder.btnCheck.visibility = View.VISIBLE
+                itemHolder.tvCheck.visibility = View.GONE
+            }
+
+            "C" -> {
+                itemHolder.btnCheck.visibility = View.GONE
+                itemHolder.tvCheck.visibility = View.VISIBLE
+            }
         }
 
         itemHolder.btnCheck.setOnClickListener {

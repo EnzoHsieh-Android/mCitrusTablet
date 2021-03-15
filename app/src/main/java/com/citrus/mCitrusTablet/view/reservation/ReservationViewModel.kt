@@ -1,7 +1,6 @@
 package com.citrus.mCitrusTablet.view.reservation
 
 
-import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,8 +12,8 @@ import com.citrus.mCitrusTablet.model.vo.*
 import com.citrus.mCitrusTablet.util.Constants
 import com.citrus.mCitrusTablet.util.Constants.defaultTimeStr
 import com.citrus.mCitrusTablet.util.Constants.inputFormat
+import com.citrus.mCitrusTablet.util.HideCheck
 import com.citrus.mCitrusTablet.util.SingleLiveEvent
-import com.citrus.mCitrusTablet.view.wait.HideCheck
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
@@ -22,7 +21,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import java.text.SimpleDateFormat
 
 enum class SortOrder { BY_LESS, BY_TIME, BY_MORE }
-enum class HideCheck { HIDE_TRUE, HIDE_FALSE}
 
 class ReservationViewModel @ViewModelInject constructor(private val model: Repository) :
     ViewModel() {
@@ -31,7 +29,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         "https://" + prefs.severDomain
     var hideCheck: HideCheck = HideCheck.HIDE_TRUE
     private var delayTime = Constants.DEFAULT_TIME
-    var storageList:MutableList<ReservationGuests> = mutableListOf()
+    var storageList = mutableListOf<ReservationGuests>()
     private val job = SupervisorJob()
 
     private var guests = mutableListOf<ReservationGuests>()
@@ -56,6 +54,11 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     val allData: LiveData<List<List<ReservationGuests>>>
         get() = _allData
 
+    private val _forDeleteData = MutableLiveData<List<Any>>()
+    val forDeleteData: LiveData<List<Any>>
+        get() = _forDeleteData
+
+
     private val _dateRange = MutableLiveData<Array<String>>()
     val dateRange: LiveData<Array<String>>
         get() = _dateRange
@@ -76,13 +79,11 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     val tasksEvent = tasksEventChannel.receiveAsFlow()
 
 
-
-
     private var scope = viewModelScope.launch(Dispatchers.IO + job) {
         while (true) {
-            if(_dateRange.value == null){
+            if (_dateRange.value == null) {
                 fetchAllData(defaultTimeStr, defaultTimeStr)
-            }else{
+            } else {
                 _dateRange.value?.get(0)?.let { fetchAllData(it, _dateRange.value?.get(1)!!) }
             }
             delay(delayTime * 60 * 1000)
@@ -93,7 +94,11 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         scope.cancel()
     }
 
-    init{  viewModelScope.launch { getStoreInformation() } }
+    init {
+        if (prefs.storeName == "") {
+            fetchStoreInfo()
+        }
+    }
 
     fun setSearchVal(
         rsno: String,
@@ -108,26 +113,19 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         val updateChange = changeForUpdate.format(date)
 
         var bookingPostData = PostToGetSeats(rsno, updateChange, customNum)
-        viewModelScope.launch {
-            fetchReservationFloor(bookingPostData,searchStr)
-        }
+        fetchReservationFloor(bookingPostData, searchStr)
     }
 
     fun setDateArray(data: Array<String>) {
         _dateRange.value = data
-
-        viewModelScope.launch {
-            fetchAllData(data[0], data[1])
-        }
+        fetchAllData(data[0], data[1])
     }
 
-    fun reload(){
-        viewModelScope.launch {
-            if(_dateRange.value == null){
-                fetchAllData(defaultTimeStr, defaultTimeStr)
-            }else{
-                _dateRange.value?.get(0)?.let { fetchAllData(it, _dateRange.value?.get(1)!!) }
-            }
+    fun reload() {
+        if (_dateRange.value == null) {
+            fetchAllData(defaultTimeStr, defaultTimeStr)
+        } else {
+            _dateRange.value?.get(0)?.let { fetchAllData(it, _dateRange.value?.get(1)!!) }
         }
     }
 
@@ -137,72 +135,86 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     }
 
 
-    private suspend fun fetchReservationFloor(postToGetSeats: PostToGetSeats, searchStr: String) =
-        model.fetchReservationFloor(serverDomain+Constants.GET_FLOOR,postToGetSeats, onEmpty = {
-            _seatData.postValue(mutableListOf())
-        }).collect { datumList ->
+    private fun fetchReservationFloor(postToGetSeats: PostToGetSeats, searchStr: String) =
+        viewModelScope.launch {
+            model.fetchReservationFloor(
+                serverDomain + Constants.GET_FLOOR,
+                postToGetSeats,
+                onEmpty = {
+                    _seatData.postValue(mutableListOf())
+                }).collect { datumList ->
 
-            var hasDate = false
-            var seatData:List<Floor> = mutableListOf()
+                var hasDate = false
+                var seatData: List<Floor> = mutableListOf()
 
-            for(datum in datumList){
-                if(datum.resDate == searchStr){
-                    seatData = datum.floor
-                    hasDate = true
+                for (datum in datumList) {
+                    if (datum.resDate == searchStr) {
+                        seatData = datum.floor
+                        hasDate = true
+                    }
+                }
+
+                if (hasDate) {
+                    _seatData.postValue(seatData)
+                } else {
+                    _datumData.postValue(datumList)
                 }
             }
-
-            if(hasDate){
-                _seatData.postValue(seatData)
-            }else{
-                _datumData.postValue(datumList)
-            }
-
-
         }
 
 
-     private suspend fun fetchAllData(startTime: String, endTime: String) {
+    private fun fetchAllData(startTime: String, endTime: String) {
         var dataOutput = PostToGetAllData(prefs.rsno, startTime, endTime)
-         if (dataOutput != null) {
-             model.fetchAllData(serverDomain+Constants.GET_ALL_DATA,"reservation",dataOutput, onCusCount = { cusCount ->
-                 _cusCount.postValue(cusCount)
-             }).collect { list ->
-                 if (list.isNotEmpty()) {
-                     storageList = list as MutableList<ReservationGuests>
-                     guests = getSortRequirement(SortOrder.BY_TIME, list)
-                     allDataReorganization(guests)
-                 } else {
-                     _titleData.postValue(listOf())
-                     _allData.postValue(mutableListOf())
-                 }
-             }
-         }
-    }
-
-    private suspend fun fetchStoreInfo() = model.fetchStoreInfo(serverDomain+Constants.GET_STORE_INFO,
-        prefs.storeId).collect {
-        prefs.storeName = it[0].storeName
-        prefs.rsno = it[0].rsno
-        _isFirst.postValue(true)
-    }
-
-    private suspend fun getStoreInformation() {
-        if(prefs.storeName == ""){
-            fetchStoreInfo()
+        if (dataOutput != null) {
+            viewModelScope.launch {
+                model.fetchAllData(
+                    serverDomain + Constants.GET_ALL_DATA,
+                    "reservation",
+                    dataOutput,
+                    onCusCount = { cusCount ->
+                        _cusCount.postValue(cusCount)
+                    }).collect { list ->
+                    if (list.isNotEmpty()) {
+                        storageList = list as MutableList<ReservationGuests>
+                        guests = getSortRequirement(SortOrder.BY_TIME, list)
+                        allDataReorganization(guests)
+                    } else {
+                        storageList = mutableListOf()
+                        guests = mutableListOf()
+                        _titleData.postValue(listOf())
+                        _allData.postValue(mutableListOf())
+                    }
+                }
+            }
         }
     }
 
-    private fun allDataReorganization(list: MutableList<ReservationGuests>){
-        var sortGuests = if(list.isNotEmpty()) getSortRequirement(SortOrder.BY_TIME, list) else list
+    private fun fetchStoreInfo() =
+        viewModelScope.launch {
+            model.fetchStoreInfo(
+                serverDomain + Constants.GET_STORE_INFO,
+                prefs.storeId
+            ).collect {
+                prefs.storeName = it[0].storeName
+                prefs.rsno = it[0].rsno
+                _isFirst.postValue(true)
+            }
+        }
+
+
+    /*拆分原始DATA組成SectionRecyclerView需求的樣式，分成Title List以及Data List*/
+    private fun allDataReorganization(list: MutableList<ReservationGuests>) {
+        var sortGuests =
+            if (list.isNotEmpty()) getSortRequirement(SortOrder.BY_TIME, list) else list
         var isFirst = true
         var tempValue = ""
         val timeTitle = mutableSetOf<String>()
         var tempItem = mutableListOf<ReservationGuests>()
         val groupItem = mutableListOf<List<ReservationGuests>>()
+        var totalList: MutableList<Any> = mutableListOf()
 
-        if(sortGuests.isNotEmpty()) {
-            for (item in  if(hideCheck != HideCheck.HIDE_TRUE) sortGuests.filter { it.status == "A" } else sortGuests ) {
+        if (sortGuests.isNotEmpty()) {
+            for (item in if (hideCheck != HideCheck.HIDE_TRUE) sortGuests.filter { it.status == Constants.ADD } else sortGuests) {
                 val date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(item.reservationTime)
                 val formattedDate = SimpleDateFormat("MM/dd HH:mm").format(date)
                 var dateStr = formattedDate.split(" ")
@@ -222,19 +234,32 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
                 tempValue = timeStr[0]
             }
             groupItem.add(tempItem.toMutableList())
+
+
+            /*用於SectionRecyclerView Swipe取得物件使用*/
+            var title = timeTitle.toList()
+            for (index in title.indices) {
+                totalList.add(title[index])
+                for (item in groupItem[index]) {
+                    totalList.add(item)
+                }
+            }
         }
+
+        _cusCount.postValue(sortGuests.filter { it.status != Constants.CANCEL }.size.toString())
+        _forDeleteData.postValue(totalList)
         _titleData.postValue(timeTitle.toList())
         _allData.postValue(groupItem)
     }
 
 
-    fun searchForStr(status:SearchViewStatus){
-        when(status){
-            is SearchViewStatus.IsEmpty -> allDataReorganization( storageList)
+    fun searchForStr(status: SearchViewStatus) {
+        when (status) {
+            is SearchViewStatus.IsEmpty -> allDataReorganization(storageList)
 
             is SearchViewStatus.NeedChange -> {
                 var tempGuestsList = mutableListOf<ReservationGuests>()
-                for (item:ReservationGuests in storageList) {
+                for (item: ReservationGuests in storageList) {
                     if (item.phone.contains(status.searchStr)) {
                         tempGuestsList.add(item)
                     }
@@ -244,74 +269,76 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         }
     }
 
-    fun changeStatus(guest: ReservationGuests){
+
+    fun changeStatus(guest: ReservationGuests, status: String) =
         viewModelScope.launch {
-            changeStatusData(guest)
-        }
-    }
+            model.changeStatus(
+                serverDomain + Constants.CHANGE_STATUS,
+                PostToChangeStatus(Reservation(guest.tkey, status))
+            ).collect { result ->
 
+                when (result) {
+                    1 -> {
+                        var index = storageList.indexOf(guest)
+                        if (status == Constants.CANCEL) {
+                            storageList.removeAt(index)
+                        } else {
+                            storageList[index].status = status
+                        }
+                        allDataReorganization(storageList)
+                    }
+                    0 -> {
 
-    private suspend fun changeStatusData(guest: ReservationGuests) = model.changeStatus(serverDomain+Constants.CHANGE_STATUS,PostToChangeStatus(Reservation(guest.tkey,"C"))).collect { status ->
-
-       when(status){
-           1 -> {
-                var index = storageList.indexOf(guest)
-               storageList[index].status = "C"
-               allDataReorganization(storageList)
-           }
-           0 -> {
-
-           }
-       }
-    }
-
-    fun uploadReservation(dataPostToSet: PostToSetReservation) {
-        viewModelScope.launch {
-            uploadReservationData(dataPostToSet)
-        }
-    }
-
-
-    private suspend fun uploadReservationData(dataPostToSet: PostToSetReservation) =
-        model.uploadReservationData(serverDomain+Constants.SET_RESERVATION,dataPostToSet).collect {
-            if (it.status == 1 && it.data == 1) {
-                tasksEventChannel.send(TasksEvent.ShowSuccessMessage)
-                var time = dataPostToSet.reservation.reservationTime.split(" ")
-                fetchAllData(time[0], time[0])
-                sendSMS("celaviLAB",dataPostToSet.reservation.phone, prefs.storeName +" "+dataPostToSet.reservation.reservationTime+" 已完成預約")
-            }else{
-                tasksEventChannel.send(TasksEvent.ShowFailMessage)
+                    }
+                }
             }
         }
 
 
-
-    private suspend fun sendSMS(project:String,phone:String,body:String) = model.sendSMS(Constants.SEND_SMS,project,phone,body).collect {
-
-    }
-
-
-    fun fetchReservationTime(postData: String){
+    fun uploadReservation(dataPostToSet: PostToSetReservation) =
         viewModelScope.launch {
-            fetchReservationTimeData(postData)
+            model.uploadReservationData(serverDomain + Constants.SET_RESERVATION, dataPostToSet)
+                .collect {
+                    if (it.status == 1 && it.data == 1) {
+                        tasksEventChannel.send(TasksEvent.ShowSuccessMessage)
+                        var time = dataPostToSet.reservation.reservationTime.split(" ")
+                        fetchAllData(time[0], time[0])
+                        sendSMS(
+                            "celaviLAB",
+                            dataPostToSet.reservation.phone,
+                            prefs.storeName + " " + dataPostToSet.reservation.reservationTime + " 已完成預約"
+                        )
+                    } else {
+                        tasksEventChannel.send(TasksEvent.ShowFailMessage)
+                    }
+                }
         }
-    }
+
+    private suspend fun sendSMS(project: String, phone: String, body: String) =
+        model.sendSMS(Constants.SEND_SMS, project, phone, body).collect {
+
+        }
 
 
-    private suspend fun fetchReservationTimeData(postData: String) =
-        model.fetchReservationTime(serverDomain +Constants.GET_RESERVATION_TIME,postData,onEmpty = {
-            _orderDateDatum.postValue(mutableListOf())
-        }).collect {
+    fun fetchReservationTime(postData: String) =
+        viewModelScope.launch {
+            model.fetchReservationTime(
+                serverDomain + Constants.GET_RESERVATION_TIME,
+                postData,
+                onEmpty = {
+                    _orderDateDatum.postValue(mutableListOf())
+                }).collect {
                 _orderDateDatum.postValue(it)
+            }
         }
-
-
-
 
     private fun getSortRequirement(
         sortStatus: SortOrder,
         originalList: List<ReservationGuests>
     ): MutableList<ReservationGuests> {
+        if (originalList.isEmpty()) {
+            return mutableListOf()
+        }
         return when (sortStatus) {
 
             SortOrder.BY_LESS -> originalList.sortedWith { first, second ->
@@ -338,10 +365,10 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
                 when {
                     inputFormat.parse(first.reservationTime) == inputFormat.parse(second.reservationTime) -> {
                         when {
-                            first.floorName+first.roomName < second.floorName+second.roomName -> {
+                            first.floorName + first.roomName < second.floorName + second.roomName -> {
                                 -1
                             }
-                            first.floorName+first.roomName > second.floorName+second.roomName -> {
+                            first.floorName + first.roomName > second.floorName + second.roomName -> {
                                 1
                             }
                             else -> {
@@ -376,10 +403,10 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         }
     }
 
-    fun hideChecked(isHide:Boolean) {
-        hideCheck = if(isHide){
+    fun hideChecked(isHide: Boolean) {
+        hideCheck = if (isHide) {
             HideCheck.HIDE_TRUE
-        }else{
+        } else {
             HideCheck.HIDE_FALSE
         }
         allDataReorganization(guests)

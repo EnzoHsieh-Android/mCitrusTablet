@@ -64,6 +64,7 @@
     <string name="order_delivery">Order Delivery</string>
     <string name="hide_check">Hide Check</string>
     <string name="show_check">Show Check</string>
+    <string name="notice">Notice</string>
     <!-- TODO: Remove or change this placeholder text -->
 
 </resources>

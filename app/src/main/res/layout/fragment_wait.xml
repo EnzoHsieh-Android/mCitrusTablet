@@ -685,6 +685,7 @@
                         android:gravity="center">
 
                         <ImageView
+                            android:layout_marginStart="@dimen/dp_5"
                             android:layout_width="@dimen/dp_10"
                             android:layout_height="@dimen/dp_10"
                             android:src="@drawable/people"
@@ -716,6 +717,7 @@
                         android:gravity="center">
 
                         <ImageView
+                            android:layout_marginStart="@dimen/dp_5"
                             android:layout_width="@dimen/dp_10"
                             android:layout_height="@dimen/dp_10"
                             android:src="@drawable/time"
@@ -739,33 +741,40 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        app:layout_constraintGuide_percent="0.18" />
+                        app:layout_constraintGuide_percent="0.1" />
                     <androidx.constraintlayout.widget.Guideline
                         android:id="@+id/guideline2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        app:layout_constraintGuide_percent="0.38" />
+                        app:layout_constraintGuide_percent="0.26" />
                     <androidx.constraintlayout.widget.Guideline
                         android:id="@+id/guideline3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        app:layout_constraintGuide_percent="0.58" />
+                        app:layout_constraintGuide_percent="0.42" />
 
                     <androidx.constraintlayout.widget.Guideline
                         android:id="@+id/guideline4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        app:layout_constraintGuide_percent="0.68" />
+                        app:layout_constraintGuide_percent="0.50" />
 
                     <androidx.constraintlayout.widget.Guideline
                         android:id="@+id/guideline5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        app:layout_constraintGuide_percent="0.85" />
+                        app:layout_constraintGuide_percent="0.68" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.84" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -773,7 +782,6 @@
 
 
         <androidx.recyclerview.widget.RecyclerView
-            android:visibility="gone"
             android:id="@+id/reservation_rv"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -787,6 +795,7 @@
             app:layout_constraintTop_toBottomOf="@+id/sortBlock" />
 
         <com.airbnb.lottie.LottieAnimationView
+            android:visibility="gone"
             android:id="@+id/animation_resultNotFound"
             android:layout_width="match_parent"
             android:layout_height="0dp"
