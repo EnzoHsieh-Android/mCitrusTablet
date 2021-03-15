@@ -1,9 +1,8 @@
 package com.citrus.mCitrusTablet.view.wait
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.View
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,8 +10,9 @@ import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.databinding.FragmentWaitBinding
 import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.model.vo.*
-import com.citrus.mCitrusTablet.view.dialog.CustomAlertDialog
 import com.citrus.mCitrusTablet.view.adapter.WaitAdapter
+import com.citrus.mCitrusTablet.view.dialog.CustomAlertDialog
+import com.citrus.mCitrusTablet.view.dialog.CustomOrderDeliveryDialog
 import com.citrus.mCitrusTablet.view.reservation.SearchViewStatus
 import com.citrus.mCitrusTablet.view.reservation.TasksEvent
 import com.citrus.util.onQueryTextChanged
@@ -39,20 +39,28 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentWaitBinding.bind(view)
-        var waitAdapter = WaitAdapter(requireActivity(),onItemClick = {
-
-
-        },onButtonClick = {
+        var waitAdapter = WaitAdapter(requireActivity(), onItemClick = { wait ->
+            activity?.let {
+                CustomOrderDeliveryDialog(
+                    wait,
+                    waitViewModel
+                ).show(it.supportFragmentManager, "CustomOrderDeliveryDialog")
+            }
+        }, onButtonClick = {
             waitViewModel.changeStatus(it)
         })
 
         binding.apply {
             date2Day(SimpleDateFormat("yyyy/MM/dd").format(Date()))
 
+            laySwipe.setOnRefreshListener {
+                waitViewModel.reload()
+                laySwipe.isRefreshing = false
+            }
+
             reservationRv.apply {
                 adapter = waitAdapter
                 layoutManager = LinearLayoutManager(requireContext())
-                setHasFixedSize(true)
                 waitAdapter.update(mutableListOf())
             }
 
@@ -93,15 +101,20 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
             }
 
 
-            hideCheck.setOnClickListener {
-                if(isHideCheck){
-                    hideCheck.setImageDrawable(resources.getDrawable(R.drawable.blind))
-                }else{
-                    hideCheck.setImageDrawable(resources.getDrawable(R.drawable.show))
-                }
+
+            hideCheckBlock.setOnClickListener {
                 waitViewModel.hideChecked(isHideCheck)
                 isHideCheck = !isHideCheck
+                if(isHideCheck){
+                    hideCheck.setImageDrawable(resources.getDrawable(R.drawable.eye))
+                    tv_hideCheck.text = resources.getString(R.string.show_check)
+                }else{
+                    hideCheck.setImageDrawable(resources.getDrawable(R.drawable.visibility))
+                    tv_hideCheck.text = resources.getString(R.string.hide_check)
+                }
             }
+
+
 
             searchView.onQueryTextChanged {
                 if (it.isEmpty()) {
@@ -129,10 +142,15 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
                     dialog!!.show()
                 }else{
                     var data = PostToSetWaiting(
-                      WaitGuestData(prefs.storeId.toInt(),seat.toInt(),cusName,cusPhone,"","A")
+                        WaitGuestData(
+                            prefs.storeId.toInt(),
+                            seat.toInt(),
+                            cusName,
+                            cusPhone,
+                            "",
+                            "A"
+                        )
                     )
-
-
                     waitViewModel.uploadWait(data)
                 }
             }
@@ -140,21 +158,24 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
 
         }
 
-        waitViewModel.allData.observe(viewLifecycleOwner,{ waitList ->
-            if(waitList.isNotEmpty()) {
+        waitViewModel.allData.observe(viewLifecycleOwner, { waitList ->
+            if (waitList.isNotEmpty()) {
                 waitAdapter?.update(waitList)
                 binding.reservationRv.visibility = View.VISIBLE
                 binding.animationResultNotFound.visibility = View.GONE
-            }else{
+            } else {
                 binding.reservationRv.visibility = View.GONE
                 binding.animationResultNotFound.visibility = View.VISIBLE
             }
-            binding.reservationRv.smoothScrollToPosition(0)
+
+            binding.reservationRv.post {
+                binding.reservationRv.smoothScrollToPosition(0)
+            }
         })
 
 
         waitViewModel.cusCount.observe(viewLifecycleOwner, { cusCount ->
-            binding.tvTotal.text = resources.getString(R.string.TotalForTheDay)+" "+cusCount
+            binding.tvTotal.text = resources.getString(R.string.TotalForTheDay) + " " + cusCount
         })
 
 
@@ -197,7 +218,7 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
         _binding = null
     }
 
-    private fun clearSubmitText(isHideSeat:Boolean){
+    private fun clearSubmitText(isHideSeat: Boolean){
         binding.name.text.clear()
         binding.phone.text.clear()
         binding.seat.text.clear()

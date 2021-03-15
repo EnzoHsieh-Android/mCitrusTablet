@@ -49,6 +49,7 @@
             >
 
             <TextView
+                android:background="@drawable/button_overlay_15"
                 android:id="@+id/tvDate"
                 android:layout_width="@dimen/dp_84"
                 android:layout_height="wrap_content"
@@ -130,13 +131,40 @@
                 android:layout_marginTop="@dimen/dp_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="查找空桌"
+                android:text="@string/search_seat"
                 android:textColor="@color/primaryColor"
                 android:textStyle="bold" />
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/btn_hideCheckBlock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@id/btn_SearchTable"
+            app:layout_constraintStart_toEndOf="@id/btn_SearchTable"
+            app:layout_constraintTop_toTopOf="@id/btn_SearchTable">
 
+            <ImageView
+                android:id="@+id/hideCheck"
+                android:scaleType="centerCrop"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:src="@drawable/visibility" />
+
+            <TextView
+                android:id="@+id/tv_hideCheck"
+                android:layout_marginTop="@dimen/dp_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hide_check"
+                android:textColor="@color/primaryColor"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -618,6 +646,7 @@
             android:layout_marginTop="@dimen/dp_5"
             android:layout_marginLeft="@dimen/dp_2"
             android:layout_marginRight="@dimen/dp_2"
+            android:layout_marginBottom="@dimen/dp_5"
             app:layout_constraintBottom_toBottomOf="@+id/reservation_block"
             app:layout_constraintEnd_toEndOf="@+id/reservation_block"
             app:layout_constraintStart_toStartOf="parent"

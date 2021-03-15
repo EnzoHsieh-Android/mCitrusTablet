@@ -4,6 +4,7 @@ package com.citrus.mCitrusTablet.view.adapter
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -11,9 +12,8 @@ import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.model.vo.ReservationGuests
 import io.github.luizgrp.sectionedrecyclerviewadapter.Section
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
-import kotlinx.android.synthetic.main.itemview.view.*
-
-import kotlinx.android.synthetic.main.timetitle.view.*
+import kotlinx.android.synthetic.main.rv_reservation_item.view.*
+import kotlinx.android.synthetic.main.rv_title_item.view.*
 import java.text.SimpleDateFormat
 
 
@@ -25,8 +25,8 @@ class ReservationAdapter(
 ) :
     Section(
         SectionParameters.builder()
-            .itemResourceId(R.layout.itemview)
-            .headerResourceId(R.layout.timetitle)
+            .itemResourceId(R.layout.rv_reservation_item)
+            .headerResourceId(R.layout.rv_title_item)
             .build()
     ) {
 

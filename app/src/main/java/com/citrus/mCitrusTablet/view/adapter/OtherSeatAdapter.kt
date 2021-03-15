@@ -10,9 +10,8 @@ import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.model.vo.Floor
 import io.github.luizgrp.sectionedrecyclerviewadapter.Section
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
-import kotlinx.android.synthetic.main.seatitemview.view.*
-import kotlinx.android.synthetic.main.timetitle.view.*
-
+import kotlinx.android.synthetic.main.rv_seat_item.view.*
+import kotlinx.android.synthetic.main.rv_title_item.view.*
 
 
 class OtherSeatAdapter(
@@ -22,8 +21,8 @@ class OtherSeatAdapter(
 ) :
     Section(
         SectionParameters.builder()
-            .itemResourceId(R.layout.seatitemview)
-            .headerResourceId(R.layout.timetitle)
+            .itemResourceId(R.layout.rv_seat_item)
+            .headerResourceId(R.layout.rv_title_item)
             .build()
     ) {
 

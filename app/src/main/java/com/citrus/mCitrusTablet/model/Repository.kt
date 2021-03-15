@@ -35,6 +35,7 @@ class Repository @Inject constructor(private val apiService: ApiService) {
         postToGetAllData: PostToGetAllData,
         onCusCount: (String) -> Unit
     ) = flow {
+
         val jsonString = Gson().toJson(postToGetAllData)
         apiService.getAllData(url, jsonString)
             .suspendOnSuccess {
@@ -57,7 +58,6 @@ class Repository @Inject constructor(private val apiService: ApiService) {
     fun fetchReservationFloor(url: String, postToGetSeats: PostToGetSeats, onEmpty: () -> Unit) =
         flow {
             val jsonString = Gson().toJson(postToGetSeats)
-            Log.e("postValue",jsonString)
             apiService.getReservationFloor(url, jsonString)
                 .suspendOnSuccess {
                     if (data?.status == 0) {
@@ -72,6 +72,7 @@ class Repository @Inject constructor(private val apiService: ApiService) {
 
 
     fun fetchStoreInfo(url: String, storeId: String) = flow {
+        Log.e("124",storeId)
         apiService.getStoreInfo(url, storeId).suspendOnSuccess {
             if (data?.status != 0) {
                 emit(data!!.data)
@@ -118,6 +119,18 @@ class Repository @Inject constructor(private val apiService: ApiService) {
         apiService.setWaitData(url,jsonString).suspendOnSuccess {
             if(data?.status != 0){
                 emit(data!!)
+            }
+        }
+    }
+
+
+    fun fetchOrdersDeliveryData(url:String, postToGetDelivery:PostToGetDelivery,onEmpty:() -> Unit) = flow {
+        val jsonString = Gson().toJson(postToGetDelivery)
+        apiService.getOrdersDeliveryData(url,jsonString).suspendOnSuccess {
+            if(data?.status != 0){
+                emit(data?.data?.ordersItemDelivery)
+            }else{
+                onEmpty()
             }
         }
     }

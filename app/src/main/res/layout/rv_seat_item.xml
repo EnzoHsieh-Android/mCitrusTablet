@@ -17,7 +17,9 @@
         android:maxLines="1"
         android:textStyle="bold"
         android:textSize="@dimen/sp_12"
-        android:textColor="@color/white"
+        android:textColor="@color/primaryColor"
+        android:backgroundTint="@color/gray"
+        android:shadowColor="@color/black"
         tools:text="A-001" />
 
 </LinearLayout>

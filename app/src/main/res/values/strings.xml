@@ -51,6 +51,19 @@
     <string name="noSeat">There is no free seat in the selected and adjacent time period</string>
     <string name="noTime">No results, please re-enter the query conditions</string>
     <string name="pick_time_hint">Choose a time to make an appointment</string>
+    <string name="search_seat">Search Seat</string>
+    <string name="query_conditions">Query conditions:</string>
+    <string name="query_time">Query time:</string>
+    <string name="by_number">By number</string>
+    <string name="by_seat">By seat</string>
+    <string name="enter">Enter:</string>
+    <string name="number">Num</string>
+    <string name="floor">Floor</string>
+    <string name="room">Room</string>
+    <string name="search">Search</string>
+    <string name="order_delivery">Order Delivery</string>
+    <string name="hide_check">Hide Check</string>
+    <string name="show_check">Show Check</string>
     <!-- TODO: Remove or change this placeholder text -->
 
 </resources>

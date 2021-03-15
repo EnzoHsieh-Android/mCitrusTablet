@@ -14,6 +14,7 @@ import com.citrus.mCitrusTablet.util.Constants
 import com.citrus.mCitrusTablet.util.Constants.defaultTimeStr
 import com.citrus.mCitrusTablet.util.Constants.inputFormat
 import com.citrus.mCitrusTablet.util.SingleLiveEvent
+import com.citrus.mCitrusTablet.view.wait.HideCheck
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
@@ -21,13 +22,14 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import java.text.SimpleDateFormat
 
 enum class SortOrder { BY_LESS, BY_TIME, BY_MORE }
+enum class HideCheck { HIDE_TRUE, HIDE_FALSE}
 
 class ReservationViewModel @ViewModelInject constructor(private val model: Repository) :
     ViewModel() {
 
     private var serverDomain =
         "https://" + prefs.severDomain
-
+    var hideCheck: HideCheck = HideCheck.HIDE_TRUE
     private var delayTime = Constants.DEFAULT_TIME
     var storageList:MutableList<ReservationGuests> = mutableListOf()
     private val job = SupervisorJob()
@@ -66,8 +68,14 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     val cusCount: LiveData<String>
         get() = _cusCount
 
+    private val _isFirst = SingleLiveEvent<Boolean>()
+    val isFirst: SingleLiveEvent<Boolean>
+        get() = _isFirst
+
     private val tasksEventChannel = Channel<TasksEvent>()
     val tasksEvent = tasksEventChannel.receiveAsFlow()
+
+
 
 
     private var scope = viewModelScope.launch(Dispatchers.IO + job) {
@@ -123,6 +131,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         }
     }
 
+
     fun setDateArrayReservation(data: Array<String>) {
         _orderDate.value = data
     }
@@ -175,10 +184,11 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         prefs.storeId).collect {
         prefs.storeName = it[0].storeName
         prefs.rsno = it[0].rsno
+        _isFirst.postValue(true)
     }
 
     private suspend fun getStoreInformation() {
-        if(prefs.storeId == ""){
+        if(prefs.storeName == ""){
             fetchStoreInfo()
         }
     }
@@ -192,7 +202,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         val groupItem = mutableListOf<List<ReservationGuests>>()
 
         if(sortGuests.isNotEmpty()) {
-            for (item in sortGuests) {
+            for (item in  if(hideCheck != HideCheck.HIDE_TRUE) sortGuests.filter { it.status == "A" } else sortGuests ) {
                 val date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(item.reservationTime)
                 val formattedDate = SimpleDateFormat("MM/dd HH:mm").format(date)
                 var dateStr = formattedDate.split(" ")
@@ -268,7 +278,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
                 tasksEventChannel.send(TasksEvent.ShowSuccessMessage)
                 var time = dataPostToSet.reservation.reservationTime.split(" ")
                 fetchAllData(time[0], time[0])
-                //sendSMS("celaviLAB",dataPostToSet.reservation.phone, prefs.storeName +" "+dataPostToSet.reservation.reservationTime+" 已完成預約")
+                sendSMS("celaviLAB",dataPostToSet.reservation.phone, prefs.storeName +" "+dataPostToSet.reservation.reservationTime+" 已完成預約")
             }else{
                 tasksEventChannel.send(TasksEvent.ShowFailMessage)
             }
@@ -366,7 +376,14 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         }
     }
 
-
+    fun hideChecked(isHide:Boolean) {
+        hideCheck = if(isHide){
+            HideCheck.HIDE_TRUE
+        }else{
+            HideCheck.HIDE_FALSE
+        }
+        allDataReorganization(guests)
+    }
 
     override fun onCleared() {
         super.onCleared()

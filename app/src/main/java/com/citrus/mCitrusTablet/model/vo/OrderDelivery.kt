@@ -14,7 +14,7 @@ data class PostToGetDelivery (
 /*input*/
 data class OrderDelivery (
     val status: Int,
-    @SerializedName("Data")
+    @SerializedName("data")
     val data: DeliveryInfo
 )
 
@@ -67,4 +67,12 @@ data class OrdersItemDelivery (
 
     @SerializedName("Price")
     val price: Int
-)
+){
+    fun isSame(other: OrdersItemDelivery): Boolean {
+        return gname == other.gname
+    }
+
+    fun isContentSame(other: OrdersItemDelivery): Boolean {
+        return this === other
+    }
+}

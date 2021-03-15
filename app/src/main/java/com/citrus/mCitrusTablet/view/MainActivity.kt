@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment!!.navController
 
 
-        if(prefs.rsno == ""|| prefs.severDomain == ""){
+        if(prefs.storeId == ""|| prefs.severDomain == ""){
             navController.navigate(R.id.settingFragment)
         }
 

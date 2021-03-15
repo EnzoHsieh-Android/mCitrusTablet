@@ -50,4 +50,17 @@
     <string name="noSeat">所選和相鄰時段皆查無空桌</string>
     <string name="noTime">沒有搜尋結果,請重新輸入查詢條件</string>
     <string name="pick_time_hint">選擇時段進行預約</string>
+    <string name="search_seat">查找空桌</string>
+    <string name="query_conditions">查詢條件:</string>
+    <string name="query_time">查詢時間:</string>
+    <string name="by_number">依人數</string>
+    <string name="by_seat">依座位</string>
+    <string name="enter">輸入:</string>
+    <string name="number">人數</string>
+    <string name="floor">樓層</string>
+    <string name="room">座位</string>
+    <string name="search">搜尋</string>
+    <string name="order_delivery">預點單</string>
+    <string name="hide_check">過濾入席</string>
+    <string name="show_check">顯示入席</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.citrus.mCitrusTablet.view.reservation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -38,6 +39,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
     private var tempSeat: String = ""
     private var tempTime: String = ""
     private var tempCount: Int = 0
+    private var isHideCheck = false
 
     private var seatData = mutableListOf<String>()
     private var timeTitle = mutableListOf<String>()
@@ -82,6 +84,18 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
 
             btNext.setOnClickListener {
                 dateChange(tvDate.text as String, 1)
+            }
+
+            btn_hideCheckBlock.setOnClickListener {
+                reservationFragmentViewModel.hideChecked(isHideCheck)
+                isHideCheck = !isHideCheck
+                if(isHideCheck){
+                    hideCheck.setImageDrawable(resources.getDrawable(R.drawable.eye))
+                    tv_hideCheck.text = resources.getString(R.string.show_check)
+                }else{
+                    hideCheck.setImageDrawable(resources.getDrawable(R.drawable.visibility))
+                    tv_hideCheck.text = resources.getString(R.string.hide_check)
+                }
             }
 
 
@@ -165,16 +179,21 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                     }
                     dialog!!.show()
                 }else{
-                    var data = ReservationClass(
+
+                    var data = PostToSetReservation(prefs.rsno, ReservationClass(
                         tempTime, tempCount, "", cusName, cusPhone, cusMemo, "A", seat[0], seat[1]
-                    )
+                    ))
 
-                    var uploadData = PostToSetReservation(prefs.rsno, data)
-
-                    reservationFragmentViewModel.uploadReservation(uploadData)
+                    reservationFragmentViewModel.uploadReservation(data)
                 }
             }
         }
+
+
+        reservationFragmentViewModel.isFirst.observe(viewLifecycleOwner,{
+            reservationFragmentViewModel.reload()
+        })
+
 
 
         reservationFragmentViewModel.titleData.observe(viewLifecycleOwner, {

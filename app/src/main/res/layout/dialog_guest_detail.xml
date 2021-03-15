@@ -6,10 +6,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_centerInParent="true"
     android:layout_gravity="center_horizontal"
-    android:padding="@dimen/padding_15"
+    android:padding="@dimen/padding_18"
     android:background="@drawable/dialog_rounded_bg"
     android:backgroundTint="@color/lightBg"
-    android:elevation="@dimen/dp_4"
     android:orientation="vertical"
     android:clipToPadding="false">
 
@@ -22,7 +21,6 @@
             android:layout_width="@dimen/dp_20"
             android:layout_height="@dimen/dp_20"
             android:layout_gravity="center"
-
             android:src="@drawable/ic_baseline_error_outline_24"
             android:contentDescription="@string/error_occurred" />
 
@@ -39,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="@dimen/padding_10">
+            android:paddingTop="@dimen/padding_5">
 
 
             <TextView

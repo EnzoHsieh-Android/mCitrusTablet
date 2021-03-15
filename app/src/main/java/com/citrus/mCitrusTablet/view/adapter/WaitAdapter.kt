@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.citrus.mCitrusTablet.databinding.WaititemBinding
+import com.citrus.mCitrusTablet.databinding.RvWaitItemBinding
 import com.citrus.mCitrusTablet.model.vo.Wait
 import com.citrus.mCitrusTablet.util.AsyncDiffUtil
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -20,7 +20,7 @@ class WaitAdapter(@ApplicationContext val context: Context,val onItemClick: (Wai
     })
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TasksViewHolder {
-        val binding = WaititemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = RvWaitItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TasksViewHolder(binding)
     }
 
@@ -37,7 +37,7 @@ class WaitAdapter(@ApplicationContext val context: Context,val onItemClick: (Wai
         asyncDiffUtil.update(items)
     }
 
-    inner class TasksViewHolder(private val binding: WaititemBinding) : RecyclerView.ViewHolder(
+    inner class TasksViewHolder(private val binding: RvWaitItemBinding) : RecyclerView.ViewHolder(
         binding.root
     ) {
         fun bind(wait: Wait, currentList: List<Wait>) {
