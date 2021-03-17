@@ -1,9 +1,8 @@
 package com.citrus.mCitrusTablet.view.dialog
 
-import android.content.Context
 import android.graphics.Point
-import android.util.Log
 import android.view.Gravity
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.di.prefs
@@ -16,6 +15,7 @@ import kotlinx.android.synthetic.main.dialog_order_delivery.*
 
 
 class CustomOrderDeliveryDialog(
+    var context: FragmentActivity,
     private var wait: Wait,
     private val waitViewModel: WaitViewModel,
 ) : BaseDialogFragment() {
@@ -29,6 +29,7 @@ class CustomOrderDeliveryDialog(
 
     override fun initView() {
         setWindowWidthPercent()
+        title.text = context.resources.getString(R.string.order_delivery) +" "+ wait.orderNo
 
         deliveryRv.apply {
             adapter = orderDeliveryAdapter
@@ -61,4 +62,6 @@ class CustomOrderDeliveryDialog(
             it.setGravity(Gravity.CENTER)
         }
     }
+
+
 }

@@ -734,7 +734,37 @@
 
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:id="@+id/statusFilter"
+                        app:layout_constraintStart_toStartOf="@id/guideline5"
+                        app:layout_constraintEnd_toEndOf="@id/guideline6"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:orientation="horizontal"
+                        android:gravity="center">
 
+                        <ImageView
+                            android:layout_marginStart="@dimen/dp_5"
+                            android:layout_width="@dimen/dp_10"
+                            android:layout_height="@dimen/dp_10"
+                            android:src="@drawable/filter"
+                            android:scaleType="fitCenter"
+                            />
+
+                        <TextView
+                            android:id="@+id/tv_filterType"
+                            android:layout_marginStart="@dimen/dp_2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/filter_all"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:textSize="@dimen/sp_6"
+                            />
+
+                    </LinearLayout>
 
                     <androidx.constraintlayout.widget.Guideline
                         android:id="@+id/guideline"
@@ -783,6 +813,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/reservation_rv"
+            android:layoutAnimation="@anim/layout_animation"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/dp_5"

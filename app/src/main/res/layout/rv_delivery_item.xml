@@ -4,56 +4,84 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tool="http://schemas.android.com/tools"
-    android:layout_margin="@dimen/dp_10">
+    >
 
-    <TextView
-        android:id="@+id/gName"
+
+    <LinearLayout
+        android:id="@+id/item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tool:text="XXXXXX"
-        android:textSize="@dimen/sp_16"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="horizontal"
+        android:gravity="start"
+        >
 
-    <TextView
-        android:id="@+id/qty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tool:text="x1"
-        android:textSize="@dimen/sp_16"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/gName"
-        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <TextView
-        android:visibility="gone"
-        android:id="@+id/addName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tool:text="XXXXXX"
-        android:textSize="@dimen/sp_16"
-        app:layout_constraintTop_toBottomOf="@id/gName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        <TextView
+            android:id="@+id/gName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tool:text="XXXXXX"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-    <TextView
-        android:visibility="gone"
-        android:id="@+id/flavorName"
-        android:layout_width="wrap_content"
+        <TextView
+            android:layout_marginStart="@dimen/dp_10"
+            android:id="@+id/qty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tool:text="x1"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/gName"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:gravity="start"
+        android:id="@+id/flavor"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        tool:text="xxxx"
-        android:textSize="@dimen/sp_16"
-        app:layout_constraintTop_toBottomOf="@id/addName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/item"
+        app:layout_constraintStart_toStartOf="@id/item"
+        app:layout_constraintEnd_toEndOf="@id/item"
+        android:orientation="vertical"
+        >
+
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/addName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tool:text="XXXXXX"
+            android:textSize="@dimen/sp_16" />
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/flavorName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tool:text="xxxx"
+            android:textSize="@dimen/sp_16"
+           />
+
+
+    </LinearLayout>
+
 
     <View
-        app:layout_constraintTop_toBottomOf="@id/flavorName"
-        android:layout_margin="@dimen/dp_5"
-        android:layout_marginStart="@dimen/dp_20"
-        android:layout_marginEnd="@dimen/dp_20"
-        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/dp_5"
+        app:layout_constraintTop_toBottomOf="@id/flavor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="@dimen/dp_200"
         android:layout_height="@dimen/dp_2"
         android:background="@color/gray"
         />

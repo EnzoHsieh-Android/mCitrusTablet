@@ -15,6 +15,7 @@ import com.citrus.mCitrusTablet.model.vo.*
 import com.citrus.mCitrusTablet.util.Constants
 import com.citrus.mCitrusTablet.view.adapter.WaitAdapter
 import com.citrus.mCitrusTablet.view.dialog.CustomAlertDialog
+import com.citrus.mCitrusTablet.view.dialog.CustomFilterCheckBoxDialog
 import com.citrus.mCitrusTablet.view.dialog.CustomOrderDeliveryDialog
 import com.citrus.mCitrusTablet.view.reservation.SearchViewStatus
 import com.citrus.mCitrusTablet.view.reservation.TasksEvent
@@ -34,20 +35,23 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
     private val binding get() = _binding!!
     private var sortOrderByTime: SortOrder = SortOrder.BY_TIME_LESS
     private var sortOrderByCount: SortOrder = SortOrder.BY_LESS
+    private var filterType = Filter.SHOW_ALL
     private var isHideCheck = false
-    private val waitAdapter by lazy{ WaitAdapter(requireActivity(),
-        onItemClick = { wait ->
-            activity?.let {
+    private var tempWaitList = mutableListOf<Wait>()
+    private val waitAdapter by lazy {
+        WaitAdapter(requireActivity(),
+            onItemClick = { wait ->
                 CustomOrderDeliveryDialog(
+                    requireActivity(),
                     wait,
                     waitViewModel
-                ).show(it.supportFragmentManager, "CustomOrderDeliveryDialog")
-            }
-        }, onButtonClick = {
-            waitViewModel.changeStatus(it, Constants.CHECK)
-        }, onNoticeClick = {
-            waitViewModel.sendNotice(it)
-        }) }
+                ).show(requireActivity().supportFragmentManager, "CustomOrderDeliveryDialog")
+            }, onButtonClick = {
+                waitViewModel.changeStatus(it, Constants.CHECK)
+            }, onNoticeClick = {
+                waitViewModel.sendNotice(it)
+            })
+    }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -55,6 +59,7 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
         _binding = FragmentWaitBinding.bind(view)
         initView()
         initObserver()
+        waitViewModel.startFetchJob()
     }
 
 
@@ -75,7 +80,7 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
 
                 ItemTouchHelper(
                     object : ItemTouchHelper.SimpleCallback(
-                        ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+                        0,
                         ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
                     ) {
                         override fun onMove(
@@ -87,7 +92,8 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
                         }
 
                         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-
+                            var guest = tempWaitList[viewHolder.adapterPosition]
+                            waitViewModel.changeStatus(guest, Constants.CANCEL)
                         }
 
                     }).attachToRecyclerView(this)
@@ -143,6 +149,29 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
             }
 
 
+            statusFilter.setOnClickListener {
+                var dialog = activity?.let {
+                    CustomFilterCheckBoxDialog(
+                        it,
+                        filterType,
+                        onCheckChange = { filter ->
+                            filterType = filter
+
+                            when(filterType){
+                                Filter.SHOW_ALL -> {  tvFilterType.text = resources.getString(R.string.filter_all) }
+                                Filter.SHOW_CANCELLED -> {  tvFilterType.text = resources.getString(R.string.filter_cancelled) }
+                                Filter.SHOW_NOTIFIED -> {  tvFilterType.text = resources.getString(R.string.filter_notified) }
+                                Filter.SHOW_CONFIRM -> {  tvFilterType.text = resources.getString(R.string.filter_confirm) }
+                                Filter.SHOW_WAIT -> {  tvFilterType.text = resources.getString(R.string.filter_wait) }
+                            }
+
+                            waitViewModel.changeFilter(filterType)
+                        }
+                    )
+                }
+                dialog!!.show()
+            }
+
 
             searchView.onQueryTextChanged {
                 if (it.isEmpty()) {
@@ -188,6 +217,7 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
     private fun initObserver() {
         waitViewModel.allData.observe(viewLifecycleOwner, { waitList ->
             if (waitList.isNotEmpty()) {
+                tempWaitList = waitList as MutableList<Wait>
                 waitAdapter?.update(waitList)
                 binding.reservationRv.visibility = View.VISIBLE
                 binding.animationResultNotFound.visibility = View.GONE
@@ -205,8 +235,6 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
         waitViewModel.cusCount.observe(viewLifecycleOwner, { cusCount ->
             binding.tvTotal.text = resources.getString(R.string.TotalForTheDay) + " " + cusCount
         })
-
-
 
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
@@ -242,9 +270,9 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
 
 
     override fun onDestroyView() {
-        super.onDestroyView()
         binding.reservationRv.adapter = null
         _binding = null
+        super.onDestroyView()
     }
 
     private fun clearSubmitText(isHideSeat: Boolean) {

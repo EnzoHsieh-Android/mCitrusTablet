@@ -103,14 +103,21 @@ data class Wait (
     val waitNumber: Int,
 
     @SerializedName("OrderNO")
-    val orderNo: String
+    val orderNo: String,
+
+    val url: String,
+
+    @SerializedName("UpdateDate")
+    var updateDate:String
+    ,
+    var isOverTime:Boolean
 ):Serializable{
     fun isSame(other: Wait): Boolean {
         return tkey == other.tkey
     }
 
     fun isContentSame(other: Wait): Boolean {
-        return this === other
+        return this == other
     }
 }
 

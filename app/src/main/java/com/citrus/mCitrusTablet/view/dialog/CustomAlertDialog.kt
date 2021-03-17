@@ -25,9 +25,12 @@ class CustomAlertDialog(
     }
 
     override fun initView() {
+
         if (icon == R.drawable.ic_check) {
             setCancelable(false)
             setCanceledOnTouchOutside(false)
+        }else{
+            setCancelable(true)
         }
 
         if(icon !=0) {

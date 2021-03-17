@@ -1,6 +1,7 @@
 package com.citrus.mCitrusTablet.view.reservation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -55,6 +56,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
         _binding = FragmentReservationBinding.bind(view)
         initView()
         initObserver()
+        reservationFragmentViewModel.startFetchJob()
     }
 
     private fun initView() {
@@ -80,7 +82,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
 
                 ItemTouchHelper(
                     object : ItemTouchHelper.SimpleCallback(
-                        ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+                        0,
                         ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
                     ) {
                         override fun onMove(
@@ -198,14 +200,13 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                 var seat = tempSeat.split("-")
 
                 if (cusName.isEmpty() || cusPhone.isEmpty() || tempSeat == "") {
-                    var dialog = activity?.let {
+                    var dialog =
                         CustomAlertDialog(
-                            it,
+                            requireActivity(),
                             getString(R.string.submitErrorMsg),
                             "",
                             R.drawable.ic_baseline_error_24
                         )
-                    }
                     dialog!!.show()
                 } else {
 
@@ -235,7 +236,6 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
         })
 
 
-
         reservationFragmentViewModel.titleData.observe(viewLifecycleOwner, {
             if (it.isNotEmpty()) {
                 timeTitle = it as MutableList<String>
@@ -256,7 +256,6 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                 binding.seatPicker.maxValue = seatData.size
                 binding.seatPicker.displayedValues = seatData.toTypedArray()
             } else {
-                activity?.let {
                     CustomAlertDialog(
                         requireActivity(),
                         resources.getString(R.string.noSeat),
@@ -266,7 +265,6 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
 
                         }
                     ).show()
-                }
             }
         })
 
@@ -296,12 +294,10 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                                 timeTitle[index],
                                 guestsList[index],
                                 onItemClick = { Guest ->
-                                    activity?.let {
                                         CustomGuestDetailDialog(
-                                            it,
+                                            requireActivity(),
                                             Guest
                                         ).show(it.supportFragmentManager, "CustomGuestDetailDialog")
-                                    }
                                 },
                                 onButtonClick = {
                                     reservationFragmentViewModel.changeStatus(it, Constants.CHECK)
@@ -335,25 +331,23 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                         showInformation.visibility = View.GONE
                         hintBlock.visibility = View.VISIBLE
                         clearSubmitText(true)
-                        var dialog = activity?.let {
+                        var dialog =
                             CustomAlertDialog(
-                                it,
+                                requireActivity(),
                                 resources.getString(R.string.res_ok),
                                 "",
                                 R.drawable.ic_check
                             )
-                        }
                         dialog!!.show()
                     }
                     is TasksEvent.ShowFailMessage -> {
-                        var dialog = activity?.let {
+                        var dialog =
                             CustomAlertDialog(
-                                it,
+                                requireActivity(),
                                 resources.getString(R.string.res_ng),
                                 "",
                                 R.drawable.ic_baseline_clear_24
                             )
-                        }
                         dialog!!.show()
                     }
                 }
@@ -441,10 +435,11 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         reservationAdapter.removeAllSections()
         binding.reservationRv.adapter = null
         _binding = null
+        reservationFragmentViewModel.onDetachView()
+        super.onDestroyView()
     }
 
 }

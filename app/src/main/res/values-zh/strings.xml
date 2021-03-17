@@ -60,8 +60,18 @@
     <string name="floor">樓層</string>
     <string name="room">座位</string>
     <string name="search">搜尋</string>
-    <string name="order_delivery">預點單</string>
+    <string name="order_delivery">預點單號:</string>
+    <string name="order_delivery_item">品項:</string>
     <string name="hide_check">過濾入席</string>
     <string name="show_check">顯示入席</string>
     <string name="notice">通知</string>
+    <string name="notified">已通知</string>
+    <string name="confirmed">已確認</string>
+    <string name="timeOut">等候逾時</string>
+    <string name="delete">已取消</string>
+    <string name="filter_all">顯示全部</string>
+    <string name="filter_cancelled">顯示已取消</string>
+    <string name="filter_notified">顯示已通知</string>
+    <string name="filter_confirm">顯示已確認</string>
+    <string name="filter_wait">顯示候位</string>
 </resources>

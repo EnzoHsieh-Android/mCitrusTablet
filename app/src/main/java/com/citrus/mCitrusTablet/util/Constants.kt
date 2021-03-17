@@ -8,8 +8,13 @@ import java.util.*
 
 enum class HideCheck { HIDE_TRUE, HIDE_FALSE }
 object Constants {
+
+    const val KEY_MESSAGE_RES = "KEY_MESSAGE_RES"
+    const val KEY_MESSAGE_WAIT = "KEY_MESSAGE_WAIT"
+    const val KEY_MESSAGE_NOTICE = "KEY_MESSAGE_NOTICE"
     const val ADD = "A"
     const val CONFIRM = "O"
+    const val NOTICE = "I"
     const val CHECK = "C"
     const val CANCEL = "D"
     const val KEY_LANGUAGE = "language"
@@ -30,7 +35,8 @@ object Constants {
     const val GET_ORDERS_DELIVERY= "/POSServer/UploadDataWS/Service1.asmx/GetOrdersDeliveryDataByWaitNo"
     const val SEND_SMS = "http://hq.citrus.tw/citrus/Service1.asmx/SendNewsletter_Mitake"
     var dateTimeFormatSql = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
-    var inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+    val outputFormat = SimpleDateFormat("MM/dd HH:mm")
     var dateFormatSql = SimpleDateFormat("yyyy/MM/dd")
     var defaultTimeStr: String = dateFormatSql.format(Date())
 

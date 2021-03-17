@@ -61,10 +61,18 @@
     <string name="floor">Floor</string>
     <string name="room">Room</string>
     <string name="search">Search</string>
-    <string name="order_delivery">Order Delivery</string>
+    <string name="order_delivery">Order Delivery No:</string>
     <string name="hide_check">Hide Check</string>
     <string name="show_check">Show Check</string>
     <string name="notice">Notice</string>
-    <!-- TODO: Remove or change this placeholder text -->
-
+    <string name="notified">Notified</string>
+    <string name="confirmed">Confirmed</string>
+    <string name="order_delivery_item">Order items:</string>
+    <string name="timeOut">Time out</string>
+    <string name="delete">Cancelled</string>
+    <string name="filter_all">Show All</string>
+    <string name="filter_cancelled">Show Cancelled</string>
+    <string name="filter_notified">Show Notified</string>
+    <string name="filter_confirm">Show Confirm</string>
+    <string name="filter_wait">Show Wait</string>
 </resources>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_centerInParent="true"
+    android:layout_gravity="center_horizontal"
+    android:padding="@dimen/padding_18"
+    android:background="@drawable/dialog_rounded_bg"
+    android:backgroundTint="@color/lightBg"
+    android:orientation="vertical"
+    android:clipToPadding="false">
+
+
+    <RadioGroup
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/rb_group"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <RadioButton
+            android:layout_margin="@dimen/dp_2"
+            android:checked="true"
+            android:id="@+id/rb_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sp_10"
+            android:text="@string/filter_all" />
+
+        <RadioButton
+            android:layout_margin="@dimen/dp_2"
+            android:id="@+id/rb_cancelled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sp_10"
+            android:text="@string/filter_cancelled" />
+
+        <RadioButton
+            android:layout_margin="@dimen/dp_2"
+            android:id="@+id/rb_notified"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sp_10"
+            android:text="@string/filter_notified" />
+
+        <RadioButton
+            android:layout_margin="@dimen/dp_2"
+            android:id="@+id/rb_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sp_10"
+            android:text="@string/filter_confirm" />
+
+        <RadioButton
+            android:layout_margin="@dimen/dp_2"
+            android:id="@+id/rb_wait"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sp_10"
+            android:text="@string/filter_wait" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btn_ok"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rb_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="@string/ok"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -46,7 +46,7 @@ class GlobalResponseOperator<T> constructor(
         withContext(Dispatchers.Main) {
             apiResponse.run {
                 Timber.d(message())
-                toast(message())
+                //toast(message())
             }
         }
     }

@@ -9,6 +9,8 @@ import com.skydoves.sandwich.suspendOnSuccess
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onCompletion
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -44,6 +46,22 @@ class Repository @Inject constructor(private val apiService: ApiService) {
                             emit(list.reservation.filter { it.status != Constants.CANCEL })
                         } else {
                             onCusCount(list.wait.size.toString())
+                            var distance = 0L
+                            var updateTimeStr = ""
+                            for (wait in list.wait) {
+                                if (wait.updateDate != null && wait.updateDate != "" && (wait.status == Constants.NOTICE || wait.status == Constants.CONFIRM)) {
+                                    val updateDateFormat = Constants.outputFormat.format(
+                                        Constants.inputFormat.parse(wait.updateDate)
+                                    )
+                                    updateTimeStr = updateDateFormat.split(" ")[1]
+                                    val updateDate =
+                                        Constants.inputFormat.parse(wait.updateDate)
+                                    distance = ((Date().time - updateDate.time) / 1000) / 60
+                                }
+                                if (distance > 9) wait.isOverTime = true else false
+                                wait.updateDate = updateTimeStr
+                            }
+
                             emit(list.wait)
                         }
                     }
@@ -67,7 +85,6 @@ class Repository @Inject constructor(private val apiService: ApiService) {
         }.flowOn(Dispatchers.IO)
 
     fun fetchStoreInfo(url: String, storeId: String) = flow {
-        Log.e("124", storeId)
         apiService.getStoreInfo(url, storeId).suspendOnSuccess {
             if (data?.status != 0) {
                 emit(data!!.data)
@@ -91,6 +108,8 @@ class Repository @Inject constructor(private val apiService: ApiService) {
                 data?.let {
                     if (it.status == 1) {
                         emit(1)
+                    }else{
+                        emit(0)
                     }
                 }
             }
@@ -115,6 +134,8 @@ class Repository @Inject constructor(private val apiService: ApiService) {
             }
         }
     }.flowOn(Dispatchers.IO)
+
+
 
 
     fun fetchOrdersDeliveryData(

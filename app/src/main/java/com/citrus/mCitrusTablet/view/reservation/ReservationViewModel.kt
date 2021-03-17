@@ -1,6 +1,7 @@
 package com.citrus.mCitrusTablet.view.reservation
 
 
+import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,8 +17,8 @@ import com.citrus.mCitrusTablet.util.HideCheck
 import com.citrus.mCitrusTablet.util.SingleLiveEvent
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.*
+import timber.log.Timber
 import java.text.SimpleDateFormat
 
 enum class SortOrder { BY_LESS, BY_TIME, BY_MORE }
@@ -30,7 +31,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     var hideCheck: HideCheck = HideCheck.HIDE_TRUE
     private var delayTime = Constants.DEFAULT_TIME
     var storageList = mutableListOf<ReservationGuests>()
-    private val job = SupervisorJob()
+    private lateinit var fetchJob: Job
 
     private var guests = mutableListOf<ReservationGuests>()
 
@@ -58,7 +59,6 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     val forDeleteData: LiveData<List<Any>>
         get() = _forDeleteData
 
-
     private val _dateRange = MutableLiveData<Array<String>>()
     val dateRange: LiveData<Array<String>>
         get() = _dateRange
@@ -67,38 +67,50 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     val orderDate: LiveData<Array<String>>
         get() = _orderDate
 
-    private val _cusCount = MutableLiveData<String>()
-    val cusCount: LiveData<String>
-        get() = _cusCount
 
     private val _isFirst = SingleLiveEvent<Boolean>()
     val isFirst: SingleLiveEvent<Boolean>
         get() = _isFirst
 
+
+    private val _cusCount = MutableLiveData<String>()
+    val cusCount: LiveData<String>
+        get() = _cusCount
+
     private val tasksEventChannel = Channel<TasksEvent>()
     val tasksEvent = tasksEventChannel.receiveAsFlow()
 
 
-    private var scope = viewModelScope.launch(Dispatchers.IO + job) {
-        while (true) {
-            if (_dateRange.value == null) {
-                fetchAllData(defaultTimeStr, defaultTimeStr)
-            } else {
-                _dateRange.value?.get(0)?.let { fetchAllData(it, _dateRange.value?.get(1)!!) }
-            }
-            delay(delayTime * 60 * 1000)
-        }
-    }
-
-    private fun stopJob() {
-        scope.cancel()
-    }
 
     init {
         if (prefs.storeName == "") {
             fetchStoreInfo()
         }
     }
+
+
+    private fun createFetchJob(): Flow<Job> = flow {
+        while (true) {
+            if (_dateRange.value == null) {
+                emit(fetchAllData(defaultTimeStr, defaultTimeStr))
+            } else {
+                _dateRange.value?.get(0)?.let { emit(fetchAllData(it, _dateRange.value?.get(1)!!)) }
+            }
+            delay(delayTime * 60 * 1000)
+        }
+    }
+
+     fun startFetchJob() {
+        fetchJob = viewModelScope.launch {
+            createFetchJob().onEach { Timber.d("Res_onFetch: $it") }
+                .collect()
+        }
+    }
+
+    private fun stopFetchJob() {
+        fetchJob.cancel()
+    }
+
 
     fun setSearchVal(
         rsno: String,
@@ -163,14 +175,12 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         }
 
 
-    private fun fetchAllData(startTime: String, endTime: String) {
-        var dataOutput = PostToGetAllData(prefs.rsno, startTime, endTime)
-        if (dataOutput != null) {
+    private fun fetchAllData(startTime: String, endTime: String) =
             viewModelScope.launch {
                 model.fetchAllData(
                     serverDomain + Constants.GET_ALL_DATA,
                     "reservation",
-                    dataOutput,
+                    PostToGetAllData(prefs.rsno, startTime, endTime),
                     onCusCount = { cusCount ->
                         _cusCount.postValue(cusCount)
                     }).collect { list ->
@@ -186,8 +196,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
                     }
                 }
             }
-        }
-    }
+
 
     private fun fetchStoreInfo() =
         viewModelScope.launch {
@@ -197,6 +206,9 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
             ).collect {
                 prefs.storeName = it[0].storeName
                 prefs.rsno = it[0].rsno
+                prefs.messageRes = it[0].message1
+                prefs.messageWait = it[0].message2
+                prefs.messageNotice = it[0].message3
                 _isFirst.postValue(true)
             }
         }
@@ -306,7 +318,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
                         sendSMS(
                             "celaviLAB",
                             dataPostToSet.reservation.phone,
-                            prefs.storeName + " " + dataPostToSet.reservation.reservationTime + " 已完成預約"
+                            prefs.storeName + " " + dataPostToSet.reservation.reservationTime + " "+ prefs.messageRes
                         )
                     } else {
                         tasksEventChannel.send(TasksEvent.ShowFailMessage)
@@ -412,10 +424,16 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         allDataReorganization(guests)
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        stopJob()
+
+    fun onDetachView(){
+        onCleared()
     }
+
+    override fun onCleared() {
+        stopFetchJob()
+        super.onCleared()
+    }
+
 }
 
 

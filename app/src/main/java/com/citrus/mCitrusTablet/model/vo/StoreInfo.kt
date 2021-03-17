@@ -65,5 +65,14 @@ data class Info (
     val rsno: String,
 
     @SerializedName("BusinessType")
-    val businessType: String
+    val businessType: String,
+
+    @SerializedName("Message1")
+    val message1:String,
+
+    @SerializedName("Message2")
+    val message2:String,
+
+    @SerializedName("Message3")
+    val message3:String
 )

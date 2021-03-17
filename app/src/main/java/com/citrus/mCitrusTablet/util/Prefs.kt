@@ -28,7 +28,17 @@ class Prefs(private val context: Context) {
         get() = prefs.getString(Constants.KEY_SERVER_DOMAIN, "")?: ""
         set(value) = prefs.edit().putString(Constants.KEY_SERVER_DOMAIN, value).apply()
 
+    var messageRes:String
+        get() = prefs.getString(Constants.KEY_MESSAGE_RES, "")?: ""
+        set(value) = prefs.edit().putString(Constants.KEY_MESSAGE_RES, value).apply()
 
+    var messageWait:String
+        get() = prefs.getString(Constants.KEY_MESSAGE_WAIT, "")?: ""
+        set(value) = prefs.edit().putString(Constants.KEY_MESSAGE_WAIT, value).apply()
+
+    var messageNotice:String
+        get() = prefs.getString(Constants.KEY_MESSAGE_NOTICE, "")?: ""
+        set(value) = prefs.edit().putString(Constants.KEY_MESSAGE_NOTICE, value).apply()
 
 
 }
