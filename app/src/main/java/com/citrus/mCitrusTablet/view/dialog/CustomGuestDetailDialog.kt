@@ -3,6 +3,7 @@ package com.citrus.mCitrusTablet.view.dialog
 import android.content.Context
 import android.graphics.Point
 import android.view.Gravity
+import android.view.View
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.model.vo.ReservationGuests
 import com.citrus.mCitrusTablet.util.ui.BaseDialogFragment
@@ -32,7 +33,14 @@ class CustomGuestDetailDialog(
         val formattedDate = outputFormat.format(date)
         var timeStr = formattedDate.split(" ")
         tv_time.text = mContext.resources.getString(R.string.time) + " : " +timeStr[1]
-        tv_memo.text = mContext.resources.getString(R.string.memo) + " : " +guest.memo.toString()
+
+        if(guest.memo != null && guest.memo != "") {
+            tv_memo.text =
+                mContext.resources.getString(R.string.memo) + " : " + guest.memo.toString()
+        }else{
+            tv_memo.visibility = View.GONE
+            ivIcon.visibility = View.GONE
+        }
     }
 
     override fun initAction() {
@@ -48,7 +56,7 @@ class CustomGuestDetailDialog(
             val width = size.x
             val height = size.y
 
-            it.setLayout((width * 0.65).toInt(), (height * 0.75).toInt())
+            it.setLayout((width * 0.5).toInt(), (height * 0.6).toInt())
             it.setGravity(Gravity.CENTER)
         }
     }

@@ -1,7 +1,7 @@
 package com.citrus.mCitrusTablet.view.reservation
 
 
-import android.util.Log
+
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -33,7 +33,8 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     var storageList = mutableListOf<ReservationGuests>()
     private lateinit var fetchJob: Job
 
-    private var guests = mutableListOf<ReservationGuests>()
+    private lateinit var selectGuest:ReservationGuests
+            private fun isSelectGuestInit()=::selectGuest.isInitialized
 
     private val _seatData = SingleLiveEvent<List<Floor>>()
     val seatData: SingleLiveEvent<List<Floor>>
@@ -186,11 +187,14 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
                     }).collect { list ->
                     if (list.isNotEmpty()) {
                         storageList = list as MutableList<ReservationGuests>
-                        guests = getSortRequirement(SortOrder.BY_TIME, list)
-                        allDataReorganization(guests)
+                        if(isSelectGuestInit()){
+                            for(item in storageList){
+                                item.isSelect = item.tkey == selectGuest.tkey
+                            }
+                        }
+                        allDataReorganization(getSortRequirement(SortOrder.BY_TIME, storageList))
                     } else {
                         storageList = mutableListOf()
-                        guests = mutableListOf()
                         _titleData.postValue(listOf())
                         _allData.postValue(mutableListOf())
                     }
@@ -212,6 +216,16 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
                 _isFirst.postValue(true)
             }
         }
+
+
+
+    fun itemSelect(guest:ReservationGuests){
+        selectGuest = guest
+        for(item in storageList){
+            item.isSelect = item == guest
+        }
+        allDataReorganization(storageList)
+    }
 
 
     /*拆分原始DATA組成SectionRecyclerView需求的樣式，分成Title List以及Data List*/
@@ -421,7 +435,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         } else {
             HideCheck.HIDE_FALSE
         }
-        allDataReorganization(guests)
+        allDataReorganization(storageList)
     }
 
 

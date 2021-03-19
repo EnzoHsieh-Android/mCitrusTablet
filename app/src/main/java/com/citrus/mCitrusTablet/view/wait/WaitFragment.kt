@@ -1,10 +1,12 @@
 package com.citrus.mCitrusTablet.view.wait
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,23 +31,29 @@ import java.util.*
 
 
 @AndroidEntryPoint
-class WaitFragment : Fragment(R.layout.fragment_wait) {
+class
+WaitFragment : Fragment(R.layout.fragment_wait) {
     private val waitViewModel: WaitViewModel by viewModels()
     private var _binding: FragmentWaitBinding? = null
     private val binding get() = _binding!!
-    private var sortOrderByTime: SortOrder = SortOrder.BY_TIME_LESS
+    private var sortOrderByTime: SortOrder = SortOrder.BY_TIME_MORE
     private var sortOrderByCount: SortOrder = SortOrder.BY_LESS
     private var filterType = Filter.SHOW_ALL
     private var isHideCheck = false
     private var tempWaitList = mutableListOf<Wait>()
     private val waitAdapter by lazy {
-        WaitAdapter(requireActivity(),
-            onItemClick = { wait ->
-                CustomOrderDeliveryDialog(
-                    requireActivity(),
-                    wait,
-                    waitViewModel
-                ).show(requireActivity().supportFragmentManager, "CustomOrderDeliveryDialog")
+        WaitAdapter(
+            mutableListOf(),
+            requireActivity(),
+            onItemClick = { wait,hasMemo,hasDelivery ->
+                waitViewModel.itemSelect(wait)
+                if(hasDelivery) {
+                    CustomOrderDeliveryDialog(
+                        requireActivity(),
+                        wait,
+                        waitViewModel
+                    ).show(requireActivity().supportFragmentManager, "CustomOrderDeliveryDialog")
+                }
             }, onButtonClick = {
                 waitViewModel.changeStatus(it, Constants.CHECK)
             }, onNoticeClick = {
@@ -67,13 +75,15 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
         binding.apply {
             date2Day(SimpleDateFormat("yyyy/MM/dd").format(Date()))
 
-            laySwipe.setOnRefreshListener {
+
+            btn_reloadBlock.setOnClickListener {
                 waitViewModel.reload()
-                laySwipe.isRefreshing = false
             }
+
 
             reservationRv.apply {
                 adapter = waitAdapter
+                addItemDecoration(DividerItemDecoration(this.context,DividerItemDecoration.VERTICAL))
                 layoutManager = LinearLayoutManager(requireContext())
                 waitAdapter.update(mutableListOf())
 
@@ -93,7 +103,14 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
 
                         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                             var guest = tempWaitList[viewHolder.adapterPosition]
-                            waitViewModel.changeStatus(guest, Constants.CANCEL)
+
+
+                            if(guest.status != "C" && guest.status != "D") {
+                                waitViewModel.changeStatus(guest, Constants.CANCEL)
+                            }else{
+                                waitAdapter.notifyDataSetChanged()
+                            }
+
                         }
 
                     }).attachToRecyclerView(this)
@@ -125,10 +142,10 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
 
             sortByTime.setOnClickListener {
                 sortOrderByTime = if (sortOrderByTime == SortOrder.BY_TIME_LESS) {
-                    timeSortStatus.setImageDrawable(resources.getDrawable(R.drawable.up))
+                    timeSortStatus.setImageDrawable(resources.getDrawable(R.drawable.down))
                     SortOrder.BY_TIME_MORE
                 } else {
-                    timeSortStatus.setImageDrawable(resources.getDrawable(R.drawable.down))
+                    timeSortStatus.setImageDrawable(resources.getDrawable(R.drawable.up))
                     SortOrder.BY_TIME_LESS
                 }
                 waitViewModel.sortList(sortOrderByTime)
@@ -226,9 +243,6 @@ class WaitFragment : Fragment(R.layout.fragment_wait) {
                 binding.animationResultNotFound.visibility = View.VISIBLE
             }
 
-            binding.reservationRv.post {
-                binding.reservationRv.smoothScrollToPosition(0)
-            }
         })
 
 

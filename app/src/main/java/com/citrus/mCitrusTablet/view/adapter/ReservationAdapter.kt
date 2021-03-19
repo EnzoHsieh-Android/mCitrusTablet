@@ -1,12 +1,13 @@
 package com.citrus.mCitrusTablet.view.adapter
 
 
+import android.graphics.Color
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.model.vo.ReservationGuests
@@ -18,10 +19,11 @@ import java.text.SimpleDateFormat
 
 
 class ReservationAdapter(
+    val activity: FragmentActivity,
     private val header: String,
     private val item: List<ReservationGuests>,
-        private val onItemClick:(ReservationGuests) -> Unit,
-    private val onButtonClick:(ReservationGuests) -> Unit
+    private val onItemClick: (ReservationGuests,Boolean) -> Unit,
+    private val onButtonClick: (ReservationGuests) -> Unit
 ) :
     Section(
         SectionParameters.builder()
@@ -51,13 +53,23 @@ class ReservationAdapter(
         return item
     }
 
+
     override fun onBindItemViewHolder(holder: ViewHolder, position: Int) {
         val itemHolder = holder as ItemViewHolder
+
+
         var guest = item[position]
+        itemHolder.itemRoot.setBackgroundColor(Color.WHITE)
         itemHolder.itemName.text = guest.mName
         itemHolder.itemPhone.text = guest.phone
         itemHolder.itemSeats.text = guest.floorName+"-"+guest.roomName
         itemHolder.itemCount.text = guest.custNum.toString()
+
+        if(guest.isSelect){
+            itemHolder.itemRoot.setBackgroundColor(activity.resources.getColor(R.color.selectColor))
+        }else{
+            itemHolder.itemRoot.setBackgroundColor(Color.WHITE)
+        }
 
         val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
         val outputFormat = SimpleDateFormat("MM/dd HH:mm")
@@ -70,11 +82,12 @@ class ReservationAdapter(
 
         if(hasMemo){
             itemHolder.imgMemo.visibility = View.VISIBLE
-            itemHolder.itemRoot.setOnClickListener {
-                onItemClick(item[position])
-            }
         }else{
             itemHolder.imgMemo.visibility = View.INVISIBLE
+        }
+
+        itemHolder.itemRoot.setOnClickListener {
+            onItemClick(item[position],hasMemo)
         }
 
         when(guest.status){

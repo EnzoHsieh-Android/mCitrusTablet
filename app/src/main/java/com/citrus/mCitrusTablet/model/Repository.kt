@@ -49,7 +49,7 @@ class Repository @Inject constructor(private val apiService: ApiService) {
                             var distance = 0L
                             var updateTimeStr = ""
                             for (wait in list.wait) {
-                                if (wait.updateDate != null && wait.updateDate != "" && (wait.status == Constants.NOTICE || wait.status == Constants.CONFIRM)) {
+                                if (wait.updateDate != null && wait.updateDate != "" ) {
                                     val updateDateFormat = Constants.outputFormat.format(
                                         Constants.inputFormat.parse(wait.updateDate)
                                     )
@@ -104,6 +104,19 @@ class Repository @Inject constructor(private val apiService: ApiService) {
 
     fun sendSMS(url: String, project: String, phone: String, body: String) = flow {
         apiService.sendSMS(url, project, phone, body)
+            .suspendOnSuccess {
+                data?.let {
+                    if (it.status == 1) {
+                        emit(1)
+                    }else{
+                        emit(0)
+                    }
+                }
+            }
+    }.flowOn(Dispatchers.IO)
+
+    fun sendMail(url: String,email: String,htmlBody: String) = flow {
+        apiService.sendMail(url,email,htmlBody)
             .suspendOnSuccess {
                 data?.let {
                     if (it.status == 1) {

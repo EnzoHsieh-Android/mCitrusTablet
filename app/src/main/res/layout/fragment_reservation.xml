@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/laySwipe">
-<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.reservation.ReservationFragment">
@@ -22,6 +18,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         >
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/bt_prev"
+            app:layout_constraintTop_toTopOf="parent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/catch_citrus"/>
 
 
         <Button
@@ -94,16 +100,16 @@
             <ImageView
                 android:id="@+id/animation_reload"
                 android:scaleType="fitCenter"
-                android:layout_width="@dimen/dp_20"
-                android:layout_height="@dimen/dp_20"
+                android:layout_width="@dimen/dp_15"
+                android:layout_height="@dimen/dp_15"
                 android:src="@drawable/check"
                 />
 
             <TextView
-                android:layout_marginTop="@dimen/dp_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/today"
+                android:textSize="@dimen/sp_7"
                 android:textColor="@color/primaryColor"
                 android:textStyle="bold"
                 />
@@ -123,8 +129,8 @@
 
             <ImageView
                 android:scaleType="centerCrop"
-                android:layout_width="@dimen/dp_20"
-                android:layout_height="@dimen/dp_20"
+                android:layout_width="@dimen/dp_15"
+                android:layout_height="@dimen/dp_15"
                 android:src="@drawable/table" />
 
             <TextView
@@ -132,6 +138,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/search_seat"
+                android:textSize="@dimen/sp_7"
                 android:textColor="@color/primaryColor"
                 android:textStyle="bold" />
 
@@ -151,8 +158,8 @@
             <ImageView
                 android:id="@+id/hideCheck"
                 android:scaleType="centerCrop"
-                android:layout_width="@dimen/dp_20"
-                android:layout_height="@dimen/dp_20"
+                android:layout_width="@dimen/dp_15"
+                android:layout_height="@dimen/dp_15"
                 android:src="@drawable/visibility" />
 
             <TextView
@@ -161,6 +168,39 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/hide_check"
+                android:textSize="@dimen/sp_7"
+                android:textColor="@color/primaryColor"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginEnd="@dimen/dp_2"
+            android:id="@+id/btn_reloadBlock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@id/btn_SearchTable"
+            app:layout_constraintStart_toEndOf="@id/btn_hideCheckBlock"
+            app:layout_constraintTop_toTopOf="@id/btn_SearchTable"
+           >
+
+            <ImageView
+                android:id="@+id/reload"
+                android:scaleType="centerCrop"
+                android:layout_width="@dimen/dp_15"
+                android:layout_height="@dimen/dp_15"
+                android:src="@drawable/ic_baseline_refresh_24" />
+
+            <TextView
+                android:id="@+id/tv_reload"
+                android:layout_marginTop="@dimen/dp_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/refresh"
+                android:textSize="@dimen/sp_7"
                 android:textColor="@color/primaryColor"
                 android:textStyle="bold" />
 
@@ -332,19 +372,19 @@
 
         <LinearLayout
             android:id="@+id/nameBlock"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/dp_100"
             android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/horizontal_TimeStr40"
             app:layout_constraintBottom_toTopOf="@id/horizontal_TimeStr50"
             android:orientation="vertical"
-            android:gravity="center"
+            android:gravity="left|center"
             >
 
             <EditText
                 android:id="@+id/name"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/name"
                 android:textSize="@dimen/sp_12"
@@ -356,8 +396,6 @@
                 />
 
             <View
-                android:layout_marginLeft="@dimen/dp_30"
-                android:layout_marginRight="@dimen/dp_30"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@color/gray"
@@ -368,19 +406,19 @@
 
         <LinearLayout
             android:id="@+id/phoneBlock"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/dp_100"
             android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/horizontal_TimeStr50"
             app:layout_constraintBottom_toTopOf="@id/horizontal_TimeStr60"
             android:orientation="vertical"
-            android:gravity="center"
+            android:gravity="left|center"
             >
 
             <EditText
                 android:id="@+id/phone"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/phone_number"
                 android:textSize="@dimen/sp_12"
@@ -395,8 +433,6 @@
                 />
 
             <View
-                android:layout_marginLeft="@dimen/dp_30"
-                android:layout_marginRight="@dimen/dp_30"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@color/gray"
@@ -407,7 +443,7 @@
 
         <LinearLayout
             android:id="@+id/memoBlock"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/dp_100"
             android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -419,7 +455,7 @@
 
             <EditText
                 android:id="@+id/memo"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/memo"
                 android:textSize="@dimen/sp_12"
@@ -430,8 +466,6 @@
                 />
 
             <View
-                android:layout_marginLeft="@dimen/dp_30"
-                android:layout_marginRight="@dimen/dp_30"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@color/gray"
@@ -493,7 +527,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.85" />
+            app:layout_constraintGuide_percent="0.80" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/middle"
@@ -503,16 +537,18 @@
             app:layout_constraintGuide_percent="0.5" />
 
 
+
+
         <TextView
-            android:layout_marginLeft="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_10"
             android:visibility="gone"
             android:id="@+id/tv_seat"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/dp_100"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@id/middle"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:text="@string/selectSeat"
-            android:gravity="right"
+            android:gravity="left"
             android:drawableStart="@drawable/ic_baseline_event_seat_24"
             android:textSize="@dimen/sp_12"
             app:layout_constraintBottom_toTopOf="@+id/horizontal_TimeStr90"
@@ -521,18 +557,17 @@
 
         <com.shawnlin.numberpicker.NumberPicker
             android:layout_marginTop="@dimen/dp_10"
-            android:layout_marginBottom="@dimen/dp_10"
             android:layout_marginRight="@dimen/dp_30"
             android:gravity="left"
             android:visibility="gone"
             android:id="@+id/seat_picker"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dp_30"
             android:layout_centerInParent="true"
             app:np_selectedTextColor="@color/primaryColor"
-            app:np_selectedTextSize="@dimen/sp_13"
-            app:np_textColor="@color/white"
-            app:np_textSize="@dimen/sp_12"
+            app:np_selectedTextSize="@dimen/sp_12"
+            app:np_textColor="@color/light_blue"
+            app:np_textSize="@dimen/sp_8"
             app:np_dividerColor="@color/gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/middle"
@@ -561,7 +596,6 @@
                 android:layout_height="wrap_content"
                android:layout_margin="@dimen/dp_10"
                 app:sv_buttonBackgroundColor="@android:color/white"
-                app:sv_buttonImage="@drawable/ic_chevron_double_right_purple"
                 app:sv_reverseSlide="false"
                 app:sv_slideTextSize="@dimen/sp_10"
                 app:sv_slideBackgroundColor="@color/primaryColor"
@@ -695,4 +729,3 @@
         app:layout_constraintGuide_percent="0.10" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

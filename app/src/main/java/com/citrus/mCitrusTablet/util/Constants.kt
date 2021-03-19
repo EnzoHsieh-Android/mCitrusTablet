@@ -34,6 +34,7 @@ object Constants {
     const val GET_RESERVATION_TIME = "/POSServer/UploadDataWS/Service1.asmx/GetReservationTime"
     const val GET_ORDERS_DELIVERY= "/POSServer/UploadDataWS/Service1.asmx/GetOrdersDeliveryDataByWaitNo"
     const val SEND_SMS = "http://hq.citrus.tw/citrus/Service1.asmx/SendNewsletter_Mitake"
+    const val SEND_MAIL = "http://hq.citrus.tw/citrus/Service1.asmx/SendMail"
     var dateTimeFormatSql = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
     val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
     val outputFormat = SimpleDateFormat("MM/dd HH:mm")

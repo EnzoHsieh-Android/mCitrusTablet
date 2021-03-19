@@ -41,28 +41,34 @@ class CustomFilterCheckBoxDialog(
             when(i){
                 R.id.rb_all -> {
                     newFilter = Filter.SHOW_ALL
+                    closeDialog()
                 }
                 R.id.rb_cancelled -> {
                     newFilter = Filter.SHOW_CANCELLED
+                    closeDialog()
                 }
                 R.id.rb_confirm -> {
                     newFilter = Filter.SHOW_CONFIRM
+                    closeDialog()
                 }
                 R.id.rb_notified -> {
                     newFilter = Filter.SHOW_NOTIFIED
+                    closeDialog()
                 }
                 R.id.rb_wait -> {
                     newFilter = Filter.SHOW_WAIT
+                    closeDialog()
                 }
             }
         }
 
 
-        btn_ok.setOnClickListener {
-            onCheckChange(newFilter)
-            dismiss()
-        }
 
+    }
+
+    private fun closeDialog(){
+        onCheckChange(newFilter)
+        dismiss()
     }
 
 

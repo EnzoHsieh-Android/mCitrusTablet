@@ -18,33 +18,30 @@ import org.jetbrains.anko.textColor
 import java.text.SimpleDateFormat
 import java.util.*
 
-class WaitAdapter(@ApplicationContext val context: Context,val onItemClick: (Wait) -> Unit,val onButtonClick: (Wait) -> Unit,val onNoticeClick: (Wait) -> Unit) :RecyclerView.Adapter<WaitAdapter.TasksViewHolder>() {
-    private val asyncDiffUtil: AsyncDiffUtil<Wait> = AsyncDiffUtil(this, object : DiffUtil.ItemCallback<Wait>() {
-        override fun areItemsTheSame(oldItem: Wait, newItem: Wait) = oldItem.isSame(newItem)
+class WaitAdapter(var waitList:MutableList<Wait>,@ApplicationContext val context: Context,val onItemClick: (Wait,Boolean,Boolean) -> Unit,val onButtonClick: (Wait) -> Unit,val onNoticeClick: (Wait) -> Unit) :RecyclerView.Adapter<WaitAdapter.TasksViewHolder>() {
 
-        override fun areContentsTheSame(oldItem: Wait, newItem: Wait): Boolean = oldItem.isContentSame(newItem)
-    })
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TasksViewHolder {
         val binding = RvWaitItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TasksViewHolder(binding)
     }
 
-    override fun getItemCount() = asyncDiffUtil.current().size
+    override fun getItemCount() = waitList.size
 
     override fun onBindViewHolder(holder: TasksViewHolder, position: Int) {
         if (position != RecyclerView.NO_POSITION) {
-            val item = asyncDiffUtil.current()[position]
+            val item = waitList[position]
             holder.bind(item)
         }
     }
 
-    fun getCurrentList(): List<Wait> {
-        return asyncDiffUtil.current()
-    }
 
-    fun update(items: List<Wait>) {
-        asyncDiffUtil.update(items)
+
+    fun update(items: MutableList<Wait>) {
+        waitList.clear()
+        waitList.addAll(items)
+        this.notifyDataSetChanged()
     }
 
     inner class TasksViewHolder(private val binding: RvWaitItemBinding) : RecyclerView.ViewHolder(
@@ -58,7 +55,20 @@ class WaitAdapter(@ApplicationContext val context: Context,val onItemClick: (Wai
                 statusBlock.visibility = View.GONE
 
                 name.text = wait.mName
-                phone.text = wait.phone
+                if(wait.phone != null && wait.phone != ""){
+                    phone.text = wait.phone
+                }else{
+                    phone.text = wait.email!!.split("@")[0]
+                }
+
+                binding.root.setBackgroundColor(context.resources.getColor(R.color.selectColor))
+
+                if(wait.isSelect){
+                    itemView.setBackgroundColor(context.resources.getColor(R.color.selectColor))
+                }else{
+                    itemView.setBackgroundColor(Color.WHITE)
+                }
+
                 count.text = wait.custNum.toString()
                 val date = Constants.inputFormat.parse(wait.reservationTime)
                 val formattedDate = Constants.outputFormat.format(date)
@@ -116,19 +126,20 @@ class WaitAdapter(@ApplicationContext val context: Context,val onItemClick: (Wai
                 }
 
 
-
+                var hasMemo = (wait.memo != null && wait.memo != "")
                 var hasDelivery = (wait.orderNo != null && wait.orderNo != "")
 
 
                 if(hasDelivery){
                     imgDelivery.visibility = View.VISIBLE
-                    root.setOnClickListener {
-                        onItemClick(wait)
-                    }
                 }else{
                     imgDelivery.visibility = View.INVISIBLE
                 }
 
+
+                root.setOnClickListener {
+                    onItemClick(wait,hasMemo,hasDelivery)
+                }
 
                 btnCheck.setOnClickListener {
                     onButtonClick(wait)

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">mCitrusPad</string>
+    <string name="app_name">CATCH</string>
     <string name="permission_denied">未授權操作</string>
     <string name="cancel">取消</string>
     <string name="download_completed">下載成功</string>
@@ -9,7 +9,7 @@
     <string name="error_occurred">發生錯誤</string>
     <string name="input_err">輸入錯誤</string>
     <string name="sure">確認</string>
-    <string name="Reservation">預約</string>
+    <string name="Reservation">訂位</string>
     <string name="TotalForTheDay">當日總計:</string>
     <string name="ok">OK</string>
     <string name="memo">備註</string>
@@ -73,5 +73,7 @@
     <string name="filter_cancelled">顯示已取消</string>
     <string name="filter_notified">顯示已通知</string>
     <string name="filter_confirm">顯示已確認</string>
-    <string name="filter_wait">顯示候位</string>
+    <string name="filter_wait">顯示未通知</string>
+    <string name="refresh">重新整理</string>
+    <string name="search_text">電話號碼或Email</string>
 </resources>

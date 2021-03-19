@@ -54,7 +54,16 @@ data class ReservationGuests(
     val floorName: String,
 
     @SerializedName("room_name")
-    val roomName: String
+    val roomName: String,
+
+    @SerializedName("AdultCount")
+    val adultCount: Int,
+
+    @SerializedName("KidCount")
+    val kidCount: Int,
+
+    var isSelect:Boolean = false
+
 ):Serializable
 
 
@@ -73,7 +82,7 @@ data class Wait (
     val mName: String,
 
     @SerializedName("Phone")
-    val phone: String,
+    val phone: String?,
 
     @SerializedName("Memo")
     val memo: String,
@@ -94,7 +103,7 @@ data class Wait (
     val kidCount: Long,
 
     @SerializedName("Email")
-    val email: String,
+    val email: String?,
 
     @SerializedName("Gender")
     val gender: String,
@@ -108,9 +117,10 @@ data class Wait (
     val url: String,
 
     @SerializedName("UpdateDate")
-    var updateDate:String
-    ,
-    var isOverTime:Boolean
+    var updateDate:String,
+
+    var isOverTime:Boolean = false,
+    var isSelect:Boolean = false
 ):Serializable{
     fun isSame(other: Wait): Boolean {
         return tkey == other.tkey

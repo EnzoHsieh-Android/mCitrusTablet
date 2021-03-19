@@ -1,11 +1,11 @@
 package com.citrus.mCitrusTablet.view.reservation
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -80,6 +80,11 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                 }
                 this.layoutManager = glm
 
+                addItemDecoration(
+                    DividerItemDecoration(this.context,
+                        DividerItemDecoration.VERTICAL)
+                )
+
                 ItemTouchHelper(
                     object : ItemTouchHelper.SimpleCallback(
                         0,
@@ -103,11 +108,10 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
             }
 
 
-
-            laySwipe.setOnRefreshListener {
+            btn_reloadBlock.setOnClickListener {
                 reservationFragmentViewModel.reload()
-                laySwipe.isRefreshing = false
             }
+
 
             btPrev.setOnClickListener {
                 dateChange(tvDate.text as String, -1)
@@ -220,7 +224,9 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                             cusMemo,
                             Constants.ADD,
                             seat[0],
-                            seat[1]
+                            seat[1],
+                            0,
+                            0
                         )
                     )
                     reservationFragmentViewModel.uploadReservation(data)
@@ -291,18 +297,21 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                     for (index in 0 until timeTitle.size) {
                         reservationAdapter.addSection(
                             ReservationAdapter(
+                                requireActivity(),
                                 timeTitle[index],
                                 guestsList[index],
-                                onItemClick = { Guest ->
+                                onItemClick = { Guest,hasMemo ->
+                                        reservationFragmentViewModel.itemSelect(Guest)
+                                    if(hasMemo) {
                                         CustomGuestDetailDialog(
                                             requireActivity(),
                                             Guest
                                         ).show(it.supportFragmentManager, "CustomGuestDetailDialog")
-                                },
-                                onButtonClick = {
-                                    reservationFragmentViewModel.changeStatus(it, Constants.CHECK)
+                                    }
                                 }
-                            )
+                            ) {
+                                reservationFragmentViewModel.changeStatus(it, Constants.CHECK)
+                            }
                         )
                     }
                 }

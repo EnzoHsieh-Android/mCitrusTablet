@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">mCitrusPad</string>
+    <string name="app_name">CATCH</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="selectDate">Select Date</string>
 
@@ -75,4 +75,6 @@
     <string name="filter_notified">Show Notified</string>
     <string name="filter_confirm">Show Confirm</string>
     <string name="filter_wait">Show Wait</string>
+    <string name="refresh">Refresh</string>
+    <string name="search_text">Phone Number or Email</string>
 </resources>

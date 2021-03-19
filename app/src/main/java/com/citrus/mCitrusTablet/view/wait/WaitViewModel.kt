@@ -30,10 +30,14 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
     private var serverDomain =
         "https://" + prefs.severDomain
     var storageList: MutableList<Wait> = mutableListOf()
-    var sortOrder: SortOrder = SortOrder.BY_TIME_LESS
+    var sortOrder: SortOrder = SortOrder.BY_TIME_MORE
     var hideCheck: HideCheck = HideCheck.HIDE_TRUE
     var nowFilter = Filter.SHOW_ALL
     var smsQueue = arrayListOf<String>()
+
+    private lateinit var selectGuest:Wait
+    private fun isSelectGuestInit()=::selectGuest.isInitialized
+
     private var delayTime = Constants.DEFAULT_TIME
     private val job = SupervisorJob()
     lateinit var fetchJob: Job
@@ -87,6 +91,12 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
                 if (list.isNotEmpty()) {
                     list as MutableList<Wait>
                     storageList = list.toMutableList()
+
+                    if(isSelectGuestInit()){
+                        for(item in storageList){
+                            item.isSelect = item.tkey == selectGuest.tkey
+                        }
+                    }
                     sendWaitSms()
                     refreshAllData(storageList)
                 } else {
@@ -98,7 +108,6 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
 
 
     private fun sendWaitSms() {
-        Log.e("smsQueue",smsQueue.toString())
        if(smsQueue.size>0){
           for (guest in storageList.filter { it.status == Constants.ADD }){
               for(key in smsQueue){
@@ -107,21 +116,32 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
                   }
               }
           }
+           smsQueue.clear()
        }
-        smsQueue.clear()
     }
 
 
     private fun sendSMS(guest:Wait, msg:String){
-        Log.e("phone",guest.phone)
         viewModelScope.launch {
             model.sendSMS(
                 Constants.SEND_SMS,
                 "celaviLAB",
-                guest.phone,
+                guest.phone!!,
                 msg
             ).collect {
-            Log.e("smsStatus",it.toString())
+            Timber.d("smsStatus%s", it.toString())
+            }
+        }
+    }
+
+    private fun sendMail(guest:Wait,msg:String){
+        viewModelScope.launch {
+            model.sendMail(
+                Constants.SEND_MAIL,
+                guest.email!!,
+                msg
+            ).collect {
+                Timber.d("smsStatus%s", it.toString())
             }
         }
     }
@@ -151,6 +171,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
     }
 
     fun reload() {
+        Log.e("has reload","reload")
         fetchAllData()
     }
 
@@ -178,9 +199,17 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
                 when (status) {
                     1 -> {
                         if(statusStr == Constants.NOTICE){
-                            sendSMS(wait, prefs.storeName+ " " + prefs.messageNotice + "\n" + wait.url)
+                            var msg = prefs.storeName+ " " + prefs.messageNotice + "\n" + wait.url
+                            if(wait.phone != null && wait.phone != ""){
+                                sendSMS(wait, msg)
+                            }else{
+                                sendMail(wait,msg)
+                            }
                         }
-                        fetchAllData()
+
+                        var index = storageList.indexOf(wait)
+                        storageList[index].status = statusStr
+                        refreshAllData(storageList)
                     }
                     0 -> {
 
@@ -215,7 +244,8 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
             is SearchViewStatus.NeedChange -> {
                 var tempGuestsList = mutableListOf<Wait>()
                 for (item: Wait in storageList) {
-                    if (item.phone.contains(status.searchStr)) {
+                    if (item.phone?.contains(status.searchStr) == true || item.email?.split("@")?.get(0)
+                            ?.contains(status.searchStr) == true) {
                         tempGuestsList.add(item)
                     }
                 }
@@ -337,6 +367,14 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
 
     fun changeFilter(filterType: Filter) {
         nowFilter = filterType
+        refreshAllData(storageList)
+    }
+
+    fun itemSelect(wait: Wait) {
+        selectGuest = wait
+        for(item in storageList){
+            item.isSelect = item == wait
+        }
         refreshAllData(storageList)
     }
 

@@ -37,7 +37,13 @@ data class ReservationClass (
         val floorName: String,
 
         @SerializedName("room_name")
-        val roomName: String
+        val roomName: String,
+
+        @SerializedName("AdultCount")
+        val adultCount: Int,
+
+        @SerializedName("KidCount")
+        val kidCount: Int
 ):Serializable
 
 

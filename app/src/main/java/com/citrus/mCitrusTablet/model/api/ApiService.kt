@@ -11,6 +11,7 @@ interface ApiService {
         const val BASE_URL = "https://cms.citrus.tw/"
     }
 
+
     /*變更狀態*/
     @FormUrlEncoded
     @Headers("Content-Type: application/x-www-form-urlencoded")
@@ -19,6 +20,7 @@ interface ApiService {
         @Url url: String,
         @Field("jsonData") jsonData: String
     ): ApiResponse<UpdateStatus>
+
 
     /*取得全部資料*/
     @FormUrlEncoded
@@ -29,6 +31,7 @@ interface ApiService {
         @Field("jsonData") jsonData: String
     ): ApiResponse<AllDataObject>
 
+
     /*取得分店資料*/
     @FormUrlEncoded
     @Headers("Content-Type: application/x-www-form-urlencoded")
@@ -37,6 +40,7 @@ interface ApiService {
         @Url url: String,
         @Field("storeId") storeId: String
     ): ApiResponse<StoreInfo>
+
 
     /*取得預約空桌*/
     @FormUrlEncoded
@@ -47,6 +51,7 @@ interface ApiService {
         @Field("jsonData") jsonData: String
     ): ApiResponse<SearchSeat>
 
+
     /*依條件取得可預約時段*/
     @FormUrlEncoded
     @Headers("Content-Type: application/x-www-form-urlencoded")
@@ -56,6 +61,7 @@ interface ApiService {
         @Field("jsonData") jsonData: String
     ): ApiResponse<OrderDate>
 
+
     /*預約*/
     @FormUrlEncoded
     @Headers("Content-Type: application/x-www-form-urlencoded")
@@ -64,6 +70,7 @@ interface ApiService {
         @Url url: String,
         @Field("jsonData") jsonData: String
     ): ApiResponse<ReservationUpdateStatus>
+
 
     /*發送簡訊*/
     @FormUrlEncoded
@@ -75,6 +82,18 @@ interface ApiService {
         @Field("phone") phone: String,
         @Field("body") body: String
     ): ApiResponse<ReservationUpdateStatus>
+
+
+    /*發送電子郵件*/
+    @FormUrlEncoded
+    @Headers("Content-Type: application/x-www-form-urlencoded")
+    @POST
+    suspend fun sendMail(
+        @Url url: String,
+        @Field("email") email: String,
+        @Field("htmlBody") htmlBody: String
+    ): ApiResponse<ReservationUpdateStatus>
+
 
     /*新增候位*/
     @FormUrlEncoded
