@@ -29,7 +29,7 @@ import java.text.SimpleDateFormat
 class CustomSearchTableDialog(
     private var mContext: FragmentActivity,
     private var viewModel: ReservationViewModel,
-    private var onSearchListener: (date:String,cusNum:String,seat:String) -> Unit
+    private var onSearchListener: (date:String,cusNum:String,seat:String,adultCount:String,childCount:String) -> Unit
 ) : BaseDialogFragment() {
     private var otherTimeAdapter = SectionedRecyclerViewAdapter()
     private var itemPerLine = 6
@@ -37,6 +37,8 @@ class CustomSearchTableDialog(
     private var item = mutableListOf<OrderDateDatum>()
 
     var type:String = "CusNum"
+    var adultCount:String ="0"
+    var childCount:String ="0"
 
     override fun getLayoutId(): Int {
         return R.layout.dialog_search_table
@@ -64,7 +66,7 @@ class CustomSearchTableDialog(
             when(i){
                 R.id.rb_people -> {
                     type = "CusNum"
-                    et_people.visibility = View.VISIBLE
+                    tv_people.visibility = View.VISIBLE
                     et_floor.visibility = View.INVISIBLE
                     et_room.visibility = View.GONE
                     et_floor.text.clear()
@@ -73,10 +75,9 @@ class CustomSearchTableDialog(
                 }
                 R.id.rb_seat -> {
                     type = "Seat"
-                    et_people.visibility = View.VISIBLE
+                    tv_people.visibility = View.VISIBLE
                     et_floor.visibility = View.VISIBLE
                     et_room.visibility = View.VISIBLE
-                    et_people.text.clear()
                     clearView()
                 }
             }
@@ -90,10 +91,21 @@ class CustomSearchTableDialog(
                     CalendarPickerView.SelectionMode.SINGLE,
                "",
                   ""
-                ) { _, startTime, endTime, _ ->
+                ) { _, startTime, endTime, _ , _ , _->
                     llDate.text = startTime
                 }.show(it.supportFragmentManager, "CustomDatePickerDialog")
             }
+        }
+
+        tv_people.setOnClickListener {
+            mContext?.let {
+                CustomNumberPickerDialog() { adultCount, childCount, totalCount ->
+                    tv_people.text = totalCount
+                    this.adultCount = adultCount
+                    this.childCount = childCount
+                }.show(it.supportFragmentManager, "CustomNumberPickerDialog")
+            }
+
         }
 
 
@@ -105,8 +117,8 @@ class CustomSearchTableDialog(
                 return@setOnClickListener
             }
 
-            if (et_people.text.toString() == "") {
-                YoYo.with(Techniques.Shake).duration(1000).playOn(et_people)
+            if (tv_people.text.toString() == getString(R.string.number)) {
+                YoYo.with(Techniques.Shake).duration(1000).playOn(tv_people)
                 toast(R.string.submitErrorMsg)
                 return@setOnClickListener
             }
@@ -129,7 +141,7 @@ class CustomSearchTableDialog(
             jsonStr = if(type == "Seat"){
                 Gson().toJson(PostToGetOrderDateBySeat(prefs.rsno,formattedDate,et_floor.text.toString(),et_room.text.toString()))
             }else{
-                Gson().toJson(PostToGetOrderDateByCusNum(prefs.rsno,formattedDate,et_people.text.toString().toInt()))
+                Gson().toJson(PostToGetOrderDateByCusNum(prefs.rsno,formattedDate,tv_people.text.toString().toInt()))
             }
 
             viewModel.fetchReservationTime(jsonStr)
@@ -146,7 +158,7 @@ class CustomSearchTableDialog(
                         title[0],
                         item,
                         onButtonClick = { timeStr ->
-                            onSearchListener(timeStr,et_people.text.toString(), if(type=="CusNum") "0" else et_floor.text.toString()+"-"+et_room.text.toString())
+                            onSearchListener(timeStr,tv_people.text.toString(), if(type=="CusNum") "0" else et_floor.text.toString()+"-"+et_room.text.toString(),adultCount,childCount)
                             dismiss()
                         }
                     )

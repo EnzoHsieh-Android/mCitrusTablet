@@ -40,6 +40,6 @@ object Constants {
     val outputFormat = SimpleDateFormat("MM/dd HH:mm")
     var dateFormatSql = SimpleDateFormat("yyyy/MM/dd")
     var defaultTimeStr: String = dateFormatSql.format(Date())
-
+    var TimeStrForDelete = outputFormat.format(Date())
 
 }

@@ -1,7 +1,9 @@
 package com.citrus.mCitrusTablet.view.reservation
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -18,9 +20,11 @@ import com.citrus.mCitrusTablet.model.vo.ReservationGuests
 import com.citrus.mCitrusTablet.util.Constants
 import com.citrus.mCitrusTablet.util.Constants.defaultTimeStr
 import com.citrus.mCitrusTablet.util.onSafeClick
+import com.citrus.mCitrusTablet.util.ui.BaseFragment
 import com.citrus.mCitrusTablet.view.adapter.ReservationAdapter
 import com.citrus.mCitrusTablet.view.dialog.*
 import com.citrus.util.onQueryTextChanged
+import com.google.android.material.snackbar.Snackbar
 import com.savvi.rangedatepicker.CalendarPickerView
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
@@ -32,7 +36,7 @@ import java.util.*
 
 
 @AndroidEntryPoint
-class ReservationFragment : Fragment(R.layout.fragment_reservation) {
+class ReservationFragment : BaseFragment() {
 
     private val reservationFragmentViewModel: ReservationViewModel by viewModels()
     private var _binding: FragmentReservationBinding? = null
@@ -43,12 +47,24 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
     private var tempSeat: String = ""
     private var tempTime: String = ""
     private var tempCount: Int = 0
+    private var tempAdultCount: Int = 0
+    private var tempChildCount: Int = 0
     private var isHideCheck = false
+    private var isSwapEmail = false
 
     private var forDeleteData = mutableListOf<Any>()
     private var seatData = mutableListOf<String>()
     private var timeTitle = mutableListOf<String>()
     private val reservationAdapter by lazy { SectionedRecyclerViewAdapter() }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentReservationBinding.inflate(inflater, container, false)
+
+        return binding.root
+    }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -101,7 +117,12 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                             var guest =
                                 forDeleteData[viewHolder.adapterPosition] as ReservationGuests
-                            reservationFragmentViewModel.changeStatus(guest, Constants.CANCEL)
+
+                            if(guest.status != "C" && guest.status != "D") {
+                                reservationFragmentViewModel.changeStatus(guest, Constants.CANCEL)
+                            }else{
+                                reservationFragmentViewModel.reload()
+                            }
                         }
 
                     }).attachToRecyclerView(this)
@@ -119,6 +140,17 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
 
             btNext.setOnClickListener {
                 dateChange(tvDate.text as String, 1)
+            }
+
+            contentSwap.setOnClickListener {
+                isSwapEmail = !isSwapEmail
+                if(isSwapEmail){
+                    phone.visibility = View.GONE
+                    mail.visibility = View.VISIBLE
+                }else{
+                    phone.visibility = View.VISIBLE
+                    mail.visibility = View.GONE
+                }
             }
 
             btn_hideCheckBlock.setOnClickListener {
@@ -139,8 +171,8 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                     CustomSearchTableDialog(
                         requireActivity(),
                         reservationFragmentViewModel
-                    ) { time, cusCount, seat ->
-                        searchSeat(cusCount, time, seat, seat == "0")
+                    ) { time, cusCount, seat ,adult , child->
+                        searchSeat(cusCount, time, seat, seat == "0" , adult , child)
                     }.show(it.supportFragmentManager, "CustomSearchTableDialog")
                 }
             }
@@ -154,7 +186,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                         mode,
                         reservationFragmentViewModel.dateRange.value?.get(0) ?: "",
                         reservationFragmentViewModel.dateRange.value?.get(1) ?: ""
-                    ) { _, startTime, endTime, _ ->
+                    ) { _, startTime, endTime, _ ,_ , _->
                         reservationFragmentViewModel.setDateArray(arrayOf(startTime, endTime))
                         date2Day(startTime)
                     }.show(it.supportFragmentManager, "CustomDatePickerDialog")
@@ -171,8 +203,8 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                         mode,
                         reservationFragmentViewModel.dateRange.value?.get(0) ?: "",
                         reservationFragmentViewModel.dateRange.value?.get(1) ?: ""
-                    ) { cusCount, startTime, _, _ ->
-                        searchSeat(cusCount, startTime, "", true)
+                    ) { cusCount, startTime, _, _ ,adultCount, childCount ->
+                        searchSeat(cusCount, startTime, "", true,adultCount,childCount)
                     }.show(it.supportFragmentManager, "CustomDatePickerDialog")
                 }
             }
@@ -200,10 +232,11 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
             btReservation.setOnSlideCompleteListener {
                 var cusName = binding.name.text.toString().trim()
                 var cusPhone = binding.phone.text.toString().trim()
+                var cusEmail = binding.mail.text.toString().trim()
                 var cusMemo = binding.memo.text.toString().trim()
                 var seat = tempSeat.split("-")
 
-                if (cusName.isEmpty() || cusPhone.isEmpty() || tempSeat == "") {
+                if (cusName.isEmpty() || (cusPhone.isEmpty() && cusEmail.isEmpty()) || tempSeat == "") {
                     var dialog =
                         CustomAlertDialog(
                             requireActivity(),
@@ -221,12 +254,13 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                             "",
                             cusName,
                             cusPhone,
+                            cusEmail,
                             cusMemo,
                             Constants.ADD,
                             seat[0],
                             seat[1],
-                            0,
-                            0
+                            tempAdultCount,
+                            tempChildCount
                         )
                     )
                     reservationFragmentViewModel.uploadReservation(data)
@@ -281,7 +315,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                     requireActivity(),
                     datumList,
                     onBtnClick = { seat, date ->
-                        searchSeat(tempCount.toString(), date.replace("-", "/"), seat, false)
+                        searchSeat(tempCount.toString(), date.replace("-", "/"), seat, false,tempAdultCount.toString(),tempChildCount.toString())
                     }
                 ).show(it.supportFragmentManager, "CustomOtherSeatDialog")
             }
@@ -302,12 +336,12 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                                 guestsList[index],
                                 onItemClick = { Guest,hasMemo ->
                                         reservationFragmentViewModel.itemSelect(Guest)
-                                    if(hasMemo) {
-                                        CustomGuestDetailDialog(
-                                            requireActivity(),
-                                            Guest
-                                        ).show(it.supportFragmentManager, "CustomGuestDetailDialog")
-                                    }
+//                                    if(hasMemo) {
+//                                        CustomGuestDetailDialog(
+//                                            requireActivity(),
+//                                            Guest
+//                                        ).show(it.supportFragmentManager, "CustomGuestDetailDialog")
+//                                    }
                                 }
                             ) {
                                 reservationFragmentViewModel.changeStatus(it, Constants.CHECK)
@@ -359,12 +393,19 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
                             )
                         dialog!!.show()
                     }
+                    is TasksEvent.ShowUndoDeleteTaskMessageR -> {
+                        var mSnackBar = Snackbar.make(requireView(), R.string.FinishMsg, Snackbar.LENGTH_LONG)
+                            .setAction(R.string.Undo) {
+                                reservationFragmentViewModel.onUndoFinish(event.guest)
+                            }
+                        adjustSnackBar(mSnackBar).show()
+                    }
                 }
             }
         }
     }
 
-    private fun searchSeat(cusCount: String, dateStr: String, seat: String, isSearch: Boolean) {
+    private fun searchSeat(cusCount: String, dateStr: String, seat: String, isSearch: Boolean, adultCount:String, childCount:String) {
         clearSubmitText(isSearch)
         reservationFragmentViewModel.setDateArrayReservation(
             arrayOf(
@@ -377,6 +418,8 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
         reservationDate.text = date[0]
         reservationTime.text = date[1] + "  " + cusCount + getString(R.string.people)
         tempCount = cusCount.toInt()
+        tempAdultCount = adultCount.toInt()
+        tempChildCount = childCount.toInt()
         syncChangeDate(date[0])
 
         showInformation.visibility = View.VISIBLE
@@ -419,6 +462,9 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
         reservationFragmentViewModel.setDateArray(arrayOf(dateStr, dateStr))
     }
 
+
+
+
     @Throws(ParseException::class)
     fun date2Day(dateString: String?) {
         val dateStringFormat = SimpleDateFormat("yyyy/MM/dd")
@@ -432,6 +478,7 @@ class ReservationFragment : Fragment(R.layout.fragment_reservation) {
     private fun clearSubmitText(isHideSeat: Boolean) {
         binding.name.text.clear()
         binding.phone.text.clear()
+        binding.mail.text.clear()
         binding.memo.text.clear()
         if (isHideSeat) {
             tempSeat = ""

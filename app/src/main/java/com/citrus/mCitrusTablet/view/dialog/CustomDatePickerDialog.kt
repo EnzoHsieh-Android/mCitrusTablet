@@ -3,6 +3,7 @@ package com.citrus.mCitrusTablet.view.dialog
 
 import android.content.Context
 import android.graphics.Point
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.RadioGroup
@@ -21,6 +22,7 @@ import com.savvi.rangedatepicker.CalendarPickerView.SelectionMode.RANGE
 import com.savvi.rangedatepicker.CalendarPickerView.SelectionMode.SINGLE
 import com.wdullaer.materialdatetimepicker.time.Timepoint
 import kotlinx.android.synthetic.main.dailog_date_picker.*
+import kotlinx.android.synthetic.main.dialog_search_table.*
 import org.jetbrains.anko.support.v4.toast
 import java.text.ParseException
 import java.util.*
@@ -37,11 +39,12 @@ class CustomDatePickerDialog(
     var mode: CalendarPickerView.SelectionMode,
     private var startTime: String,
     private var endTime: String,
-    private val listener: (seat: String,startTime: String, endTime: String, selectionMode: CalendarPickerView.SelectionMode) -> Unit
+    private val listener: (seat: String,startTime: String, endTime: String, selectionMode: CalendarPickerView.SelectionMode,String,String) -> Unit
 ) : BaseDialogFragment() {
 
     var count:String = "1"
-
+    var adultCount:String ="0"
+    var childCount:String ="0"
 
     override fun getLayoutId(): Int {
         return R.layout.dailog_date_picker
@@ -65,8 +68,8 @@ class CustomDatePickerDialog(
                 tvStartTime.visibility = View.VISIBLE
                 tvEndTime.visibility = View.GONE
                 rgDateMode.visibility = View.GONE
-                tv_seatCountTitle.visibility = View.VISIBLE
-                number_picker.visibility = View.VISIBLE
+                tv_seatCountTitle.visibility = View.GONE
+                number_picker.visibility = View.GONE
             }
         }.exhaustive
 
@@ -94,9 +97,9 @@ class CustomDatePickerDialog(
             RANGE -> rgDateMode.check(R.id.rbRange)
         }
 
-        number_picker.setOnValueChangedListener { _, _, newVal ->
-            count = newVal.toString()
-        }
+//        number_picker.setOnValueChangedListener { _, _, newVal ->
+//            count = newVal.toString()
+//        }
 
         rgDateMode.setOnCheckedChangeListener { _: RadioGroup?, checkedId: Int ->
             mode = SINGLE
@@ -116,13 +119,25 @@ class CustomDatePickerDialog(
         }
 
 
+        tvPerson.onSafeClick {
+            showNumberPickerDialog(it as TextView)
+        }
+
+
         btnOK.onSafeClick {
             if (calendarView.selectedDates.size > 0) {
-                if (calendarType == CalendarType.OneTimePickerForReservation && (tvStartTime.text == getString(R.string.select_time))) {
-                    if (tvStartTime.text == getString(R.string.select_time)) {
+                if (calendarType == CalendarType.OneTimePickerForReservation && (tvStartTime.text == getString(R.string.time))) {
+                    if (tvStartTime.text == getString(R.string.time)) {
                         YoYo.with(Techniques.Shake).duration(1000).playOn(tvStartTime)
                     }
                     toast(R.string.select_time)
+                    return@onSafeClick
+                }
+
+
+                if (calendarType == CalendarType.OneTimePickerForReservation && tvPerson.text == getString(R.string.person)) {
+                    YoYo.with(Techniques.Shake).duration(1000).playOn(tvPerson)
+                    toast(R.string.select_cusNum)
                     return@onSafeClick
                 }
 
@@ -149,15 +164,13 @@ class CustomDatePickerDialog(
 
 
 
-
-
                 if (dateFormatSql.parse(start)?.after(dateFormatSql.parse(end)) == true) {
                     toast(R.string.input_err)
                     YoYo.with(Techniques.Shake).duration(1000).playOn(calendarView)
                     return@onSafeClick
                 }
 
-                listener(count,start, end, mode)
+                listener(count,start, end, mode , adultCount, childCount)
                 dismiss()
             } else {
                 YoYo.with(Techniques.Shake).duration(1000).playOn(calendarView)
@@ -166,6 +179,17 @@ class CustomDatePickerDialog(
         }
         btnClose.onSafeClick { dismiss() }
     }
+
+    private fun showNumberPickerDialog(textView: TextView) {
+            CustomNumberPickerDialog() { adultCount, childCount, totalCount ->
+                textView.text = totalCount
+                count = totalCount
+                this.adultCount = adultCount
+                this.childCount = childCount
+            }.show(requireActivity().supportFragmentManager, "CustomNumberPickerDialog")
+        }
+
+
 
     override fun initAction() {
     }

@@ -62,7 +62,18 @@ data class ReservationGuests(
     @SerializedName("KidCount")
     val kidCount: Int,
 
-    var isSelect:Boolean = false
+    var isSelect:Boolean = false,
+
+    var isExpend:Boolean = false,
+
+    @SerializedName("Email")
+    var email:String,
+
+    @SerializedName("CreateDate")
+    var createDate:String,
+
+    @SerializedName("UpdateDate")
+    var updateDate:String
 
 ):Serializable
 
@@ -120,7 +131,8 @@ data class Wait (
     var updateDate:String,
 
     var isOverTime:Boolean = false,
-    var isSelect:Boolean = false
+    var isSelect:Boolean = false,
+    var isExpend:Boolean = false
 ):Serializable{
     fun isSame(other: Wait): Boolean {
         return tkey == other.tkey

@@ -2,55 +2,59 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:id="@+id/dataBlock">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/dataBlock"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/dp_35"
-        >
 
         <LinearLayout
+            android:id="@+id/hintBlock"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="@id/guideline"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="@dimen/dp_35"
             android:gravity="center"
             >
 
             <ImageView
+                android:visibility="visible"
+                android:id="@+id/img_memo"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:layout_gravity="center"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_baseline_error_outline_24"
+                android:textAlignment="center"
+                android:textSize="@dimen/sp_22"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:visibility="gone"
+                android:layout_margin="@dimen/dp_5"
                 android:id="@+id/img_delivery"
                 android:layout_width="@dimen/dp_20"
                 android:layout_height="@dimen/dp_20"
                 android:layout_gravity="center"
-                android:layout_weight="0.3"
                 android:scaleType="centerInside"
                 android:src="@drawable/order"
-                android:textAlignment="center"
-                android:textSize="@dimen/sp_22"
-                android:textStyle="bold" />
+                />
 
         </LinearLayout>
 
 
 
         <LinearLayout
+            android:id="@+id/nameBlock"
             app:layout_constraintStart_toStartOf="@id/guideline"
             app:layout_constraintEnd_toEndOf="@id/guideline2"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="@dimen/dp_35"
             android:gravity="left|center"
             android:orientation="vertical">
 
             <TextView
+                android:drawableStart="@drawable/ic_baseline_person_24"
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -59,8 +63,19 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:drawableStart="@drawable/ic_baseline_phone_android_24"
                 android:id="@+id/phone"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0916710498"
+                android:textSize="@dimen/sp_9"
+                android:textStyle="bold" />
+
+            <TextView
+                android:visibility="gone"
+                android:drawableStart="@drawable/ic_baseline_email_24"
+                android:id="@+id/mail"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="0916710498"
                 android:textSize="@dimen/sp_9"
@@ -73,9 +88,8 @@
             app:layout_constraintStart_toStartOf="@id/guideline2"
             app:layout_constraintEnd_toEndOf="@id/guideline3"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="@dimen/dp_35"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -97,9 +111,8 @@
             app:layout_constraintStart_toStartOf="@id/guideline3"
             app:layout_constraintEnd_toEndOf="@id/guideline4"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="@dimen/dp_35"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -181,9 +194,8 @@
             app:layout_constraintStart_toStartOf="@id/guideline4"
             app:layout_constraintEnd_toEndOf="@id/guideline5"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="@dimen/dp_35"
             android:gravity="center">
 
             <TextView
@@ -203,9 +215,8 @@
             app:layout_constraintStart_toStartOf="@id/guideline5"
             app:layout_constraintEnd_toEndOf="@id/guideline6"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="@dimen/dp_35"
             android:gravity="center">
 
             <LinearLayout
@@ -259,9 +270,8 @@
             app:layout_constraintStart_toStartOf="@id/guideline6"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="@dimen/dp_35"
             android:gravity="center">
 
             <TextView
@@ -301,20 +311,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.34" />
+            app:layout_constraintGuide_percent="0.36" />
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.34" />
+            app:layout_constraintGuide_percent="0.36" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.50" />
+            app:layout_constraintGuide_percent="0.54" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline5"
@@ -331,7 +341,19 @@
             app:layout_constraintGuide_percent="0.84" />
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/tvMemo"
+        android:drawableStart="@drawable/ic_baseline_comment_24"
+        android:drawablePadding="@dimen/dp_2"
+        app:layout_constraintStart_toEndOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/nameBlock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="@dimen/sp_10"
+        android:text=""
+        />
 
 
 <!--    <View-->

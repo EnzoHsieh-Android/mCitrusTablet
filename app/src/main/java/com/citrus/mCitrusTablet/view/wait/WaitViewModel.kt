@@ -1,7 +1,6 @@
 package com.citrus.mCitrusTablet.view.wait
 
 
-import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -30,10 +29,15 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
     private var serverDomain =
         "https://" + prefs.severDomain
     var storageList: MutableList<Wait> = mutableListOf()
+    var expendList = mutableListOf<String>()
     var sortOrder: SortOrder = SortOrder.BY_TIME_MORE
     var hideCheck: HideCheck = HideCheck.HIDE_TRUE
     var nowFilter = Filter.SHOW_ALL
+    var undo = false
     var smsQueue = arrayListOf<String>()
+
+    private lateinit var storeChangeForDelete:Wait
+    private fun isStoreChangeInit()=::storeChangeForDelete.isInitialized
 
     private lateinit var selectGuest:Wait
     private fun isSelectGuestInit()=::selectGuest.isInitialized
@@ -95,13 +99,18 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
                     if(isSelectGuestInit()){
                         for(item in storageList){
                             item.isSelect = item.tkey == selectGuest.tkey
+                            for(key in expendList){
+                                if(key == item.tkey){
+                                    item.isExpend = true
+                                }
+                            }
                         }
                     }
                     sendWaitSms()
                     refreshAllData(storageList)
                 } else {
                     storageList = mutableListOf()
-                    _allData.postValue(mutableListOf())
+                    _allData.postValue(storageList)
                 }
             }
         }
@@ -147,16 +156,24 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
     }
 
 
-    private fun refreshAllData( list: MutableList<Wait>) {
+    private fun refreshAllData(list: MutableList<Wait>) {
 
-        var wlist = list
-
-        when(nowFilter){
-            Filter.SHOW_ALL -> {}
-            Filter.SHOW_CANCELLED -> { wlist = wlist.filter { it.status == Constants.CANCEL } as MutableList<Wait> }
-            Filter.SHOW_NOTIFIED -> { wlist = wlist.filter { it.status == Constants.NOTICE } as MutableList<Wait> }
-            Filter.SHOW_CONFIRM -> { wlist = wlist.filter { it.status == Constants.CONFIRM } as MutableList<Wait> }
-            Filter.SHOW_WAIT -> { wlist = wlist.filter { it.status == Constants.ADD } as MutableList<Wait> }
+        var wlist: MutableList<Wait> = when(nowFilter){
+            Filter.SHOW_ALL -> {
+                list
+            }
+            Filter.SHOW_CANCELLED -> {
+                list.filter { it.status == Constants.CANCEL } as MutableList<Wait>
+            }
+            Filter.SHOW_NOTIFIED -> {
+                list.filter { it.status == Constants.NOTICE } as MutableList<Wait>
+            }
+            Filter.SHOW_CONFIRM -> {
+                list.filter { it.status == Constants.CONFIRM } as MutableList<Wait>
+            }
+            Filter.SHOW_WAIT -> {
+                list.filter { it.status == Constants.ADD } as MutableList<Wait>
+            }
         }
 
         if (hideCheck != HideCheck.HIDE_TRUE) {
@@ -171,7 +188,6 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
     }
 
     fun reload() {
-        Log.e("has reload","reload")
         fetchAllData()
     }
 
@@ -198,7 +214,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
 
                 when (status) {
                     1 -> {
-                        if(statusStr == Constants.NOTICE){
+                        if(statusStr == Constants.NOTICE && !undo){
                             var msg = prefs.storeName+ " " + prefs.messageNotice + "\n" + wait.url
                             if(wait.phone != null && wait.phone != ""){
                                 sendSMS(wait, msg)
@@ -207,9 +223,13 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
                             }
                         }
 
-                        var index = storageList.indexOf(wait)
-                        storageList[index].status = statusStr
-                        refreshAllData(storageList)
+                        if(statusStr == Constants.CANCEL){
+                            showUndoToast(wait)
+                            storeChangeForDelete = wait
+                        }
+
+                        undo = false
+                        fetchAllData()
                     }
                     0 -> {
 
@@ -375,8 +395,26 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
         for(item in storageList){
             item.isSelect = item == wait
         }
+
+        if(wait.isExpend){
+            expendList.add(wait.tkey)
+        }else{
+            expendList.remove(wait.tkey)
+        }
+
         refreshAllData(storageList)
     }
+
+    private fun showUndoToast(wait:Wait) = viewModelScope.launch{
+        tasksEventChannel.send(TasksEvent.ShowUndoDeleteTaskMessageW(wait))
+    }
+
+    fun onUndoFinish(wait: Wait) =
+        viewModelScope.launch {
+            Timber.d("Action: Undo all change")
+            undo = true
+            changeStatus(wait,storeChangeForDelete.status)
+        }
 
 
 }

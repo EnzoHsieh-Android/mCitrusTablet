@@ -71,20 +71,23 @@
         app:layout_constraintTop_toBottomOf="@+id/rgDateMode" />
 
     <TextView
+        android:drawablePadding="@dimen/dp_5"
+        android:drawableStart="@drawable/ic_baseline_access_time_filled_24"
         android:id="@+id/tvStartTime"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/dp_80"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dp_3"
         android:layout_marginTop="@dimen/dp_3"
         android:background="@drawable/button_overlay_15"
         android:padding="@dimen/padding_15"
-        android:text="@string/select_time"
+        android:text="@string/time"
         android:textColor="@color/selector_text"
-        android:textSize="@dimen/sp_6"
+        android:textSize="@dimen/sp_10"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvStartTimeTitle" />
 
     <TextView
+        android:visibility="gone"
         android:id="@+id/tvEndTimeTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -94,6 +97,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tvStartTime" />
 
     <TextView
+        android:visibility="gone"
         android:id="@+id/tvEndTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -101,12 +105,27 @@
         android:layout_marginTop="@dimen/dp_3"
         android:background="@drawable/button_overlay_15"
         android:padding="@dimen/padding_15"
-        android:text="@string/select_time"
+        android:text="@string/select_cusNum"
         android:textColor="@color/selector_text"
         android:textSize="@dimen/sp_6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvEndTimeTitle" />
 
+    <TextView
+        android:drawableStart="@drawable/ic_baseline_person_add_alt_1_24"
+        android:drawablePadding="@dimen/dp_5"
+        android:id="@+id/tvPerson"
+        android:layout_width="@dimen/dp_80"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_3"
+        android:layout_marginTop="@dimen/dp_3"
+        android:background="@drawable/button_overlay_15"
+        android:padding="@dimen/padding_15"
+        android:text="@string/person"
+        android:textColor="@color/selector_text"
+        android:textSize="@dimen/sp_10"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvEndTimeTitle" />
 
     <TextView
         android:visibility="gone"

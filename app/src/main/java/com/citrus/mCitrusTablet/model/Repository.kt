@@ -42,8 +42,8 @@ class Repository @Inject constructor(private val apiService: ApiService) {
                 data?.let { oData ->
                     oData.data?.let { list ->
                         if (fetchType == "reservation") {
-                            onCusCount(list.reservation.filter { it.status != Constants.CANCEL }.size.toString())
-                            emit(list.reservation.filter { it.status != Constants.CANCEL })
+                            onCusCount(list.reservation.size.toString())
+                            emit(list.reservation)
                         } else {
                             onCusCount(list.wait.size.toString())
                             var distance = 0L

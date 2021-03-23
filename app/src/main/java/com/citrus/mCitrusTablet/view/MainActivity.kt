@@ -277,7 +277,7 @@ class MainActivity : AppCompatActivity() {
                 true
             )
         }
-        downloadTask.execute("http://cms.citrus.tw/apk/mCitrusTablet_signed_v$name.apk")
+        downloadTask.execute("https://www.cms.citrus.tw/apk/mCitrusTablet_signed_v$name.apk")
     }
 
 

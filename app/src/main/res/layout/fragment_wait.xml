@@ -397,6 +397,18 @@
 
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/contentSwap"
+            android:layout_width="@dimen/dp_10"
+            android:layout_height="@dimen/dp_10"
+            app:layout_constraintStart_toEndOf="@+id/phoneBlock"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/horizontal_TimeStr50"
+            app:layout_constraintBottom_toTopOf="@+id/horizontal_TimeStr60"
+            android:src="@drawable/swap"
+            android:scaleType="fitCenter"
+            />
+
 
         <LinearLayout
             android:id="@+id/phoneBlock"
@@ -426,6 +438,21 @@
                 android:maxLength="10"
                 />
 
+            <EditText
+                android:visibility="gone"
+                android:id="@+id/mail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="E-mail"
+                android:textSize="@dimen/sp_12"
+                android:background="@null"
+                android:drawablePadding="5dp"
+                android:drawableStart="@drawable/ic_baseline_email_24"
+                android:nextFocusForward="@+id/memo"
+                android:imeOptions="actionNext"
+                android:singleLine="true"
+                />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
@@ -437,6 +464,42 @@
 
         <LinearLayout
             android:id="@+id/seatsBlock"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="@+id/phoneBlock"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/horizontal_TimeStr70"
+            app:layout_constraintBottom_toTopOf="@id/horizontal_TimeStr80"
+            android:orientation="vertical"
+            android:gravity="center"
+            >
+
+            <TextView
+                android:inputType="number"
+                android:id="@+id/seat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/num_of_person"
+                android:textSize="@dimen/sp_12"
+                android:background="@null"
+                android:drawablePadding="5dp"
+                android:drawableStart="@drawable/ic_baseline_person_add_alt_1_24"
+                android:imeOptions="actionNext"
+                android:nextFocusForward="@+id/memo"
+                android:maxLength="1"
+                />
+
+            <View
+                android:layout_gravity="left"
+                android:layout_width="@dimen/dp_100"
+                android:layout_height="2dp"
+                android:background="@color/gray"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/memoBlock"
             android:layout_width="@dimen/dp_100"
             android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -448,42 +511,22 @@
             >
 
             <EditText
-                android:inputType="number"
-                android:id="@+id/seat"
+                android:id="@+id/memo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/person"
+                android:hint="@string/memo"
                 android:textSize="@dimen/sp_12"
                 android:background="@null"
                 android:drawablePadding="5dp"
-                android:drawableStart="@drawable/ic_baseline_event_seat_24"
-                android:imeOptions="actionNext"
-                android:nextFocusForward="@+id/memo"
-                android:maxLength="1"
+                android:drawableStart="@drawable/ic_baseline_comment_24"
+                android:imeOptions="actionDone"
                 />
 
             <View
-
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@color/gray"
                 />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/memoBlock"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/horizontal_TimeStr70"
-            app:layout_constraintBottom_toTopOf="@id/horizontal_TimeStr80"
-            android:orientation="vertical"
-            android:gravity="center"
-            >
-
-
 
 
         </LinearLayout>
@@ -823,20 +866,20 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        app:layout_constraintGuide_percent="0.34" />
+                        app:layout_constraintGuide_percent="0.36" />
                     <androidx.constraintlayout.widget.Guideline
                         android:id="@+id/guideline3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        app:layout_constraintGuide_percent="0.34" />
+                        app:layout_constraintGuide_percent="0.36" />
 
                     <androidx.constraintlayout.widget.Guideline
                         android:id="@+id/guideline4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        app:layout_constraintGuide_percent="0.50" />
+                        app:layout_constraintGuide_percent="0.54" />
 
                     <androidx.constraintlayout.widget.Guideline
                         android:id="@+id/guideline5"

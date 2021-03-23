@@ -27,6 +27,9 @@ data class ReservationClass (
         @SerializedName("Phone")
         val phone: String,
 
+        @SerializedName("Email")
+        val email: String,
+
         @SerializedName("Memo")
         val memo: String,
 

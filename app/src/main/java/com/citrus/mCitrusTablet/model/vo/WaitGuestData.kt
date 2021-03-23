@@ -21,9 +21,18 @@ data class WaitGuestData (
     @SerializedName("Phone")
     val phone: String,
 
+    @SerializedName("Email")
+    val email: String,
+
     @SerializedName("Memo")
     val memo: String,
 
     @SerializedName("Status")
-    val status: String
+    val status: String,
+
+    @SerializedName("AdultCount")
+    val adultCount: Int,
+
+    @SerializedName("KidCount")
+    val kidCount: Int
 )

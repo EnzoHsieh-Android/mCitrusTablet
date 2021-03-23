@@ -18,7 +18,7 @@ import org.jetbrains.anko.textColor
 import java.text.SimpleDateFormat
 import java.util.*
 
-class WaitAdapter(var waitList:MutableList<Wait>,@ApplicationContext val context: Context,val onItemClick: (Wait,Boolean,Boolean) -> Unit,val onButtonClick: (Wait) -> Unit,val onNoticeClick: (Wait) -> Unit) :RecyclerView.Adapter<WaitAdapter.TasksViewHolder>() {
+class WaitAdapter(var waitList:MutableList<Wait>,@ApplicationContext val context: Context,val onItemClick: (Wait,Boolean,Boolean) -> Unit,val onButtonClick: (Wait) -> Unit,val onNoticeClick: (Wait) -> Unit,val onImgClick:(Wait) -> Unit) :RecyclerView.Adapter<WaitAdapter.TasksViewHolder>() {
 
 
 
@@ -50,18 +50,31 @@ class WaitAdapter(var waitList:MutableList<Wait>,@ApplicationContext val context
         fun bind(wait: Wait) {
             binding.apply {
 
-                checkBlock.visibility = View.VISIBLE
-                btnNotice.visibility = View.VISIBLE
-                statusBlock.visibility = View.GONE
+                recoveryItemView()
 
                 name.text = wait.mName
                 if(wait.phone != null && wait.phone != ""){
+                    mail.visibility = View.GONE
+                    phone.visibility = View.VISIBLE
                     phone.text = wait.phone
                 }else{
-                    phone.text = wait.email!!.split("@")[0]
+                    mail.visibility = View.VISIBLE
+                    phone.visibility = View.GONE
+                    mail.text = wait.email!!.split("@")[0]
                 }
 
-                binding.root.setBackgroundColor(context.resources.getColor(R.color.selectColor))
+                adult.text = wait.adultCount.toString()
+                child.text = wait.kidCount.toString()
+
+                if(wait.isExpend){
+                    tvMemo.text = wait.memo
+                    tvMemo.visibility = View.VISIBLE
+                }else{
+                    tvMemo.visibility = View.GONE
+                }
+
+
+               root.setBackgroundColor(context.resources.getColor(R.color.selectColor))
 
                 if(wait.isSelect){
                     itemView.setBackgroundColor(context.resources.getColor(R.color.selectColor))
@@ -92,14 +105,14 @@ class WaitAdapter(var waitList:MutableList<Wait>,@ApplicationContext val context
                     "I" -> {
                         checkBlock.visibility = View.VISIBLE
                         btnNotice.visibility = View.GONE
-                        statusBlock.visibility = View.VISIBLE
                         tvStatus.text = context.resources.getString(R.string.notified)
                         tvUpdateTime.text = wait.updateDate
                         tvStatus.textColor = context.resources.getColor(R.color.deepGray)
                         tvUpdateTime.textColor = context.resources.getColor(R.color.deepGray)
+                        statusBlock.visibility = View.VISIBLE
                         if(wait.isOverTime){
-                            tvStatus.textColor = Color.RED
-                            tvUpdateTime.textColor = Color.RED
+                            tvStatus.textColor = context.resources.getColor(R.color.red)
+                            tvUpdateTime.textColor = context.resources.getColor(R.color.red)
                             tvStatus.text = context.resources.getString(R.string.timeOut)
                         }
                     }
@@ -120,8 +133,8 @@ class WaitAdapter(var waitList:MutableList<Wait>,@ApplicationContext val context
                         statusBlock.visibility = View.VISIBLE
                         tvStatus.text = context.resources.getString(R.string.delete)
                         tvUpdateTime.text = wait.updateDate
-                        tvStatus.textColor = Color.RED
-                        tvUpdateTime.textColor = Color.RED
+                        tvStatus.textColor = context.resources.getColor(R.color.red)
+                        tvUpdateTime.textColor = context.resources.getColor(R.color.red)
                     }
                 }
 
@@ -129,11 +142,28 @@ class WaitAdapter(var waitList:MutableList<Wait>,@ApplicationContext val context
                 var hasMemo = (wait.memo != null && wait.memo != "")
                 var hasDelivery = (wait.orderNo != null && wait.orderNo != "")
 
+                if(hasMemo){
+                    imgMemo.visibility = View.VISIBLE
+                }else{
+                    imgMemo.visibility = View.INVISIBLE
+                }
+
 
                 if(hasDelivery){
                     imgDelivery.visibility = View.VISIBLE
                 }else{
                     imgDelivery.visibility = View.INVISIBLE
+                }
+
+                hintBlock.setOnClickListener {
+                    if(tvMemo.visibility == View.GONE) {
+                        wait.isExpend = true
+                        tvMemo.visibility = View.VISIBLE
+                    }else{
+                        wait.isExpend = false
+                        tvMemo.visibility = View.GONE
+                    }
+                    onImgClick(wait)
                 }
 
 
@@ -144,10 +174,22 @@ class WaitAdapter(var waitList:MutableList<Wait>,@ApplicationContext val context
                 btnCheck.setOnClickListener {
                     onButtonClick(wait)
                 }
+
                 btnNotice.setOnClickListener {
                     onNoticeClick(wait)
                 }
             }
+        }
+
+
+
+        private fun recoveryItemView(){
+            binding.apply {
+                checkBlock.visibility = View.VISIBLE
+                btnNotice.visibility = View.VISIBLE
+                statusBlock.visibility = View.GONE
+            }
+
         }
     }
 }

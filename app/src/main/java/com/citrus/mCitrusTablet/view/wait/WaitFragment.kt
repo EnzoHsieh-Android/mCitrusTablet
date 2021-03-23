@@ -2,7 +2,9 @@ package com.citrus.mCitrusTablet.view.wait
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -11,17 +13,21 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.citrus.mCitrusTablet.R
+import com.citrus.mCitrusTablet.databinding.FragmentReservationBinding
 import com.citrus.mCitrusTablet.databinding.FragmentWaitBinding
 import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.model.vo.*
 import com.citrus.mCitrusTablet.util.Constants
+import com.citrus.mCitrusTablet.util.ui.BaseFragment
 import com.citrus.mCitrusTablet.view.adapter.WaitAdapter
 import com.citrus.mCitrusTablet.view.dialog.CustomAlertDialog
 import com.citrus.mCitrusTablet.view.dialog.CustomFilterCheckBoxDialog
+import com.citrus.mCitrusTablet.view.dialog.CustomNumberPickerDialog
 import com.citrus.mCitrusTablet.view.dialog.CustomOrderDeliveryDialog
 import com.citrus.mCitrusTablet.view.reservation.SearchViewStatus
 import com.citrus.mCitrusTablet.view.reservation.TasksEvent
 import com.citrus.util.onQueryTextChanged
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_reservation.*
 import kotlinx.coroutines.flow.collect
@@ -32,7 +38,7 @@ import java.util.*
 
 @AndroidEntryPoint
 class
-WaitFragment : Fragment(R.layout.fragment_wait) {
+WaitFragment : BaseFragment() {
     private val waitViewModel: WaitViewModel by viewModels()
     private var _binding: FragmentWaitBinding? = null
     private val binding get() = _binding!!
@@ -40,11 +46,17 @@ WaitFragment : Fragment(R.layout.fragment_wait) {
     private var sortOrderByCount: SortOrder = SortOrder.BY_LESS
     private var filterType = Filter.SHOW_ALL
     private var isHideCheck = false
+    private var isSwapEmail = false
+    private var cusNum = 0
+    private var adultNum = 0
+    private var childNum = 0
     private var tempWaitList = mutableListOf<Wait>()
     private val waitAdapter by lazy {
         WaitAdapter(
             mutableListOf(),
             requireActivity(),
+            onImgClick = { wait ->
+                waitViewModel.itemSelect(wait) },
             onItemClick = { wait,hasMemo,hasDelivery ->
                 waitViewModel.itemSelect(wait)
                 if(hasDelivery) {
@@ -59,6 +71,16 @@ WaitFragment : Fragment(R.layout.fragment_wait) {
             }, onNoticeClick = {
                 waitViewModel.sendNotice(it)
             })
+    }
+
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentWaitBinding.inflate(inflater, container, false)
+
+        return binding.root
     }
 
 
@@ -152,6 +174,17 @@ WaitFragment : Fragment(R.layout.fragment_wait) {
             }
 
 
+            contentSwap.setOnClickListener {
+                isSwapEmail = !isSwapEmail
+                if(isSwapEmail){
+                    phone.visibility = View.GONE
+                    mail.visibility = View.VISIBLE
+                }else{
+                    phone.visibility = View.VISIBLE
+                    mail.visibility = View.GONE
+                }
+            }
+
 
             hideCheckBlock.setOnClickListener {
                 waitViewModel.hideChecked(isHideCheck)
@@ -198,13 +231,24 @@ WaitFragment : Fragment(R.layout.fragment_wait) {
                 }
             }
 
+            seat.setOnClickListener {
+                CustomNumberPickerDialog() { adultCount, childCount, totalCount ->
+                    seat.text = totalCount
+                    cusNum = totalCount.toInt()
+                    adultNum = adultCount.toInt()
+                    childNum = childCount.toInt()
+                }.show(requireActivity().supportFragmentManager, "CustomNumberPickerDialog")
+            }
+
 
             btReservation.setOnSlideCompleteListener {
                 var cusName = binding.name.text.toString().trim()
                 var cusPhone = binding.phone.text.toString().trim()
+                var cusEmail = binding.mail.text.toString().trim()
                 var seat = binding.seat.text.toString().trim()
+                var memo = binding.memo.text.toString().trim()
 
-                if (cusName.isEmpty() || cusPhone.isEmpty() || seat.isEmpty()) {
+                if (cusName.isEmpty() || (cusPhone.isEmpty() && cusEmail.isEmpty()) || seat.isEmpty()) {
                     var dialog = activity?.let {
                         CustomAlertDialog(
                             it,
@@ -218,16 +262,20 @@ WaitFragment : Fragment(R.layout.fragment_wait) {
                     var data = PostToSetWaiting(
                         WaitGuestData(
                             prefs.storeId.toInt(),
-                            seat.toInt(),
+                            cusNum,
                             cusName,
                             cusPhone,
-                            "",
-                            Constants.ADD
+                            cusEmail,
+                            memo,
+                            Constants.ADD,
+                            adultNum,
+                            childNum
                         )
                     )
                     waitViewModel.uploadWait(data)
                 }
             }
+
         }
     }
 
@@ -277,6 +325,14 @@ WaitFragment : Fragment(R.layout.fragment_wait) {
                         }
                         dialog!!.show()
                     }
+
+                    is TasksEvent.ShowUndoDeleteTaskMessageW -> {
+                        var mSnackBar = Snackbar.make(requireView(), R.string.FinishMsg, Snackbar.LENGTH_LONG)
+                            .setAction(R.string.Undo) {
+                                waitViewModel.onUndoFinish(event.wait)
+                            }
+                        adjustSnackBar(mSnackBar).show()
+                    }
                 }
             }
         }
@@ -292,7 +348,9 @@ WaitFragment : Fragment(R.layout.fragment_wait) {
     private fun clearSubmitText(isHideSeat: Boolean) {
         binding.name.text.clear()
         binding.phone.text.clear()
-        binding.seat.text.clear()
+        binding.mail.text.clear()
+        binding.memo.text.clear()
+        binding.seat.text = ""
     }
 
     @Throws(ParseException::class)

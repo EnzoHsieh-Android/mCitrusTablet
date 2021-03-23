@@ -77,4 +77,10 @@
     <string name="filter_wait">Show Wait</string>
     <string name="refresh">Refresh</string>
     <string name="search_text">Phone Number or Email</string>
+    <string name="select_cusNum">Number of person</string>
+    <string name="child">Child</string>
+    <string name="adult">Adult</string>
+    <string name="num_of_person">Number of person</string>
+    <string name="FinishMsg">Change completed</string>
+    <string name="Undo">Undo</string>
 </resources>

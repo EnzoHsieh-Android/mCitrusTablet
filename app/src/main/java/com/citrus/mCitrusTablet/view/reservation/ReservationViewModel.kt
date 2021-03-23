@@ -11,6 +11,7 @@ import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.model.Repository
 import com.citrus.mCitrusTablet.model.vo.*
 import com.citrus.mCitrusTablet.util.Constants
+import com.citrus.mCitrusTablet.util.Constants.TimeStrForDelete
 import com.citrus.mCitrusTablet.util.Constants.defaultTimeStr
 import com.citrus.mCitrusTablet.util.Constants.inputFormat
 import com.citrus.mCitrusTablet.util.HideCheck
@@ -20,6 +21,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import timber.log.Timber
 import java.text.SimpleDateFormat
+import java.util.*
 
 enum class SortOrder { BY_LESS, BY_TIME, BY_MORE }
 
@@ -31,6 +33,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     var hideCheck: HideCheck = HideCheck.HIDE_TRUE
     private var delayTime = Constants.DEFAULT_TIME
     var storageList = mutableListOf<ReservationGuests>()
+    var expendList = mutableListOf<String>()
     private lateinit var fetchJob: Job
 
     private lateinit var selectGuest:ReservationGuests
@@ -190,6 +193,11 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
                         if(isSelectGuestInit()){
                             for(item in storageList){
                                 item.isSelect = item.tkey == selectGuest.tkey
+                                for(key in expendList){
+                                    if(key == item.tkey){
+                                        item.isExpend = true
+                                    }
+                                }
                             }
                         }
                         allDataReorganization(getSortRequirement(SortOrder.BY_TIME, storageList))
@@ -224,6 +232,13 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         for(item in storageList){
             item.isSelect = item == guest
         }
+
+        if(guest.isExpend){
+            expendList.add(guest.tkey)
+        }else{
+            expendList.remove(guest.tkey)
+        }
+
         allDataReorganization(storageList)
     }
 
@@ -239,8 +254,10 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         val groupItem = mutableListOf<List<ReservationGuests>>()
         var totalList: MutableList<Any> = mutableListOf()
 
+        sortGuests = if (hideCheck != HideCheck.HIDE_TRUE) sortGuests.filter { it.status != Constants.CHECK } as MutableList<ReservationGuests> else sortGuests
+
         if (sortGuests.isNotEmpty()) {
-            for (item in if (hideCheck != HideCheck.HIDE_TRUE) sortGuests.filter { it.status == Constants.ADD } else sortGuests) {
+            for (item in sortGuests) {
                 val date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(item.reservationTime)
                 val formattedDate = SimpleDateFormat("MM/dd HH:mm").format(date)
                 var dateStr = formattedDate.split(" ")
@@ -272,7 +289,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
             }
         }
 
-        _cusCount.postValue(sortGuests.filter { it.status != Constants.CANCEL }.size.toString())
+        _cusCount.postValue(sortGuests.size.toString())
         _forDeleteData.postValue(totalList)
         _titleData.postValue(timeTitle.toList())
         _allData.postValue(groupItem)
@@ -286,7 +303,9 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
             is SearchViewStatus.NeedChange -> {
                 var tempGuestsList = mutableListOf<ReservationGuests>()
                 for (item: ReservationGuests in storageList) {
-                    if (item.phone.contains(status.searchStr)) {
+                    if (item.phone?.contains(status.searchStr) || item.email?.split("@")?.get(0)
+                            ?.contains(status.searchStr)
+                    ) {
                         tempGuestsList.add(item)
                     }
                 }
@@ -307,10 +326,11 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
                     1 -> {
                         var index = storageList.indexOf(guest)
                         if (status == Constants.CANCEL) {
-                            storageList.removeAt(index)
-                        } else {
-                            storageList[index].status = status
+                            storageList[index].updateDate = TimeStrForDelete
+                            showUndoToast(storageList[index])
                         }
+
+                        storageList[index].status = status
                         allDataReorganization(storageList)
                     }
                     0 -> {
@@ -439,6 +459,18 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     }
 
 
+    private fun showUndoToast(guest:ReservationGuests) = viewModelScope.launch{
+        tasksEventChannel.send(TasksEvent.ShowUndoDeleteTaskMessageR(guest))
+    }
+
+    fun onUndoFinish(guest: ReservationGuests) =
+        viewModelScope.launch {
+            Timber.d("Action: Undo all change")
+            changeStatus(guest,Constants.ADD)
+        }
+
+
+
     fun onDetachView(){
         onCleared()
     }
@@ -457,6 +489,8 @@ sealed class SearchViewStatus {
 }
 
 sealed class TasksEvent {
+    data class ShowUndoDeleteTaskMessageR(val guest: ReservationGuests) : TasksEvent()
+    data class ShowUndoDeleteTaskMessageW(val wait: Wait) : TasksEvent()
     object ShowSuccessMessage : TasksEvent()
     object ShowFailMessage : TasksEvent()
 }
