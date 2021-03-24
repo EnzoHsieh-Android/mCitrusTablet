@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -18,6 +19,7 @@ import com.citrus.mCitrusTablet.databinding.FragmentWaitBinding
 import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.model.vo.*
 import com.citrus.mCitrusTablet.util.Constants
+import com.citrus.mCitrusTablet.util.HideCheck
 import com.citrus.mCitrusTablet.util.ui.BaseFragment
 import com.citrus.mCitrusTablet.view.adapter.WaitAdapter
 import com.citrus.mCitrusTablet.view.dialog.CustomAlertDialog
@@ -41,7 +43,7 @@ import java.util.*
 @AndroidEntryPoint
 class
 WaitFragment : BaseFragment() {
-    private val waitViewModel: WaitViewModel by viewModels()
+    private val waitViewModel: WaitViewModel by activityViewModels()
     private var _binding: FragmentWaitBinding? = null
     private val binding get() = _binding!!
     private var sortOrderByTime: SortOrder = SortOrder.BY_TIME_MORE
@@ -190,14 +192,6 @@ WaitFragment : BaseFragment() {
 
             hideCheckBlock.setOnClickListener {
                 waitViewModel.hideChecked(isHideCheck)
-                isHideCheck = !isHideCheck
-                if (isHideCheck) {
-                    hideCheck.setImageDrawable(resources.getDrawable(R.drawable.eye))
-                    tv_hideCheck.text = resources.getString(R.string.show_check)
-                } else {
-                    hideCheck.setImageDrawable(resources.getDrawable(R.drawable.visibility))
-                    tv_hideCheck.text = resources.getString(R.string.hide_check)
-                }
             }
 
 
@@ -301,6 +295,62 @@ WaitFragment : BaseFragment() {
 
         })
 
+        waitViewModel.hideCheckType.observe(viewLifecycleOwner,{ status ->
+            when(status){
+                HideCheck.HIDE_TRUE -> {
+                    isHideCheck = false
+                    hideCheck.setImageDrawable(resources.getDrawable(R.drawable.visibility))
+                    tv_hideCheck.text = resources.getString(R.string.hide_check)
+                }
+                HideCheck.HIDE_FALSE -> {
+                    isHideCheck = true
+                    hideCheck.setImageDrawable(resources.getDrawable(R.drawable.eye))
+                    tv_hideCheck.text = resources.getString(R.string.show_check)
+
+                }
+            }
+        })
+
+        waitViewModel.filterType.observe(viewLifecycleOwner,{ status ->
+            filterType = status
+            when(status){
+                Filter.SHOW_ALL -> {  binding.tvFilterType.text = resources.getString(R.string.filter_all) }
+                Filter.SHOW_CANCELLED -> {  binding.tvFilterType.text = resources.getString(R.string.filter_cancelled) }
+                Filter.SHOW_NOTIFIED -> {  binding.tvFilterType.text = resources.getString(R.string.filter_notified) }
+                Filter.SHOW_CONFIRM -> {  binding.tvFilterType.text = resources.getString(R.string.filter_confirm) }
+                Filter.SHOW_WAIT -> {  binding.tvFilterType.text = resources.getString(R.string.filter_wait) }
+            }
+        })
+
+        waitViewModel.sortType.observe(viewLifecycleOwner,{ status ->
+            when(status){
+                SortOrder.BY_TIME_MORE -> {
+                    sortOrderByTime = status
+                    binding.timeSortStatus.visibility = View.VISIBLE
+                    binding.timeSortStatus.setImageDrawable(resources.getDrawable(R.drawable.down))
+                    binding.groupSortStatus.visibility = View.INVISIBLE
+                }
+                SortOrder.BY_TIME_LESS -> {
+                    sortOrderByTime = status
+                    binding.timeSortStatus.visibility = View.VISIBLE
+                    binding.timeSortStatus.setImageDrawable(resources.getDrawable(R.drawable.up))
+                    binding.groupSortStatus.visibility = View.INVISIBLE
+                }
+                SortOrder.BY_MORE -> {
+                    sortOrderByCount = status
+                    binding.groupSortStatus.visibility = View.VISIBLE
+                    binding.groupSortStatus.setImageDrawable(resources.getDrawable(R.drawable.up))
+                    binding.timeSortStatus.visibility = View.INVISIBLE
+                }
+                SortOrder.BY_LESS -> {
+                    sortOrderByCount = status
+                    binding.groupSortStatus.visibility = View.VISIBLE
+                    binding.groupSortStatus.setImageDrawable(resources.getDrawable(R.drawable.down))
+                    binding.timeSortStatus.visibility = View.INVISIBLE
+                }
+            }
+        })
+
 
         waitViewModel.cusCount.observe(viewLifecycleOwner, { cusCount ->
             binding.tvTotal.text = resources.getString(R.string.TotalForTheDay) + " " + cusCount
@@ -350,6 +400,7 @@ WaitFragment : BaseFragment() {
     override fun onDestroyView() {
         binding.reservationRv.adapter = null
         _binding = null
+        waitViewModel.onDetachView()
         super.onDestroyView()
     }
 

@@ -782,6 +782,7 @@
                             />
 
                         <ImageView
+                            android:visibility="invisible"
                             android:id="@+id/groupSortStatus"
                             android:layout_width="@dimen/dp_5"
                             android:layout_height="@dimen/dp_5"

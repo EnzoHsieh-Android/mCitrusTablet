@@ -23,6 +23,7 @@ import androidx.core.content.FileProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.navOptions
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.citrus.mCitrusTablet.BuildConfig
 import com.citrus.mCitrusTablet.R
@@ -111,8 +112,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun navigateToTarget(id: Int) {
-        if (!findNavController(R.id.navHost).popBackStack(id, false)) {
-            findNavController(R.id.navHost).navigate(id)
+        if(findNavController(R.id.navHost).isFragmentRemovedFromBackStack(id)){
+            findNavController(R.id.navHost).navigate(id,null,  navOptions {
+                anim {
+                    enter = android.R.animator.fade_in
+                    exit = android.R.animator.fade_out
+                }
+            })
+        }else{
+            findNavController(R.id.navHost).popBackStack(id,false)
         }
     }
 
@@ -332,5 +340,13 @@ class MainActivity : AppCompatActivity() {
         dialog!!.show()
     }
 
+
+    private fun NavController.isFragmentRemovedFromBackStack(destinationId: Int) =
+        try {
+            getBackStackEntry(destinationId)
+            false
+        } catch (e: Exception) {
+            true
+        }
 
 }

@@ -54,6 +54,18 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
     val allData: LiveData<List<Wait>>
         get() = _allData
 
+    private val _filterType = MutableLiveData<Filter>()
+    val filterType: LiveData<Filter>
+        get() = _filterType
+
+    private val _hideCheckType = MutableLiveData<HideCheck>()
+    val hideCheckType: LiveData<HideCheck>
+        get() = _hideCheckType
+
+    private val _sortType = MutableLiveData<SortOrder>()
+    val sortType: LiveData<SortOrder>
+        get() = _sortType
+
 
     private val _deliveryInfo = SingleLiveEvent<List<OrdersItemDelivery>>()
     val deliveryInfo: SingleLiveEvent<List<OrdersItemDelivery>>
@@ -370,6 +382,11 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
     }
 
 
+    fun onDetachView(){
+        onCleared()
+    }
+
+
     override fun onCleared() {
         stopFetchJob()
         super.onCleared()
@@ -377,6 +394,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
 
     fun sortList(sort: SortOrder) {
         sortOrder = sort
+        _sortType.postValue(sortOrder)
         refreshAllData(storageList)
     }
 
@@ -386,6 +404,8 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
         } else {
             HideCheck.HIDE_FALSE
         }
+
+        _hideCheckType.postValue(hideCheck)
         refreshAllData(storageList)
     }
 
@@ -396,6 +416,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
 
     fun changeFilter(filterType: Filter) {
         nowFilter = filterType
+        _filterType.postValue(nowFilter)
         refreshAllData(storageList)
     }
 
@@ -424,6 +445,8 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
             undo = true
             changeStatus(wait,storeChangeForDelete.status)
         }
+
+
 
 
 }

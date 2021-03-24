@@ -1,6 +1,7 @@
 package com.citrus.mCitrusTablet.view.reservation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,7 @@ import com.citrus.mCitrusTablet.model.vo.PostToSetReservation
 import com.citrus.mCitrusTablet.model.vo.ReservationGuests
 import com.citrus.mCitrusTablet.util.Constants
 import com.citrus.mCitrusTablet.util.Constants.defaultTimeStr
+import com.citrus.mCitrusTablet.util.HideCheck
 import com.citrus.mCitrusTablet.util.onSafeClick
 import com.citrus.mCitrusTablet.util.ui.BaseFragment
 import com.citrus.mCitrusTablet.view.adapter.ReservationAdapter
@@ -127,7 +129,7 @@ class ReservationFragment : BaseFragment() {
                             if(guest.status != "C" && guest.status != "D") {
                                 reservationFragmentViewModel.changeStatus(guest, Constants.CANCEL)
                             }else{
-                                reservationFragmentViewModel.reload()
+                                reservationFragmentViewModel.deleteNone()
                             }
                         }
 
@@ -162,13 +164,6 @@ class ReservationFragment : BaseFragment() {
             btn_hideCheckBlock.setOnClickListener {
                 reservationFragmentViewModel.hideChecked(isHideCheck)
                 isHideCheck = !isHideCheck
-                if (isHideCheck) {
-                    hideCheck.setImageDrawable(resources.getDrawable(R.drawable.eye))
-                    tv_hideCheck.text = resources.getString(R.string.show_check)
-                } else {
-                    hideCheck.setImageDrawable(resources.getDrawable(R.drawable.visibility))
-                    tv_hideCheck.text = resources.getString(R.string.hide_check)
-                }
             }
 
 
@@ -281,6 +276,22 @@ class ReservationFragment : BaseFragment() {
 
 
     private fun initObserver() {
+        reservationFragmentViewModel.highCheckEvent.observe(viewLifecycleOwner,{ status ->
+            when(status){
+                HideCheck.HIDE_TRUE -> {
+                    hideCheck.setImageDrawable(resources.getDrawable(R.drawable.visibility))
+                    tv_hideCheck.text = resources.getString(R.string.hide_check)
+                }
+                HideCheck.HIDE_FALSE -> {
+                    hideCheck.setImageDrawable(resources.getDrawable(R.drawable.eye))
+                    tv_hideCheck.text = resources.getString(R.string.show_check)
+
+                }
+            }
+        })
+
+
+
         reservationFragmentViewModel.isFirst.observe(viewLifecycleOwner, {
             reservationFragmentViewModel.reload()
         })
@@ -516,7 +527,10 @@ class ReservationFragment : BaseFragment() {
         }
     }
 
+
+
     override fun onDestroyView() {
+        Log.e("onDestroyView","-----")
         reservationAdapter.removeAllSections()
         binding.reservationRv.adapter = null
         _binding = null

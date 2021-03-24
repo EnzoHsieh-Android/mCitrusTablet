@@ -41,6 +41,10 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     private lateinit var selectGuest:ReservationGuests
             private fun isSelectGuestInit()=::selectGuest.isInitialized
 
+    private val _highCheckEvent = MutableLiveData<HideCheck>()
+    val highCheckEvent: LiveData<HideCheck>
+        get() = _highCheckEvent
+
     private val _seatData = SingleLiveEvent<List<Floor>>()
     val seatData: SingleLiveEvent<List<Floor>>
         get() = _seatData
@@ -247,6 +251,10 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
             expendList.remove(guest.tkey)
         }
 
+        allDataReorganization(storageList)
+    }
+
+    fun deleteNone(){
         allDataReorganization(storageList)
     }
 
@@ -470,6 +478,9 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         } else {
             HideCheck.HIDE_FALSE
         }
+
+        _highCheckEvent.postValue(hideCheck)
+
         isReload = !isReload
         allDataReorganization(storageList)
     }
