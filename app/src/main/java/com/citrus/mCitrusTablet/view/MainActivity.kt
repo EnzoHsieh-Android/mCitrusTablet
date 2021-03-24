@@ -257,7 +257,7 @@ class MainActivity : AppCompatActivity() {
                     .show()
                 val path =
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                val file = File(path, "mCitrusTablet.apk")
+                val file = File(path, "catch.apk")
                 val apkUri = FileProvider.getUriForFile(
                     this@MainActivity,
                     BuildConfig.APPLICATION_ID + ".provider",
@@ -277,7 +277,7 @@ class MainActivity : AppCompatActivity() {
                 true
             )
         }
-        downloadTask.execute("https://www.cms.citrus.tw/apk/mCitrusTablet_signed_v$name.apk")
+        downloadTask.execute("http://hq.citrus.tw/apk/catch_signed_v$name.apk")
     }
 
 

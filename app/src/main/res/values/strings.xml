@@ -14,7 +14,7 @@
     <string name="today">Today</string>
     <string name="seats">seats</string>
     <string name="Reservation">Reservation</string>
-    <string name="TotalForTheDay">Total for the day :</string>
+    <string name="TotalForTheDay">Total:</string>
     <string name="sure">OK</string>
     <string name="cancel">Cancel</string>
     <string name="input_err">Input error!</string>

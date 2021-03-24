@@ -470,12 +470,13 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         } else {
             HideCheck.HIDE_FALSE
         }
+        isReload = !isReload
         allDataReorganization(storageList)
     }
 
     fun hideCancelled(cancelFilter: CancelFilter) {
         hideCancelled = cancelFilter
-
+        isReload = !isReload
         allDataReorganization(storageList)
     }
 

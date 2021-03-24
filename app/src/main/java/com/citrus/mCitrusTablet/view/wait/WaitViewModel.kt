@@ -184,12 +184,14 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
         }
 
         if (hideCheck != HideCheck.HIDE_TRUE) {
+            _cusCount.postValue(wlist.filter { it.status != Constants.CHECK }.size.toString())
             _allData.postValue(
                 getSortRequirement(
                     sortOrder,
                     wlist.filter { it.status != Constants.CHECK })
             )
         } else {
+            _cusCount.postValue(wlist.size.toString())
             _allData.postValue(getSortRequirement(sortOrder, wlist))
         }
     }
