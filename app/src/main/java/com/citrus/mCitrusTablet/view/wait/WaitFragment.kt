@@ -27,6 +27,8 @@ import com.citrus.mCitrusTablet.view.dialog.CustomOrderDeliveryDialog
 import com.citrus.mCitrusTablet.view.reservation.SearchViewStatus
 import com.citrus.mCitrusTablet.view.reservation.TasksEvent
 import com.citrus.util.onQueryTextChanged
+import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_reservation.*
@@ -57,19 +59,19 @@ WaitFragment : BaseFragment() {
             requireActivity(),
             onImgClick = { wait ->
                 waitViewModel.itemSelect(wait) },
-            onItemClick = { wait,hasMemo,hasDelivery ->
+            onItemClick = { wait ->
                 waitViewModel.itemSelect(wait)
-                if(hasDelivery) {
-                    CustomOrderDeliveryDialog(
-                        requireActivity(),
-                        wait,
-                        waitViewModel
-                    ).show(requireActivity().supportFragmentManager, "CustomOrderDeliveryDialog")
-                }
             }, onButtonClick = {
                 waitViewModel.changeStatus(it, Constants.CHECK)
             }, onNoticeClick = {
                 waitViewModel.sendNotice(it)
+            }, onDeliveryClick = {
+                waitViewModel.itemSelect(it)
+                CustomOrderDeliveryDialog(
+                    requireActivity(),
+                    it,
+                    waitViewModel
+                ).show(requireActivity().supportFragmentManager, "CustomOrderDeliveryDialog")
             })
     }
 
@@ -248,17 +250,23 @@ WaitFragment : BaseFragment() {
                 var seat = binding.seat.text.toString().trim()
                 var memo = binding.memo.text.toString().trim()
 
-                if (cusName.isEmpty() || (cusPhone.isEmpty() && cusEmail.isEmpty()) || seat.isEmpty()) {
-                    var dialog = activity?.let {
-                        CustomAlertDialog(
-                            it,
-                            getString(R.string.submitErrorMsg),
-                            "",
-                            R.drawable.ic_baseline_error_24
-                        )
-                    }
-                    dialog!!.show()
-                } else {
+
+                if(cusName.isEmpty()) {
+                    YoYo.with(Techniques.Shake).duration(1000).playOn(binding.name)
+                    return@setOnSlideCompleteListener
+                }
+
+                if(cusPhone.isEmpty() && cusEmail.isEmpty() ) {
+                    YoYo.with(Techniques.Shake).duration(1000).playOn(binding.phone)
+                    YoYo.with(Techniques.Shake).duration(1000).playOn(binding.mail)
+                    return@setOnSlideCompleteListener
+                }
+
+                if(seat.isEmpty() ) {
+                    YoYo.with(Techniques.Shake).duration(1000).playOn(binding.seat)
+                    return@setOnSlideCompleteListener
+                }
+
                     var data = PostToSetWaiting(
                         WaitGuestData(
                             prefs.storeId.toInt(),
@@ -273,7 +281,7 @@ WaitFragment : BaseFragment() {
                         )
                     )
                     waitViewModel.uploadWait(data)
-                }
+
             }
 
         }

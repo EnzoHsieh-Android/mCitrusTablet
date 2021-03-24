@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.model.vo.ReservationGuests
+import com.citrus.mCitrusTablet.view.reservation.CancelFilter
 import io.github.luizgrp.sectionedrecyclerviewadapter.Section
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
 import kotlinx.android.synthetic.main.rv_reservation_item.view.*
@@ -24,9 +25,12 @@ import kotlin.math.roundToInt
 class ReservationAdapter(
     val activity: FragmentActivity,
     private val header: String,
+    private val cancelFilter: CancelFilter,
+    private val index:Int,
     private val item: List<ReservationGuests>,
     private val onItemClick: (ReservationGuests,Boolean) -> Unit,
-    private val onButtonClick: (ReservationGuests) -> Unit
+    private val onButtonClick: (ReservationGuests) -> Unit,
+    private val onFilterClick: () -> Unit,
 ) :
     Section(
         SectionParameters.builder()
@@ -49,7 +53,25 @@ class ReservationAdapter(
 
     override fun onBindHeaderViewHolder(holder: ViewHolder) {
         val headerHolder = holder as HeaderViewHolder
+
+
+        if(index == 0){
+            when(cancelFilter){
+                CancelFilter.SHOW_CANCELLED -> {headerHolder.tv_filterType.text = activity.getString(R.string.filter_cancelled)}
+                CancelFilter.HIDE_CANCELLED -> {headerHolder.tv_filterType.text = activity.getString(R.string.filter_cancelled_H)}
+            }
+            headerHolder.statusFilter.visibility = View.VISIBLE
+            headerHolder.statusFilter.setOnClickListener {
+                onFilterClick()
+            }
+
+        }else{
+            headerHolder.statusFilter.visibility = View.GONE
+        }
+
         headerHolder.headerText.text = header
+
+
     }
 
     fun getCurrentList(): List<ReservationGuests> {
@@ -161,6 +183,8 @@ class ReservationAdapter(
 
     internal inner class HeaderViewHolder(itemView: View) : ViewHolder(itemView) {
         val headerText: TextView = itemView.time
+        val statusFilter:LinearLayout = itemView.statusFilter
+        val tv_filterType:TextView = itemView.tv_filterType
     }
 
     internal inner class ItemViewHolder(itemView: View) : ViewHolder(itemView) {

@@ -133,15 +133,7 @@ data class Wait (
     var isOverTime:Boolean = false,
     var isSelect:Boolean = false,
     var isExpend:Boolean = false
-):Serializable{
-    fun isSame(other: Wait): Boolean {
-        return tkey == other.tkey
-    }
-
-    fun isContentSame(other: Wait): Boolean {
-        return this == other
-    }
-}
+):Serializable
 
 
 

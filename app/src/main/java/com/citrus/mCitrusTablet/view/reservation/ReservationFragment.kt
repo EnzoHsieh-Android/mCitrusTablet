@@ -23,11 +23,15 @@ import com.citrus.mCitrusTablet.util.onSafeClick
 import com.citrus.mCitrusTablet.util.ui.BaseFragment
 import com.citrus.mCitrusTablet.view.adapter.ReservationAdapter
 import com.citrus.mCitrusTablet.view.dialog.*
+import com.citrus.mCitrusTablet.view.wait.Filter
 import com.citrus.util.onQueryTextChanged
+import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
 import com.google.android.material.snackbar.Snackbar
 import com.savvi.rangedatepicker.CalendarPickerView
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
+import kotlinx.android.synthetic.main.dailog_date_picker.*
 import kotlinx.android.synthetic.main.fragment_reservation.*
 import kotlinx.coroutines.flow.collect
 import java.text.ParseException
@@ -50,7 +54,9 @@ class ReservationFragment : BaseFragment() {
     private var tempAdultCount: Int = 0
     private var tempChildCount: Int = 0
     private var isHideCheck = false
+    private var isHideCancelled = false
     private var isSwapEmail = false
+    private var filterType = CancelFilter.SHOW_CANCELLED
 
     private var forDeleteData = mutableListOf<Any>()
     private var seatData = mutableListOf<String>()
@@ -236,16 +242,21 @@ class ReservationFragment : BaseFragment() {
                 var cusMemo = binding.memo.text.toString().trim()
                 var seat = tempSeat.split("-")
 
-                if (cusName.isEmpty() || (cusPhone.isEmpty() && cusEmail.isEmpty()) || tempSeat == "") {
-                    var dialog =
-                        CustomAlertDialog(
-                            requireActivity(),
-                            getString(R.string.submitErrorMsg),
-                            "",
-                            R.drawable.ic_baseline_error_24
-                        )
-                    dialog!!.show()
-                } else {
+                if(cusName.isEmpty()) {
+                    YoYo.with(Techniques.Shake).duration(1000).playOn(binding.name)
+                    return@setOnSlideCompleteListener
+                }
+
+                if(cusPhone.isEmpty() && cusEmail.isEmpty() ) {
+                    YoYo.with(Techniques.Shake).duration(1000).playOn(binding.phone)
+                    YoYo.with(Techniques.Shake).duration(1000).playOn(binding.mail)
+                    return@setOnSlideCompleteListener
+                }
+
+                if(tempSeat.isEmpty()){
+                    YoYo.with(Techniques.Shake).duration(1000).playOn(binding.hintBlock)
+                    return@setOnSlideCompleteListener
+                }
 
                     var data = PostToSetReservation(
                         prefs.rsno, ReservationClass(
@@ -264,7 +275,6 @@ class ReservationFragment : BaseFragment() {
                         )
                     )
                     reservationFragmentViewModel.uploadReservation(data)
-                }
             }
         }
     }
@@ -333,19 +343,29 @@ class ReservationFragment : BaseFragment() {
                             ReservationAdapter(
                                 requireActivity(),
                                 timeTitle[index],
+                                filterType,
+                                index,
                                 guestsList[index],
                                 onItemClick = { Guest,hasMemo ->
-                                        reservationFragmentViewModel.itemSelect(Guest)
-//                                    if(hasMemo) {
-//                                        CustomGuestDetailDialog(
-//                                            requireActivity(),
-//                                            Guest
-//                                        ).show(it.supportFragmentManager, "CustomGuestDetailDialog")
-//                                    }
+                                    reservationFragmentViewModel.itemSelect(Guest)
+                                },
+                                onButtonClick = {
+                                    reservationFragmentViewModel.changeStatus(it, Constants.CHECK)
+                                },
+                                onFilterClick = {
+                                    var dialog = activity?.let {
+                                        CustomRvFilterCheckBoxDialog(
+                                            it,
+                                            filterType,
+                                            onCheckChange = { filter ->
+                                                filterType = filter
+                                                reservationFragmentViewModel.hideCancelled(filterType)
+                                            }
+                                        )
+                                    }
+                                    dialog!!.show()
                                 }
-                            ) {
-                                reservationFragmentViewModel.changeStatus(it, Constants.CHECK)
-                            }
+                            )
                         )
                     }
                 }
@@ -355,6 +375,12 @@ class ReservationFragment : BaseFragment() {
                 reservationAdapter.removeAllSections()
             }
             binding.reservationRv.adapter = reservationAdapter
+        })
+
+
+
+        reservationFragmentViewModel.holdData.observe(viewLifecycleOwner,{ guestList ->
+            reservationAdapter.notifyDataSetChanged()
         })
 
 

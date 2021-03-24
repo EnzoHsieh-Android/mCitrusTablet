@@ -25,6 +25,45 @@
             android:textSize="@dimen/sp_13" />
     </LinearLayout>
 
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/statusFilter"
+        app:layout_constraintStart_toEndOf="@id/rv_title_guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_marginStart="@dimen/dp_5"
+            android:layout_width="@dimen/dp_10"
+            android:layout_height="@dimen/dp_10"
+            android:src="@drawable/filter"
+            android:scaleType="fitCenter"
+            />
+
+        <TextView
+            android:id="@+id/tv_filterType"
+            android:layout_marginStart="@dimen/dp_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/filter"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="@dimen/sp_6"
+            />
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/rv_title_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.84" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

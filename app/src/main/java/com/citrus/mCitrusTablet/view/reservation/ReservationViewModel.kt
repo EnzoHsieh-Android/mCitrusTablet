@@ -24,13 +24,15 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 enum class SortOrder { BY_LESS, BY_TIME, BY_MORE }
-
+enum class CancelFilter {SHOW_CANCELLED, HIDE_CANCELLED}
 class ReservationViewModel @ViewModelInject constructor(private val model: Repository) :
     ViewModel() {
 
     private var serverDomain =
         "https://" + prefs.severDomain
+    var isReload = true
     var hideCheck: HideCheck = HideCheck.HIDE_TRUE
+    var hideCancelled:CancelFilter = CancelFilter.SHOW_CANCELLED
     private var delayTime = Constants.DEFAULT_TIME
     var storageList = mutableListOf<ReservationGuests>()
     var expendList = mutableListOf<String>()
@@ -58,6 +60,10 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     private val _allData = MutableLiveData<List<List<ReservationGuests>>>()
     val allData: LiveData<List<List<ReservationGuests>>>
         get() = _allData
+
+    private val _holdData = MutableLiveData<List<List<ReservationGuests>>>()
+    val holdData: LiveData<List<List<ReservationGuests>>>
+        get() = _holdData
 
     private val _forDeleteData = MutableLiveData<List<Any>>()
     val forDeleteData: LiveData<List<Any>>
@@ -138,6 +144,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     }
 
     fun reload() {
+        isReload = !isReload
         if (_dateRange.value == null) {
             fetchAllData(defaultTimeStr, defaultTimeStr)
         } else {
@@ -200,6 +207,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
                                 }
                             }
                         }
+                        isReload = true
                         allDataReorganization(getSortRequirement(SortOrder.BY_TIME, storageList))
                     } else {
                         storageList = mutableListOf()
@@ -254,6 +262,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         val groupItem = mutableListOf<List<ReservationGuests>>()
         var totalList: MutableList<Any> = mutableListOf()
 
+        sortGuests = if (hideCancelled == CancelFilter.HIDE_CANCELLED) sortGuests.filter { it.status != Constants.CANCEL } as MutableList<ReservationGuests> else sortGuests
         sortGuests = if (hideCheck != HideCheck.HIDE_TRUE) sortGuests.filter { it.status != Constants.CHECK } as MutableList<ReservationGuests> else sortGuests
 
         if (sortGuests.isNotEmpty()) {
@@ -292,7 +301,14 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         _cusCount.postValue(sortGuests.size.toString())
         _forDeleteData.postValue(totalList)
         _titleData.postValue(timeTitle.toList())
-        _allData.postValue(groupItem)
+
+        if(isReload){
+            _allData.postValue(groupItem)
+            isReload = !isReload
+        }else{
+            _holdData.postValue(groupItem)
+        }
+
     }
 
 
@@ -303,9 +319,8 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
             is SearchViewStatus.NeedChange -> {
                 var tempGuestsList = mutableListOf<ReservationGuests>()
                 for (item: ReservationGuests in storageList) {
-                    if (item.phone?.contains(status.searchStr) || item.email?.split("@")?.get(0)
-                            ?.contains(status.searchStr)
-                    ) {
+                    if (item.phone?.contains(status.searchStr) == true || item.email?.split("@")?.get(0)
+                            ?.contains(status.searchStr) == true) {
                         tempGuestsList.add(item)
                     }
                 }
@@ -458,6 +473,11 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         allDataReorganization(storageList)
     }
 
+    fun hideCancelled(cancelFilter: CancelFilter) {
+        hideCancelled = cancelFilter
+
+        allDataReorganization(storageList)
+    }
 
     private fun showUndoToast(guest:ReservationGuests) = viewModelScope.launch{
         tasksEventChannel.send(TasksEvent.ShowUndoDeleteTaskMessageR(guest))

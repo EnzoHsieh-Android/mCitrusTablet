@@ -121,7 +121,14 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
           for (guest in storageList.filter { it.status == Constants.ADD }){
               for(key in smsQueue){
                   if(guest.tkey == key){
-                      sendSMS(guest,prefs.storeName+" "+ prefs.messageWait +"\n"+ guest.url)
+                      if(guest.phone != null && guest.phone != "") {
+                          sendSMS(
+                              guest,
+                              prefs.storeName + " " + prefs.messageWait + "\n" + guest.url
+                          )
+                      }else{
+                          sendMail(guest,prefs.storeName + " " + prefs.messageWait + "\n" + guest.url)
+                      }
                   }
               }
           }

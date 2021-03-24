@@ -18,7 +18,7 @@ import org.jetbrains.anko.textColor
 import java.text.SimpleDateFormat
 import java.util.*
 
-class WaitAdapter(var waitList:MutableList<Wait>,@ApplicationContext val context: Context,val onItemClick: (Wait,Boolean,Boolean) -> Unit,val onButtonClick: (Wait) -> Unit,val onNoticeClick: (Wait) -> Unit,val onImgClick:(Wait) -> Unit) :RecyclerView.Adapter<WaitAdapter.TasksViewHolder>() {
+class WaitAdapter(var waitList:MutableList<Wait>,@ApplicationContext val context: Context,val onItemClick: (Wait) -> Unit,val onButtonClick: (Wait) -> Unit,val onNoticeClick: (Wait) -> Unit,val onImgClick:(Wait) -> Unit,val onDeliveryClick:(Wait) -> Unit) :RecyclerView.Adapter<WaitAdapter.TasksViewHolder>() {
 
 
 
@@ -66,6 +66,11 @@ class WaitAdapter(var waitList:MutableList<Wait>,@ApplicationContext val context
                 adult.text = wait.adultCount.toString()
                 child.text = wait.kidCount.toString()
 
+
+                waitNo.text = wait.tkey.substring(wait.tkey.length-3,wait.tkey.length)
+
+
+
                 if(wait.isExpend){
                     tvMemo.text = wait.memo
                     tvMemo.visibility = View.VISIBLE
@@ -98,7 +103,6 @@ class WaitAdapter(var waitList:MutableList<Wait>,@ApplicationContext val context
                     btnCheck.visibility = View.VISIBLE
                     tvCheck.visibility = View.GONE
                 }
-
 
 
                 when(wait.status){
@@ -155,7 +159,7 @@ class WaitAdapter(var waitList:MutableList<Wait>,@ApplicationContext val context
                     imgDelivery.visibility = View.INVISIBLE
                 }
 
-                hintBlock.setOnClickListener {
+                imgMemo.setOnClickListener {
                     if(tvMemo.visibility == View.GONE) {
                         wait.isExpend = true
                         tvMemo.visibility = View.VISIBLE
@@ -168,7 +172,11 @@ class WaitAdapter(var waitList:MutableList<Wait>,@ApplicationContext val context
 
 
                 root.setOnClickListener {
-                    onItemClick(wait,hasMemo,hasDelivery)
+                    onItemClick(wait)
+                }
+
+                imgDelivery.setOnClickListener {
+                    onDeliveryClick(wait)
                 }
 
                 btnCheck.setOnClickListener {

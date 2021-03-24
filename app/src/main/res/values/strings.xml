@@ -72,6 +72,7 @@
     <string name="delete">Cancelled</string>
     <string name="filter_all">Show All</string>
     <string name="filter_cancelled">Show Cancelled</string>
+    <string name="filter_cancelled_H">Hide Cancelled</string>
     <string name="filter_notified">Show Notified</string>
     <string name="filter_confirm">Show Confirm</string>
     <string name="filter_wait">Show Wait</string>
@@ -83,4 +84,5 @@
     <string name="num_of_person">Number of person</string>
     <string name="FinishMsg">Change completed</string>
     <string name="Undo">Undo</string>
+    <string name="filter">Filter</string>
 </resources>
