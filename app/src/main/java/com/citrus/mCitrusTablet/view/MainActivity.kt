@@ -35,6 +35,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import java.util.*
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.graphics.BitmapFactory
+import android.graphics.Color
 
 
 @AndroidEntryPoint
@@ -42,6 +47,12 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
     private var currentApiVersion: Int = 0
     private val sharedViewModel: SharedViewModel by viewModels()
+
+    lateinit var notificationManager: NotificationManager
+    lateinit var notificationChannel: NotificationChannel
+    lateinit var builder: Notification.Builder
+    private val channelId = "i.apps.notifications"
+    private val description = "Test notification"
 
     override fun onResume() {
         super.onResume()
@@ -66,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         updateLanguage(this)
         setContentView(R.layout.activity_main)
-
+        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val navController: NavController
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.navHost) as NavHostFragment?
@@ -110,6 +121,42 @@ class MainActivity : AppCompatActivity() {
             updateDialog()
         })
 
+        sharedViewModel.newDataTrigger.observe(this,{ type ->
+            var msg = ""
+
+            when(type){
+                "wait" -> {
+                    msg = "候位有新資料"
+                }
+                "reservation" -> {
+                    msg = "訂位有新資料"
+                }
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                notificationChannel = NotificationChannel(channelId, description, NotificationManager.IMPORTANCE_HIGH)
+                notificationChannel.enableLights(true)
+                notificationChannel.lightColor = Color.GREEN
+                notificationChannel.enableVibration(false)
+                notificationManager.createNotificationChannel(notificationChannel)
+
+                builder = Notification.Builder(this, channelId)
+                    .setContentTitle("新訊息通知！")
+                    .setContentText(msg)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setLargeIcon(BitmapFactory.decodeResource(this.resources, R.drawable.ic_launcher_background))
+
+            } else {
+
+                builder = Notification.Builder(this)
+                    .setContentTitle("新訊息通知！")
+                    .setContentText(msg)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setLargeIcon(BitmapFactory.decodeResource(this.resources, R.drawable.ic_launcher_background))
+
+            }
+            notificationManager.notify(1234, builder.build())
+        })
 
         sharedViewModel.setLanguageTrigger.observe(this, {
             val intent = intent

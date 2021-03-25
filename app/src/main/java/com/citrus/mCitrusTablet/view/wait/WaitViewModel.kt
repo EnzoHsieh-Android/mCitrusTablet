@@ -103,7 +103,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
                 PostToGetAllData(prefs.rsno, Constants.defaultTimeStr, Constants.defaultTimeStr),
                 onCusCount = { cusCount ->
                     _cusCount.postValue(cusCount)
-                }).collect { list ->
+                },onReservationCount = {},onWaitCount = {}).collect { list ->
                 if (list.isNotEmpty()) {
                     list as MutableList<Wait>
                     storageList = list.toMutableList()

@@ -30,6 +30,10 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
 
     private var serverDomain =
         "https://" + prefs.severDomain
+
+    private var lastWaitGuestCount = 0
+    private var newWaitGuestCount = 0
+    private var isFirstFetch = true
     private var isReload = true
     private var hideCheck: HideCheck = HideCheck.HIDE_TRUE
     private var hideCancelled:CancelFilter = CancelFilter.SHOW_CANCELLED
@@ -81,6 +85,9 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     val orderDate: LiveData<Array<String>>
         get() = _orderDate
 
+    private val _waitHasNewData = SingleLiveEvent<Boolean>()
+    val waitHasNewData: SingleLiveEvent<Boolean>
+        get() = _waitHasNewData
 
     private val _isFirst = SingleLiveEvent<Boolean>()
     val isFirst: SingleLiveEvent<Boolean>
@@ -145,6 +152,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     fun setDateArray(data: Array<String>) {
         _dateRange.value = data
         fetchAllData(data[0], data[1])
+        isFirstFetch = true
     }
 
     fun reload() {
@@ -198,8 +206,19 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
                     PostToGetAllData(prefs.rsno, startTime, endTime),
                     onCusCount = { cusCount ->
                         _cusCount.postValue(cusCount)
+                    },onWaitCount = {
+                        newWaitGuestCount = it
+                    },onReservationCount = {
+
                     }).collect { list ->
                     if (list.isNotEmpty()) {
+                        lastWaitGuestCount = if(!isFirstFetch && (lastWaitGuestCount != newWaitGuestCount)){
+                            waitHasNewData.postValue(true)
+                            newWaitGuestCount
+                        }else{
+                            newWaitGuestCount
+                        }
+
                        var newList = list as MutableList<ReservationGuests>
                         if(isSelectGuestInit()){
                             for(item in newList){
@@ -219,6 +238,8 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
                         }else{
                             isReload = false
                         }
+
+                        isFirstFetch = false
 
                     } else {
                         storageList = mutableListOf()

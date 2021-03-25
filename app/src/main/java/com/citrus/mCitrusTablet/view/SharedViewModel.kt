@@ -29,6 +29,10 @@ class SharedViewModel @ViewModelInject constructor(@ApplicationContext context: 
         get() = _setLanguageTrigger
 
 
+    private val _newDataTrigger = SingleLiveEvent<String>()
+    val newDataTrigger: SingleLiveEvent<String>
+        get() = _newDataTrigger
+
 
     fun updateDialog() {
         _versionUpdateTrigger.value = true
@@ -36,6 +40,10 @@ class SharedViewModel @ViewModelInject constructor(@ApplicationContext context: 
 
     fun hasSetLanguage(){
         _setLanguageTrigger.value = true
+    }
+
+    fun newDataNotify(type:String){
+        newDataTrigger.postValue(type)
     }
 
 
