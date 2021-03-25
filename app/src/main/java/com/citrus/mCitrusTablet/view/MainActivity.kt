@@ -5,8 +5,6 @@ import android.app.*
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
@@ -29,6 +27,8 @@ import cn.pedant.SweetAlert.SweetAlertDialog
 import com.citrus.mCitrusTablet.BuildConfig
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.di.prefs
+import com.citrus.mCitrusTablet.model.vo.ReservationGuests
+import com.citrus.mCitrusTablet.model.vo.Wait
 import com.citrus.mCitrusTablet.util.*
 import com.citrus.mCitrusTablet.view.dialog.CustomAlertDialog
 import com.noober.background.BackgroundLibrary
@@ -44,11 +44,12 @@ class MainActivity : AppCompatActivity() {
     private var currentApiVersion: Int = 0
     private val sharedViewModel: SharedViewModel by viewModels()
 
-    lateinit var notificationManager: NotificationManager
-    lateinit var notificationChannel: NotificationChannel
-    lateinit var builder: Notification.Builder
-    private val channelId = "i.apps.notifications"
-    private val description = "Test notification"
+    lateinit var alert:CustomAlertDialog
+    private fun isAlertInit()=::alert.isInitialized
+
+    lateinit var storageWait:Wait
+    private fun isWaitInit()=::storageWait.isInitialized
+
 
     override fun onResume() {
         super.onResume()
@@ -73,7 +74,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         updateLanguage(this)
         setContentView(R.layout.activity_main)
-        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val navController: NavController
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.navHost) as NavHostFragment?
@@ -85,6 +85,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         reservation_block.setOnClickListener {
+            resAlert.visibility = View.INVISIBLE
             report_block.setBackgroundResource(0)
             wait_block.setBackgroundResource(0)
             reservation_block.setBackgroundResource(R.drawable.bg_menu_select)
@@ -92,6 +93,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         wait_block.setOnClickListener {
+            waitAlert.visibility = View.INVISIBLE
             report_block.setBackgroundResource(0)
             reservation_block.setBackgroundResource(0)
             wait_block.setBackgroundResource(R.drawable.bg_menu_select)
@@ -117,61 +119,52 @@ class MainActivity : AppCompatActivity() {
             updateDialog()
         })
 
-        sharedViewModel.newDataTrigger.observe(this, { type ->
+        sharedViewModel.newDataTrigger.observe(this, { map ->
             var msg = ""
 
-            when (type) {
+            when (map.keys.first()) {
                 Constants.KEY_WAIT_NUM -> {
-                    msg = "候位有新資料"
+
+
+                    var wait = map[Constants.KEY_WAIT_NUM] as Wait
+
+                    if(isWaitInit()){
+                        if(wait.tkey == storageWait.tkey)
+                            return@observe
+                    }
+
+                    storageWait = wait
+                    msg = "候位名單已新增來自 " + wait.mName + " 的候位資料"
+                    waitAlert.visibility = View.VISIBLE
                 }
+
                 Constants.KEY_RESERVATION_NUM -> {
-                    msg = "訂位有新資料"
+                    var res = map[Constants.KEY_RESERVATION_NUM] as ReservationGuests
+                    msg = "訂位名單已新增來自 " + res.mName + " 的訂位資料"
+                    resAlert.visibility = View.VISIBLE
                 }
             }
-            val defaultSoundUri: Uri =
-                RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                notificationChannel = NotificationChannel(
-                    channelId,
-                    description,
-                    NotificationManager.IMPORTANCE_HIGH
-                )
-                notificationChannel.enableLights(true)
-                notificationChannel.lightColor = Color.GREEN
-                notificationChannel.enableVibration(false)
-                notificationManager.createNotificationChannel(notificationChannel)
 
 
-                builder = Notification.Builder(this, channelId)
-                    .setContentTitle("新訊息通知！")
-                    .setContentText(msg)
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setLargeIcon(
-                        BitmapFactory.decodeResource(
-                            this.resources,
-                            R.drawable.ic_launcher_background
-                        )
-                    )
-                    .setSound(defaultSoundUri)
-
-
-            } else {
-
-                builder = Notification.Builder(this)
-                    .setContentTitle("新訊息通知！")
-                    .setContentText(msg)
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setLargeIcon(
-                        BitmapFactory.decodeResource(
-                            this.resources,
-                            R.drawable.ic_launcher_background
-                        )
-                    )
-                    .setSound(defaultSoundUri)
-
+            if (isAlertInit()) {
+                alert.dismiss()
             }
-            notificationManager.notify(1234, builder.build())
+
+            alert = CustomAlertDialog(
+                this,
+                "新增通知",
+                msg,
+                0,
+                onConfirmListener = {
+
+                }
+            )
+            alert.show()
+
+            val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+            val r = RingtoneManager.getRingtone(applicationContext, notification)
+            r.play()
+
         })
 
         sharedViewModel.setLanguageTrigger.observe(this, {

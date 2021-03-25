@@ -9,6 +9,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.citrus.mCitrusTablet.model.vo.Wait
 import com.citrus.mCitrusTablet.util.SingleLiveEvent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.text.SimpleDateFormat
@@ -29,8 +30,8 @@ class SharedViewModel @ViewModelInject constructor(@ApplicationContext context: 
         get() = _setLanguageTrigger
 
 
-    private val _newDataTrigger = SingleLiveEvent<String>()
-    val newDataTrigger: SingleLiveEvent<String>
+    private val _newDataTrigger = SingleLiveEvent<Map<String,Any>>()
+    val newDataTrigger: SingleLiveEvent<Map<String,Any>>
         get() = _newDataTrigger
 
 
@@ -42,8 +43,8 @@ class SharedViewModel @ViewModelInject constructor(@ApplicationContext context: 
         _setLanguageTrigger.value = true
     }
 
-    fun newDataNotify(type:String){
-        newDataTrigger.postValue(type)
+    fun newDataNotify(type:String,item: Any){
+        newDataTrigger.postValue(mapOf(type to item))
     }
 
 

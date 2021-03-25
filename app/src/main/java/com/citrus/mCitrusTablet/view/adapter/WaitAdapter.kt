@@ -63,6 +63,13 @@ class WaitAdapter(var waitList:MutableList<Wait>,@ApplicationContext val context
                     mail.text = wait.email!!.split("@")[0]
                 }
 
+                if(wait.isNew){
+                    newHint.visibility = View.VISIBLE
+                }else{
+                    newHint.visibility = View.GONE
+                }
+                wait.isNew = false
+
                 adult.text = wait.adultCount.toString()
                 child.text = wait.kidCount.toString()
 

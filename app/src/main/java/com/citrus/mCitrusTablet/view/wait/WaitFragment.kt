@@ -283,7 +283,7 @@ WaitFragment : BaseFragment() {
 
 
         waitViewModel.resHasNewData.observe(viewLifecycleOwner, {
-            sharedViewModel.newDataNotify(Constants.KEY_RESERVATION_NUM)
+            sharedViewModel.newDataNotify(Constants.KEY_RESERVATION_NUM,it)
         })
 
 

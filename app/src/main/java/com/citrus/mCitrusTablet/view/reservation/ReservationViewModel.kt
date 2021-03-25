@@ -31,6 +31,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     private var serverDomain =
         "https://" + prefs.severDomain
 
+    private lateinit var newWaitGuest:Wait
     private var newWaitGuestCount = 0
     private var isFirstFetch = true
     private var isReload = true
@@ -84,8 +85,8 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     val orderDate: LiveData<Array<String>>
         get() = _orderDate
 
-    private val _waitHasNewData = SingleLiveEvent<Boolean>()
-    val waitHasNewData: SingleLiveEvent<Boolean>
+    private val _waitHasNewData = SingleLiveEvent<Wait>()
+    val waitHasNewData: SingleLiveEvent<Wait>
         get() = _waitHasNewData
 
     private val _isFirst = SingleLiveEvent<Boolean>()
@@ -207,15 +208,16 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
                     PostToGetAllData(prefs.rsno, startTime, endTime),
                     onCusCount = { cusCount ->
                         _cusCount.postValue(cusCount)
-                    },onWaitCount = {
-                        newWaitGuestCount = it
-                    },onReservationCount = {
+                    },onWaitCount = {  num,guest ->
+                        newWaitGuestCount = num
+                        newWaitGuest = guest
+                    },onReservationCount = { _,_ ->
 
                     }).collect { list ->
                     if (list.isNotEmpty()) {
                         prefs.storageWaitNum = if(!isFirstFetch && (prefs.storageWaitNum != newWaitGuestCount)){
-                            _waitHasNewData.postValue(true)
-                            newWaitGuestCount
+                            _waitHasNewData.postValue(newWaitGuest)
+                            prefs.storageWaitNum
                         }else{
                             newWaitGuestCount
                         }

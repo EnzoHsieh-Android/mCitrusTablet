@@ -1,6 +1,7 @@
 package com.citrus.mCitrusTablet.view.wait
 
 
+import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -17,6 +18,7 @@ import com.citrus.mCitrusTablet.view.reservation.TasksEvent
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
+import okhttp3.internal.wait
 import timber.log.Timber
 
 
@@ -28,6 +30,8 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
 
     private var serverDomain =
         "https://" + prefs.severDomain
+
+    private lateinit var newReservationGuest:ReservationGuests
     private var newReservationCount = 0
     private var isFirstFetch = true
     private var storageList: MutableList<Wait> = mutableListOf()
@@ -68,8 +72,8 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
     val sortType: LiveData<SortOrder>
         get() = _sortType
 
-    private val _resHasNewData = SingleLiveEvent<Boolean>()
-    val resHasNewData: SingleLiveEvent<Boolean>
+    private val _resHasNewData = SingleLiveEvent<ReservationGuests>()
+    val resHasNewData: SingleLiveEvent<ReservationGuests>
         get() = _resHasNewData
 
 
@@ -109,15 +113,16 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
                 PostToGetAllData(prefs.rsno, Constants.defaultTimeStr, Constants.defaultTimeStr),
                 onCusCount = { cusCount ->
                     _cusCount.postValue(cusCount)
-                },onReservationCount = {
-                    newReservationCount = it
-                },onWaitCount = {
+                },onReservationCount = { num,res ->
+                    newReservationCount = num
+                    newReservationGuest = res
+                },onWaitCount = { _,_ ->
 
                 }).collect { list ->
                 if (list.isNotEmpty()) {
 
                     prefs.storageReservationNum = if(!isFirstFetch && (prefs.storageReservationNum != newReservationCount)){
-                        _resHasNewData.postValue(true)
+                        _resHasNewData.postValue(newReservationGuest)
                         newReservationCount
                     }else{
                         newReservationCount
@@ -135,6 +140,15 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
                                 }
                             }
                         }
+                    }
+
+                    if(prefs.storageWaitNum < storageList.size){
+                        var distance = storageList.size - prefs.storageWaitNum
+
+                        for(index in storageList.size - distance +1 .. storageList.size){
+                            storageList[index-1].isNew = true
+                        }
+                        prefs.storageWaitNum = storageList.size
                     }
 
                     sendWaitSms()
