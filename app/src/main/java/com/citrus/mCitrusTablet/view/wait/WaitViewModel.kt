@@ -28,13 +28,13 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
 
     private var serverDomain =
         "https://" + prefs.severDomain
-    var storageList: MutableList<Wait> = mutableListOf()
-    var expendList = mutableListOf<String>()
-    var sortOrder: SortOrder = SortOrder.BY_TIME_MORE
-    var hideCheck: HideCheck = HideCheck.HIDE_TRUE
-    var nowFilter = Filter.SHOW_ALL
-    var undo = false
-    var smsQueue = arrayListOf<String>()
+    private var storageList: MutableList<Wait> = mutableListOf()
+    private var expendList = mutableListOf<String>()
+    private var sortOrder: SortOrder = SortOrder.BY_TIME_MORE
+    private var hideCheck: HideCheck = HideCheck.HIDE_TRUE
+    private var nowFilter = Filter.SHOW_ALL
+    private var undo = false
+    private var smsQueue = arrayListOf<String>()
 
     private lateinit var storeChangeForDelete:Wait
     private fun isStoreChangeInit()=::storeChangeForDelete.isInitialized

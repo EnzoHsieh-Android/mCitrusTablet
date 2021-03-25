@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -23,6 +24,7 @@ import com.citrus.mCitrusTablet.util.Constants.defaultTimeStr
 import com.citrus.mCitrusTablet.util.HideCheck
 import com.citrus.mCitrusTablet.util.onSafeClick
 import com.citrus.mCitrusTablet.util.ui.BaseFragment
+import com.citrus.mCitrusTablet.view.SharedViewModel
 import com.citrus.mCitrusTablet.view.adapter.ReservationAdapter
 import com.citrus.mCitrusTablet.view.dialog.*
 import com.citrus.mCitrusTablet.view.wait.Filter
@@ -43,7 +45,7 @@ import java.util.*
 
 @AndroidEntryPoint
 class ReservationFragment : BaseFragment() {
-
+    private val sharedViewModel:SharedViewModel by activityViewModels()
     private val reservationFragmentViewModel: ReservationViewModel by viewModels()
     private var _binding: FragmentReservationBinding? = null
     private val binding get() = _binding!!

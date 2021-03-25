@@ -2,7 +2,6 @@ package com.citrus.mCitrusTablet.view.reservation
 
 
 
-import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -31,12 +30,12 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
 
     private var serverDomain =
         "https://" + prefs.severDomain
-    var isReload = true
-    var hideCheck: HideCheck = HideCheck.HIDE_TRUE
-    var hideCancelled:CancelFilter = CancelFilter.SHOW_CANCELLED
+    private var isReload = true
+    private var hideCheck: HideCheck = HideCheck.HIDE_TRUE
+    private var hideCancelled:CancelFilter = CancelFilter.SHOW_CANCELLED
     private var delayTime = Constants.DEFAULT_TIME
-    var storageList = mutableListOf<ReservationGuests>()
-    var expendList = mutableListOf<String>()
+    private var storageList = mutableListOf<ReservationGuests>()
+    private var expendList = mutableListOf<String>()
     private lateinit var fetchJob: Job
 
     private lateinit var selectGuest:ReservationGuests

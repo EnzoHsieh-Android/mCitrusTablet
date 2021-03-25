@@ -21,6 +21,7 @@ import com.citrus.mCitrusTablet.model.vo.*
 import com.citrus.mCitrusTablet.util.Constants
 import com.citrus.mCitrusTablet.util.HideCheck
 import com.citrus.mCitrusTablet.util.ui.BaseFragment
+import com.citrus.mCitrusTablet.view.SharedViewModel
 import com.citrus.mCitrusTablet.view.adapter.WaitAdapter
 import com.citrus.mCitrusTablet.view.dialog.CustomAlertDialog
 import com.citrus.mCitrusTablet.view.dialog.CustomFilterCheckBoxDialog
@@ -43,6 +44,7 @@ import java.util.*
 @AndroidEntryPoint
 class
 WaitFragment : BaseFragment() {
+    private val sharedViewModel: SharedViewModel by activityViewModels()
     private val waitViewModel: WaitViewModel by activityViewModels()
     private var _binding: FragmentWaitBinding? = null
     private val binding get() = _binding!!
