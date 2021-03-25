@@ -39,7 +39,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     private lateinit var fetchJob: Job
 
     private lateinit var selectGuest:ReservationGuests
-            private fun isSelectGuestInit()=::selectGuest.isInitialized
+             fun isSelectGuestInit()=::selectGuest.isInitialized
 
     private val _highCheckEvent = MutableLiveData<HideCheck>()
     val highCheckEvent: LiveData<HideCheck>
