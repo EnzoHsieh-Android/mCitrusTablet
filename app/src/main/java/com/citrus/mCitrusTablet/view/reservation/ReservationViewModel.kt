@@ -31,7 +31,6 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     private var serverDomain =
         "https://" + prefs.severDomain
 
-    private var lastWaitGuestCount = 0
     private var newWaitGuestCount = 0
     private var isFirstFetch = true
     private var isReload = true
@@ -130,6 +129,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
 
     private fun stopFetchJob() {
         fetchJob.cancel()
+        isFirstFetch = true
     }
 
 
@@ -152,6 +152,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     fun setDateArray(data: Array<String>) {
         _dateRange.value = data
         fetchAllData(data[0], data[1])
+        prefs.storageWaitNum = 0
         isFirstFetch = true
     }
 
@@ -212,7 +213,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
 
                     }).collect { list ->
                     if (list.isNotEmpty()) {
-                        lastWaitGuestCount = if(!isFirstFetch && (lastWaitGuestCount != newWaitGuestCount)){
+                        prefs.storageWaitNum = if(!isFirstFetch && (prefs.storageWaitNum != newWaitGuestCount)){
                             waitHasNewData.postValue(true)
                             newWaitGuestCount
                         }else{

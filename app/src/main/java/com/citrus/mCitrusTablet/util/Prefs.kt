@@ -8,6 +8,10 @@ import android.content.SharedPreferences
 class Prefs(private val context: Context) {
     private val prefs: SharedPreferences = context.getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
+    var storageWaitNum: Int
+        get() = prefs.getInt("WaitNum", 0)
+        set(value) = prefs.edit().putInt("WaitNum", value).apply()
+
     var languagePos: Int
         get() = prefs.getInt(Constants.KEY_LANGUAGE, -1)
         set(value) = prefs.edit().putInt(Constants.KEY_LANGUAGE, value).apply()

@@ -267,6 +267,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
             model.setWaitData(serverDomain + Constants.SET_WAIT, dataPostToSet).collect {
                 if (it.status != 0) {
                     smsQueue.add(it.data)
+                    prefs.storageWaitNum = prefs.storageWaitNum + 1
                     fetchAllData()
                     tasksEventChannel.send(TasksEvent.ShowSuccessMessage)
                 } else {

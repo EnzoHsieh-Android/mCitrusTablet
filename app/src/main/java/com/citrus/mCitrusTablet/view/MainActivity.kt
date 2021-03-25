@@ -1,16 +1,17 @@
 package com.citrus.mCitrusTablet.view
 
 import android.annotation.TargetApi
-import android.app.Activity
-import android.app.Dialog
-import android.app.ProgressDialog
+import android.app.*
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -35,11 +36,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import java.util.*
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.graphics.BitmapFactory
-import android.graphics.Color
 
 
 @AndroidEntryPoint
@@ -121,10 +117,10 @@ class MainActivity : AppCompatActivity() {
             updateDialog()
         })
 
-        sharedViewModel.newDataTrigger.observe(this,{ type ->
+        sharedViewModel.newDataTrigger.observe(this, { type ->
             var msg = ""
 
-            when(type){
+            when (type) {
                 "wait" -> {
                     msg = "候位有新資料"
                 }
@@ -132,19 +128,33 @@ class MainActivity : AppCompatActivity() {
                     msg = "訂位有新資料"
                 }
             }
+            val defaultSoundUri: Uri =
+                RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                notificationChannel = NotificationChannel(channelId, description, NotificationManager.IMPORTANCE_HIGH)
+                notificationChannel = NotificationChannel(
+                    channelId,
+                    description,
+                    NotificationManager.IMPORTANCE_HIGH
+                )
                 notificationChannel.enableLights(true)
                 notificationChannel.lightColor = Color.GREEN
                 notificationChannel.enableVibration(false)
                 notificationManager.createNotificationChannel(notificationChannel)
 
+
                 builder = Notification.Builder(this, channelId)
                     .setContentTitle("新訊息通知！")
                     .setContentText(msg)
                     .setSmallIcon(R.mipmap.ic_launcher)
-                    .setLargeIcon(BitmapFactory.decodeResource(this.resources, R.drawable.ic_launcher_background))
+                    .setLargeIcon(
+                        BitmapFactory.decodeResource(
+                            this.resources,
+                            R.drawable.ic_launcher_background
+                        )
+                    )
+                    .setSound(defaultSoundUri)
+
 
             } else {
 
@@ -152,7 +162,13 @@ class MainActivity : AppCompatActivity() {
                     .setContentTitle("新訊息通知！")
                     .setContentText(msg)
                     .setSmallIcon(R.mipmap.ic_launcher)
-                    .setLargeIcon(BitmapFactory.decodeResource(this.resources, R.drawable.ic_launcher_background))
+                    .setLargeIcon(
+                        BitmapFactory.decodeResource(
+                            this.resources,
+                            R.drawable.ic_launcher_background
+                        )
+                    )
+                    .setSound(defaultSoundUri)
 
             }
             notificationManager.notify(1234, builder.build())
@@ -169,14 +185,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun navigateToTarget(id: Int) {
         if(findNavController(R.id.navHost).isFragmentRemovedFromBackStack(id)){
-            findNavController(R.id.navHost).navigate(id,null,  navOptions {
+            findNavController(R.id.navHost).navigate(id, null, navOptions {
                 anim {
                     enter = android.R.animator.fade_in
                     exit = android.R.animator.fade_out
                 }
             })
         }else{
-            findNavController(R.id.navHost).popBackStack(id,false)
+            findNavController(R.id.navHost).popBackStack(id, false)
         }
     }
 
