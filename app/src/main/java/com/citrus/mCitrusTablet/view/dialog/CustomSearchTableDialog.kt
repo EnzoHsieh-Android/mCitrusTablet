@@ -98,6 +98,7 @@ class CustomSearchTableDialog(
         }
 
         tv_people.setOnClickListener {
+            clearView()
             mContext?.let {
                 CustomNumberPickerDialog() { adultCount, childCount, totalCount ->
                     tv_people.text = totalCount
@@ -144,10 +145,12 @@ class CustomSearchTableDialog(
                 Gson().toJson(PostToGetOrderDateByCusNum(prefs.rsno,formattedDate,tv_people.text.toString().toInt()))
             }
 
+            showLoadingDialog()
             viewModel.fetchReservationTime(jsonStr)
         }
 
         viewModel.orderDateDatum.observe(viewLifecycleOwner, {
+            hideLoadingDialog()
             otherTimeAdapter.removeAllSections()
             if (it.isNotEmpty()) {
                 title.add(mContext.resources.getString(R.string.pick_time_hint))

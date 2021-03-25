@@ -29,5 +29,10 @@
         android:name="com.citrus.mCitrusTablet.view.setting.SettingFragment"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_setting" />
+    <fragment
+        android:id="@+id/reportFragment"
+        android:name="com.citrus.mCitrusTablet.view.report.ReportFragment"
+        android:label="fragment_report"
+        tools:layout="@layout/fragment_report" />
 
 </navigation>

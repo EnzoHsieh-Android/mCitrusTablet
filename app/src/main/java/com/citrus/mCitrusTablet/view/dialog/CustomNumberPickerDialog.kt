@@ -34,6 +34,9 @@ class CustomNumberPickerDialog(val onBtnClick: (String, String, String) -> Unit)
         }
 
         btnOK.setOnClickListener {
+            if(adult + child == 0 ){
+                return@setOnClickListener
+            }
             onBtnClick(adult.toString(),child.toString(),(adult+child).toString())
             dismiss()
         }

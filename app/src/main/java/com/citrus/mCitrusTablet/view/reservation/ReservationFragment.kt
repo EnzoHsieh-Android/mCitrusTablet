@@ -63,6 +63,7 @@ class ReservationFragment : BaseFragment() {
     private var forDeleteData = mutableListOf<Any>()
     private var seatData = mutableListOf<String>()
     private var timeTitle = mutableListOf<String>()
+    private var storeGuestsList: List<List<ReservationGuests>> = mutableListOf()
     private val reservationAdapter by lazy { SectionedRecyclerViewAdapter() }
 
     override fun onCreateView(
@@ -345,6 +346,7 @@ class ReservationFragment : BaseFragment() {
 
         reservationFragmentViewModel.allData.observe(viewLifecycleOwner, { guestsList ->
             if (guestsList.isNotEmpty()) {
+                storeGuestsList = guestsList
                 binding.reservationRv.visibility = View.VISIBLE
                 binding.animationResultNotFound.visibility = View.GONE
                 activity?.let {
@@ -356,8 +358,8 @@ class ReservationFragment : BaseFragment() {
                                 timeTitle[index],
                                 filterType,
                                 index,
-                                guestsList[index],
-                                onItemClick = { Guest,hasMemo ->
+                                storeGuestsList[index],
+                                onItemClick = { Guest ->
                                     reservationFragmentViewModel.itemSelect(Guest)
                                 },
                                 onButtonClick = {
@@ -391,6 +393,7 @@ class ReservationFragment : BaseFragment() {
 
 
         reservationFragmentViewModel.holdData.observe(viewLifecycleOwner,{ guestList ->
+            storeGuestsList = guestList
             reservationAdapter.notifyDataSetChanged()
         })
 

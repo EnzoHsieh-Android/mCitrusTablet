@@ -28,7 +28,7 @@ class ReservationAdapter(
     private val cancelFilter: CancelFilter,
     private val index:Int,
     private val item: List<ReservationGuests>,
-    private val onItemClick: (ReservationGuests,Boolean) -> Unit,
+    private val onItemClick: (ReservationGuests) -> Unit,
     private val onButtonClick: (ReservationGuests) -> Unit,
     private val onFilterClick: () -> Unit,
 ) :
@@ -141,11 +141,11 @@ class ReservationAdapter(
                     guest.isExpend = false
                     itemHolder.tvMemo.visibility = View.GONE
                 }
-            onItemClick(item[position],guest.isExpend)
+            onItemClick(item[position])
         }
 
         itemHolder.itemRoot.setOnClickListener {
-            onItemClick(item[position],hasMemo)
+            onItemClick(item[position])
         }
 
         when(guest.status){

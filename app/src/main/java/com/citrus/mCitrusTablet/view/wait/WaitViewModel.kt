@@ -118,6 +118,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
                             }
                         }
                     }
+
                     sendWaitSms()
                     refreshAllData(storageList)
                 } else {
@@ -128,6 +129,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
         }
 
 
+    /*新增時無法取得wait url,利用smsQueue儲存新增成功時返回的單號*/
     private fun sendWaitSms() {
        if(smsQueue.size>0){
           for (guest in storageList.filter { it.status == Constants.ADD }){

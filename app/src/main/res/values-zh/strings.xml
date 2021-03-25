@@ -84,4 +84,5 @@
     <string name="FinishMsg">預約已取消</string>
     <string name="Undo">還原</string>
     <string name="filter">Filter</string>
+    <string name="Report">報表</string>
 </resources>

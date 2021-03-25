@@ -2,6 +2,7 @@ package com.citrus.mCitrusTablet.view.reservation
 
 
 
+import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -21,7 +22,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import timber.log.Timber
 import java.text.SimpleDateFormat
-import java.util.*
+
 
 enum class SortOrder { BY_LESS, BY_TIME, BY_MORE }
 enum class CancelFilter {SHOW_CANCELLED, HIDE_CANCELLED}
@@ -39,7 +40,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     private lateinit var fetchJob: Job
 
     private lateinit var selectGuest:ReservationGuests
-             fun isSelectGuestInit()=::selectGuest.isInitialized
+            private fun isSelectGuestInit()=::selectGuest.isInitialized
 
     private val _highCheckEvent = MutableLiveData<HideCheck>()
     val highCheckEvent: LiveData<HideCheck>
@@ -148,7 +149,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     }
 
     fun reload() {
-        isReload = !isReload
+        isReload = true
         if (_dateRange.value == null) {
             fetchAllData(defaultTimeStr, defaultTimeStr)
         } else {
@@ -200,9 +201,9 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
                         _cusCount.postValue(cusCount)
                     }).collect { list ->
                     if (list.isNotEmpty()) {
-                        storageList = list as MutableList<ReservationGuests>
+                       var newList = list as MutableList<ReservationGuests>
                         if(isSelectGuestInit()){
-                            for(item in storageList){
+                            for(item in newList){
                                 item.isSelect = item.tkey == selectGuest.tkey
                                 for(key in expendList){
                                     if(key == item.tkey){
@@ -211,8 +212,15 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
                                 }
                             }
                         }
-                        isReload = true
-                        allDataReorganization(getSortRequirement(SortOrder.BY_TIME, storageList))
+
+                        if(newList != storageList){
+                            storageList = newList
+                            isReload = true
+                            allDataReorganization(getSortRequirement(SortOrder.BY_TIME, storageList))
+                        }else{
+                            isReload = false
+                        }
+
                     } else {
                         storageList = mutableListOf()
                         _titleData.postValue(listOf())
@@ -312,7 +320,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
 
         if(isReload){
             _allData.postValue(groupItem)
-            isReload = !isReload
+            isReload = false
         }else{
             _holdData.postValue(groupItem)
         }
@@ -321,8 +329,11 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
 
 
     fun searchForStr(status: SearchViewStatus) {
+        isReload = true
         when (status) {
-            is SearchViewStatus.IsEmpty -> allDataReorganization(storageList)
+            is SearchViewStatus.IsEmpty -> {
+                allDataReorganization(storageList)
+            }
 
             is SearchViewStatus.NeedChange -> {
                 var tempGuestsList = mutableListOf<ReservationGuests>()
@@ -480,7 +491,6 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         }
 
         _highCheckEvent.postValue(hideCheck)
-
         isReload = !isReload
         allDataReorganization(storageList)
     }

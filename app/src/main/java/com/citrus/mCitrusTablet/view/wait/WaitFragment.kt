@@ -157,10 +157,8 @@ WaitFragment : BaseFragment() {
 
             sortByCount.setOnClickListener {
                 sortOrderByCount = if (sortOrderByCount == SortOrder.BY_LESS) {
-                    groupSortStatus.setImageDrawable(resources.getDrawable(R.drawable.up))
                     SortOrder.BY_MORE
                 } else {
-                    groupSortStatus.setImageDrawable(resources.getDrawable(R.drawable.down))
                     SortOrder.BY_LESS
                 }
                 waitViewModel.sortList(sortOrderByCount)
@@ -168,10 +166,8 @@ WaitFragment : BaseFragment() {
 
             sortByTime.setOnClickListener {
                 sortOrderByTime = if (sortOrderByTime == SortOrder.BY_TIME_LESS) {
-                    timeSortStatus.setImageDrawable(resources.getDrawable(R.drawable.down))
                     SortOrder.BY_TIME_MORE
                 } else {
-                    timeSortStatus.setImageDrawable(resources.getDrawable(R.drawable.up))
                     SortOrder.BY_TIME_LESS
                 }
                 waitViewModel.sortList(sortOrderByTime)

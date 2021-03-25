@@ -78,15 +78,24 @@ class MainActivity : AppCompatActivity() {
         }
 
         reservation_block.setOnClickListener {
+            report_block.setBackgroundResource(0)
             wait_block.setBackgroundResource(0)
             reservation_block.setBackgroundResource(R.drawable.bg_menu_select)
             navigateToTarget(R.id.reservationFragment)
         }
 
         wait_block.setOnClickListener {
+            report_block.setBackgroundResource(0)
             reservation_block.setBackgroundResource(0)
             wait_block.setBackgroundResource(R.drawable.bg_menu_select)
             navigateToTarget(R.id.waitFragment)
+        }
+
+        report_block.setOnClickListener {
+            wait_block.setBackgroundResource(0)
+            reservation_block.setBackgroundResource(0)
+            report_block.setBackgroundResource(R.drawable.bg_menu_select)
+            navigateToTarget(R.id.reportFragment)
         }
 
         setting_block.setOnClickListener {
