@@ -214,7 +214,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
                     }).collect { list ->
                     if (list.isNotEmpty()) {
                         prefs.storageWaitNum = if(!isFirstFetch && (prefs.storageWaitNum != newWaitGuestCount)){
-                            waitHasNewData.postValue(true)
+                            _waitHasNewData.postValue(true)
                             newWaitGuestCount
                         }else{
                             newWaitGuestCount

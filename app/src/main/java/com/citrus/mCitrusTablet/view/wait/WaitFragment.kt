@@ -280,6 +280,15 @@ WaitFragment : BaseFragment() {
     }
 
     private fun initObserver() {
+
+
+        waitViewModel.resHasNewData.observe(viewLifecycleOwner, {
+            sharedViewModel.newDataNotify(Constants.KEY_RESERVATION_NUM)
+        })
+
+
+
+
         waitViewModel.allData.observe(viewLifecycleOwner, { waitList ->
             if (waitList.isNotEmpty()) {
                 tempWaitList = waitList as MutableList<Wait>

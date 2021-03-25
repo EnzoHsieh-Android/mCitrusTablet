@@ -28,6 +28,8 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
 
     private var serverDomain =
         "https://" + prefs.severDomain
+    private var newReservationCount = 0
+    private var isFirstFetch = true
     private var storageList: MutableList<Wait> = mutableListOf()
     private var expendList = mutableListOf<String>()
     private var sortOrder: SortOrder = SortOrder.BY_TIME_MORE
@@ -66,6 +68,10 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
     val sortType: LiveData<SortOrder>
         get() = _sortType
 
+    private val _resHasNewData = SingleLiveEvent<Boolean>()
+    val resHasNewData: SingleLiveEvent<Boolean>
+        get() = _resHasNewData
+
 
     private val _deliveryInfo = SingleLiveEvent<List<OrdersItemDelivery>>()
     val deliveryInfo: SingleLiveEvent<List<OrdersItemDelivery>>
@@ -103,8 +109,20 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
                 PostToGetAllData(prefs.rsno, Constants.defaultTimeStr, Constants.defaultTimeStr),
                 onCusCount = { cusCount ->
                     _cusCount.postValue(cusCount)
-                },onReservationCount = {},onWaitCount = {}).collect { list ->
+                },onReservationCount = {
+                    newReservationCount = it
+                },onWaitCount = {
+
+                }).collect { list ->
                 if (list.isNotEmpty()) {
+
+                    prefs.storageReservationNum = if(!isFirstFetch && (prefs.storageReservationNum != newReservationCount)){
+                        _resHasNewData.postValue(true)
+                        newReservationCount
+                    }else{
+                        newReservationCount
+                    }
+
                     list as MutableList<Wait>
                     storageList = list.toMutableList()
 
@@ -121,6 +139,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
 
                     sendWaitSms()
                     refreshAllData(storageList)
+                    isFirstFetch = false
                 } else {
                     storageList = mutableListOf()
                     _allData.postValue(storageList)

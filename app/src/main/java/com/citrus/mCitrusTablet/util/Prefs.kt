@@ -2,15 +2,20 @@ package com.citrus.mCitrusTablet.util
 
 import android.content.Context
 import android.content.SharedPreferences
-
+import com.citrus.mCitrusTablet.util.Constants.KEY_RESERVATION_NUM
+import com.citrus.mCitrusTablet.util.Constants.KEY_WAIT_NUM
 
 
 class Prefs(private val context: Context) {
     private val prefs: SharedPreferences = context.getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
     var storageWaitNum: Int
-        get() = prefs.getInt("WaitNum", 0)
-        set(value) = prefs.edit().putInt("WaitNum", value).apply()
+        get() = prefs.getInt(KEY_WAIT_NUM, 0)
+        set(value) = prefs.edit().putInt(KEY_WAIT_NUM, value).apply()
+
+    var storageReservationNum: Int
+        get() = prefs.getInt(KEY_RESERVATION_NUM, 0)
+        set(value) = prefs.edit().putInt(KEY_RESERVATION_NUM, value).apply()
 
     var languagePos: Int
         get() = prefs.getInt(Constants.KEY_LANGUAGE, -1)

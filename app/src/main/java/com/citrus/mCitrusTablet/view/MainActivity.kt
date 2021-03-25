@@ -121,10 +121,10 @@ class MainActivity : AppCompatActivity() {
             var msg = ""
 
             when (type) {
-                "wait" -> {
+                Constants.KEY_WAIT_NUM -> {
                     msg = "候位有新資料"
                 }
-                "reservation" -> {
+                Constants.KEY_RESERVATION_NUM -> {
                     msg = "訂位有新資料"
                 }
             }

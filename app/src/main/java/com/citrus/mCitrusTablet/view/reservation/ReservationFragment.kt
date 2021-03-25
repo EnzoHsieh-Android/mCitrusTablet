@@ -284,7 +284,7 @@ class ReservationFragment : BaseFragment() {
     private fun initObserver() {
 
         reservationFragmentViewModel.waitHasNewData.observe(viewLifecycleOwner,{
-            sharedViewModel.newDataNotify("wait")
+            sharedViewModel.newDataNotify(Constants.KEY_WAIT_NUM)
         })
 
 
