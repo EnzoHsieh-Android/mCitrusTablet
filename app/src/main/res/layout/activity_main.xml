@@ -57,7 +57,7 @@
                     android:visibility="invisible"
                     android:layout_width="@dimen/dp_10"
                     android:layout_height="@dimen/dp_10"
-                    android:src="@drawable/ic_baseline_notifications_active_24"
+                    android:src="@drawable/ic_baseline_error_24"
                     android:layout_gravity="right"
                     />
 

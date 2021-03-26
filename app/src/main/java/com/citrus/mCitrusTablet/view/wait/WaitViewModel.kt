@@ -115,7 +115,10 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
                     _cusCount.postValue(cusCount)
                 },onReservationCount = { num,res ->
                     newReservationCount = num
-                    newReservationGuest = res
+                    Log.e("newReservationCount",newReservationCount.toString())
+                    if (res != null) {
+                        newReservationGuest = res
+                    }
                 },onWaitCount = { _,_ ->
 
                 }).collect { list ->
@@ -123,10 +126,11 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
 
                     prefs.storageReservationNum = if(!isFirstFetch && (prefs.storageReservationNum != newReservationCount)){
                         _resHasNewData.postValue(newReservationGuest)
-                        newReservationCount
+                        prefs.storageReservationNum
                     }else{
                         newReservationCount
                     }
+                    Log.e("prefs.storageReservationNum",prefs.storageReservationNum.toString())
 
                     list as MutableList<Wait>
                     storageList = list.toMutableList()

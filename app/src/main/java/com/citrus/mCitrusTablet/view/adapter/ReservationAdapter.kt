@@ -126,6 +126,12 @@ class ReservationAdapter(
             itemHolder.imgMemo.visibility = View.INVISIBLE
         }
 
+        if(guest.isNew){
+            itemHolder.hintNew.visibility = View.VISIBLE
+        }else{
+            itemHolder.hintNew.visibility = View.GONE
+        }
+        guest.isNew = false
 
         if(guest.isExpend){
             itemHolder.tvMemo.visibility = View.VISIBLE
@@ -204,6 +210,7 @@ class ReservationAdapter(
         val statusBlock:LinearLayout = itemView.statusBlock
         val tvUpdateTime:TextView = itemView.tv_updateTime
         val tvStatus:TextView = itemView.tv_status
+        val hintNew:ImageView = itemView.new_hint
     }
 
 }

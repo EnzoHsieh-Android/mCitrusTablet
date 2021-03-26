@@ -35,8 +35,8 @@ class Repository @Inject constructor(private val apiService: ApiService) {
         fetchType: String,
         postToGetAllData: PostToGetAllData,
         onCusCount: (String) -> Unit,
-        onReservationCount: (Int,ReservationGuests) -> Unit,
-        onWaitCount: (Int,Wait) -> Unit
+        onReservationCount: (Int,ReservationGuests?) -> Unit,
+        onWaitCount: (Int,Wait?) -> Unit
     ) = flow {
         val jsonString = Gson().toJson(postToGetAllData)
         apiService.getAllData(url, jsonString)
@@ -44,11 +44,11 @@ class Repository @Inject constructor(private val apiService: ApiService) {
                 data?.let { oData ->
                     oData.data?.let { list ->
                         if (fetchType == "reservation") {
-                            onWaitCount(list.wait.size,list.wait.last())
+                            onWaitCount(list.wait.size,if (list.wait.isNotEmpty()) list.wait.last() else null)
                             onCusCount(list.reservation.size.toString())
                             emit(list.reservation)
                         } else {
-                            onReservationCount(list.reservation.size,list.reservation.last())
+                            onReservationCount(list.reservation.size, if (list.reservation.isNotEmpty()) list.reservation.last() else null)
                             onCusCount(list.wait.size.toString())
                             var distance = 0L
                             var updateTimeStr = ""

@@ -31,7 +31,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     private var serverDomain =
         "https://" + prefs.severDomain
 
-    private lateinit var newWaitGuest:Wait
+    private lateinit var newWaitGuest: Wait
     private var newWaitGuestCount = 0
     private var isFirstFetch = true
     private var isReload = true
@@ -210,7 +210,9 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
                         _cusCount.postValue(cusCount)
                     },onWaitCount = {  num,guest ->
                         newWaitGuestCount = num
-                        newWaitGuest = guest
+                        if (guest != null) {
+                            newWaitGuest = guest
+                        }
                     },onReservationCount = { _,_ ->
 
                     }).collect { list ->
@@ -234,8 +236,23 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
                             }
                         }
 
+
+
                         if(newList != storageList){
                             storageList = newList
+
+                            /*判斷日期為本日才具備新增提醒功能*/
+                            if(startTime == defaultTimeStr) {
+                                if (prefs.storageReservationNum < storageList.size) {
+                                    var distance = storageList.size - prefs.storageReservationNum
+
+                                    for (index in storageList.size - distance + 1..storageList.size) {
+                                        storageList[index - 1].isNew = true
+                                    }
+                                    prefs.storageReservationNum = storageList.size
+                                }
+                            }
+
                             isReload = true
                             allDataReorganization(getSortRequirement(SortOrder.BY_TIME, storageList))
                         }else{
@@ -403,6 +420,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
             model.uploadReservationData(serverDomain + Constants.SET_RESERVATION, dataPostToSet)
                 .collect {
                     if (it.status == 1 && it.data == 1) {
+                        prefs.storageReservationNum = prefs.storageReservationNum + 1
                         tasksEventChannel.send(TasksEvent.ShowSuccessMessage)
                         var time = dataPostToSet.reservation.reservationTime.split(" ")
                         fetchAllData(time[0], time[0])

@@ -73,7 +73,9 @@ data class ReservationGuests(
     var createDate:String,
 
     @SerializedName("UpdateDate")
-    var updateDate:String
+    var updateDate:String,
+
+    var isNew:Boolean = false
 
 ):Serializable
 

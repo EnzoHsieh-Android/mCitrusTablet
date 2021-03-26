@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -47,8 +48,11 @@ class MainActivity : AppCompatActivity() {
     lateinit var alert:CustomAlertDialog
     private fun isAlertInit()=::alert.isInitialized
 
-    lateinit var storageWait:Wait
+    private lateinit var storageWait:Wait
     private fun isWaitInit()=::storageWait.isInitialized
+
+    private lateinit var storageRes:ReservationGuests
+    private fun isResInit()=::storageRes.isInitialized
 
 
     override fun onResume() {
@@ -140,7 +144,16 @@ class MainActivity : AppCompatActivity() {
 
                 Constants.KEY_RESERVATION_NUM -> {
                     var res = map[Constants.KEY_RESERVATION_NUM] as ReservationGuests
-                    msg = "訂位名單已新增來自 " + res.mName + " 的訂位資料"
+
+                    if(isResInit()){
+                        Log.e("isResInit","yes")
+                        if(res.tkey == storageRes.tkey)
+                            return@observe
+                    }
+
+                    storageRes = res
+
+                    msg = "本日訂位名單已新增來自 " + res.mName + " 的訂位資料"
                     resAlert.visibility = View.VISIBLE
                 }
             }

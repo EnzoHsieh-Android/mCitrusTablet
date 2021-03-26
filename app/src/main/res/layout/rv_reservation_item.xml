@@ -15,17 +15,32 @@
             android:gravity="center"
             >
 
-            <ImageView
-                android:id="@+id/img_memo"
-                android:layout_width="0dp"
+            <FrameLayout
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="0.3"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_baseline_error_outline_24"
-                android:textAlignment="center"
-                android:textSize="@dimen/sp_22"
-                android:textStyle="bold" />
+                >
+
+                <ImageView
+                    android:visibility="invisible"
+                    android:id="@+id/new_hint"
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20"
+                    android:src="@drawable/new_hint"
+                    android:scaleType="fitCenter"
+                    />
+
+                <ImageView
+                    android:id="@+id/img_memo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_baseline_error_outline_24"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/sp_22"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
 
         </LinearLayout>
 
