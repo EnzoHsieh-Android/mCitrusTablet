@@ -146,7 +146,6 @@ class MainActivity : AppCompatActivity() {
                     var res = map[Constants.KEY_RESERVATION_NUM] as ReservationGuests
 
                     if(isResInit()){
-                        Log.e("isResInit","yes")
                         if(res.tkey == storageRes.tkey)
                             return@observe
                     }

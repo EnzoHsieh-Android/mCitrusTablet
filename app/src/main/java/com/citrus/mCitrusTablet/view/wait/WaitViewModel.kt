@@ -1,7 +1,6 @@
 package com.citrus.mCitrusTablet.view.wait
 
 
-import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -18,7 +17,6 @@ import com.citrus.mCitrusTablet.view.reservation.TasksEvent
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
-import okhttp3.internal.wait
 import timber.log.Timber
 
 
@@ -33,13 +31,17 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
 
     private lateinit var newReservationGuest:ReservationGuests
     private var newReservationCount = 0
+    /**是否第一次撈取資料*/
     private var isFirstFetch = true
+    /**記憶體暫存 Data List*/
     private var storageList: MutableList<Wait> = mutableListOf()
+    /**記憶體暫存memo展開的item*/
     private var expendList = mutableListOf<String>()
     private var sortOrder: SortOrder = SortOrder.BY_TIME_MORE
     private var hideCheck: HideCheck = HideCheck.HIDE_TRUE
     private var nowFilter = Filter.SHOW_ALL
     private var undo = false
+    /**待發送訊息貯列*/
     private var smsQueue = arrayListOf<String>()
 
     private lateinit var storeChangeForDelete:Wait
@@ -105,6 +107,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
         fetchJob.cancel()
     }
 
+    /**撈取今日wait資料*/
     private fun fetchAllData() =
         viewModelScope.launch {
             model.fetchAllData(
@@ -115,7 +118,6 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
                     _cusCount.postValue(cusCount)
                 },onReservationCount = { num,res ->
                     newReservationCount = num
-                    Log.e("newReservationCount",newReservationCount.toString())
                     if (res != null) {
                         newReservationGuest = res
                     }
@@ -123,18 +125,18 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
 
                 }).collect { list ->
                 if (list.isNotEmpty()) {
-
+                    /**第二次撈取後以儲存的當日訂位人數來比對是否有來自外部的新增資料*/
                     prefs.storageReservationNum = if(!isFirstFetch && (prefs.storageReservationNum != newReservationCount)){
                         _resHasNewData.postValue(newReservationGuest)
                         prefs.storageReservationNum
                     }else{
                         newReservationCount
                     }
-                    Log.e("prefs.storageReservationNum",prefs.storageReservationNum.toString())
 
                     list as MutableList<Wait>
                     storageList = list.toMutableList()
 
+                    /**新的List keep上一次選中及展開的狀態*/
                     if(isSelectGuestInit()){
                         for(item in storageList){
                             item.isSelect = item.tkey == selectGuest.tkey
@@ -146,6 +148,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
                         }
                     }
 
+                    /**來自外部的新資料加上new hint*/
                     if(prefs.storageWaitNum < storageList.size){
                         var distance = storageList.size - prefs.storageWaitNum
 
@@ -166,17 +169,14 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
         }
 
 
-    /*新增時無法取得wait url,利用smsQueue儲存新增成功時返回的單號*/
+    /**新增時無法取得客戶所需的候位網站連結，利用smsQueue儲存新增成功時返回的單號，在reload的時候進行發送*/
     private fun sendWaitSms() {
        if(smsQueue.size>0){
           for (guest in storageList.filter { it.status == Constants.ADD }){
               for(key in smsQueue){
                   if(guest.tkey == key){
                       if(guest.phone != null && guest.phone != "") {
-                          sendSMS(
-                              guest,
-                              prefs.storeName + " " + prefs.messageWait + "\n" + guest.url
-                          )
+                          sendSMS(guest,prefs.storeName + " " + prefs.messageWait + "\n" + guest.url)
                       }else{
                           sendMail(guest,prefs.storeName + " " + prefs.messageWait + "\n" + guest.url)
                       }
@@ -188,6 +188,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
     }
 
 
+    /**傳送簡訊*/
     private fun sendSMS(guest:Wait, msg:String){
         viewModelScope.launch {
             model.sendSMS(
@@ -201,6 +202,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
         }
     }
 
+    /**傳送mail*/
     private fun sendMail(guest:Wait,msg:String){
         viewModelScope.launch {
             model.sendMail(
@@ -216,7 +218,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
 
     private fun refreshAllData(list: MutableList<Wait>) {
 
-        var wlist: MutableList<Wait> = when(nowFilter){
+        var wList: MutableList<Wait> = when(nowFilter){
             Filter.SHOW_ALL -> {
                 list
             }
@@ -235,15 +237,15 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
         }
 
         if (hideCheck != HideCheck.HIDE_TRUE) {
-            _cusCount.postValue(wlist.filter { it.status != Constants.CHECK }.size.toString())
+            _cusCount.postValue(wList.filter { it.status != Constants.CHECK }.size.toString())
             _allData.postValue(
                 getSortRequirement(
                     sortOrder,
-                    wlist.filter { it.status != Constants.CHECK })
+                    wList.filter { it.status != Constants.CHECK })
             )
         } else {
-            _cusCount.postValue(wlist.size.toString())
-            _allData.postValue(getSortRequirement(sortOrder, wlist))
+            _cusCount.postValue(wList.size.toString())
+            _allData.postValue(getSortRequirement(sortOrder, wList))
         }
     }
 
@@ -252,6 +254,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
     }
 
 
+    /**撈取預點單資料*/
     fun fetchOrdersDeliver(postToGetDelivery: PostToGetDelivery) =
         viewModelScope.launch {
             model.fetchOrdersDeliveryData(
@@ -265,6 +268,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
         }
 
 
+    /**改變狀態 (A:新增候位、I:已通知、O:已確認、D:已取消,Ｃ:已入席)*/
     fun changeStatus(wait: Wait, statusStr: String) =
         viewModelScope.launch {
             model.changeStatus(
@@ -298,7 +302,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
             }
         }
 
-
+    /**新增候位資料*/
     fun uploadWait(dataPostToSet: PostToSetWaiting) =
         viewModelScope.launch {
             model.setWaitData(serverDomain + Constants.SET_WAIT, dataPostToSet).collect {
@@ -313,6 +317,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
             }
         }
 
+    /**字串搜尋功能*/
     fun searchForStr(status: SearchViewStatus) {
         when (status) {
             is SearchViewStatus.IsEmpty -> _allData.postValue(

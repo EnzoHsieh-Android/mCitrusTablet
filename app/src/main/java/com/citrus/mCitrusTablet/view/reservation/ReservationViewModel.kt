@@ -33,15 +33,20 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
 
     private lateinit var newWaitGuest: Wait
     private var newWaitGuestCount = 0
+
+    /**是否第一次撈取*/
     private var isFirstFetch = true
+    /**是否需要畫面重建*/
     private var isReload = true
     private var hideCheck: HideCheck = HideCheck.HIDE_TRUE
     private var hideCancelled:CancelFilter = CancelFilter.SHOW_CANCELLED
     private var delayTime = Constants.DEFAULT_TIME
+    /**記憶體暫存 Data List*/
     private var storageList = mutableListOf<ReservationGuests>()
+    /**記憶體暫存memo展開的item*/
     private var expendList = mutableListOf<String>()
     private lateinit var fetchJob: Job
-
+    /**記憶體暫存highLight的item*/
     private lateinit var selectGuest:ReservationGuests
             private fun isSelectGuestInit()=::selectGuest.isInitialized
 
@@ -133,30 +138,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         isFirstFetch = true
     }
 
-
-    fun setSearchVal(
-        rsno: String,
-        reservationTime: String,
-        customNum: Int
-    ) {
-        val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm")
-        var date = sdf.parse(reservationTime)
-        val sdf2 = SimpleDateFormat("yyyy-MM-dd HH:mm")
-        var searchStr = sdf2.format(date)
-        val changeForUpdate = SimpleDateFormat("MM-dd-yyyy HH:mm")
-        val updateChange = changeForUpdate.format(date)
-
-        var bookingPostData = PostToGetSeats(rsno, updateChange, customNum)
-        fetchReservationFloor(bookingPostData, searchStr)
-    }
-
-    fun setDateArray(data: Array<String>) {
-        _dateRange.value = data
-        fetchAllData(data[0], data[1])
-        prefs.storageWaitNum = 0
-        isFirstFetch = true
-    }
-
+    /**資料刷新，預期畫面重建，實際由fetchAllData重組List後判斷是否需要*/
     fun reload() {
         isReload = true
         if (_dateRange.value == null) {
@@ -166,9 +148,32 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         }
     }
 
+    /**畫面上方選擇日期*/
+    fun setDateArray(data: Array<String>) {
+        _dateRange.value = data
+        fetchAllData(data[0], data[1])
+        prefs.storageWaitNum = 0
+        isFirstFetch = true
+    }
 
+
+    /**畫面左方選擇日期*/
     fun setDateArrayReservation(data: Array<String>) {
         _orderDate.value = data
+    }
+
+
+    /**撈取座位資料*/
+    fun setSearchVal(rsno: String, reservationTime: String, customNum: Int) {
+        val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm")
+        var date = sdf.parse(reservationTime)
+        val sdf2 = SimpleDateFormat("yyyy-MM-dd HH:mm")
+        var searchStr = sdf2.format(date)
+        val changeForUpdate = SimpleDateFormat("MM-dd-yyyy HH:mm")
+        val updateChange = changeForUpdate.format(date)
+
+        var bookingPostData = PostToGetSeats(rsno, updateChange, customNum)
+        fetchReservationFloor(bookingPostData, searchStr)
     }
 
 
@@ -200,6 +205,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         }
 
 
+    /**撈取今日reservation資料*/
     private fun fetchAllData(startTime: String, endTime: String) =
             viewModelScope.launch {
                 model.fetchAllData(
@@ -217,6 +223,8 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
 
                     }).collect { list ->
                     if (list.isNotEmpty()) {
+
+                        /**第二次撈取後以儲存的候位人數來比對是否有來自外部的新增資料*/
                         prefs.storageWaitNum = if(!isFirstFetch && (prefs.storageWaitNum != newWaitGuestCount)){
                             _waitHasNewData.postValue(newWaitGuest)
                             prefs.storageWaitNum
@@ -224,6 +232,8 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
                             newWaitGuestCount
                         }
 
+
+                        /**新的List keep上一次選中及展開的狀態*/
                        var newList = list as MutableList<ReservationGuests>
                         if(isSelectGuestInit()){
                             for(item in newList){
@@ -237,11 +247,11 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
                         }
 
 
-
+                        /**如果有不一樣才走removeSection，否則單純刷新畫面*/
                         if(newList != storageList){
                             storageList = newList
 
-                            /*判斷日期為本日才具備新增提醒功能*/
+                            /**判斷日期為本日才具備新增提醒功能*/
                             if(startTime == defaultTimeStr) {
                                 if (prefs.storageReservationNum < storageList.size) {
                                     var distance = storageList.size - prefs.storageReservationNum
@@ -270,6 +280,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
             }
 
 
+    /**撈取店鋪資料*/
     private fun fetchStoreInfo() =
         viewModelScope.launch {
             model.fetchStoreInfo(
@@ -286,7 +297,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         }
 
 
-
+    /** highLight功能 */
     fun itemSelect(guest:ReservationGuests){
         selectGuest = guest
         for(item in storageList){
@@ -306,8 +317,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         allDataReorganization(storageList)
     }
 
-
-    /*拆分原始DATA組成SectionRecyclerView需求的樣式，分成Title List以及Data List*/
+    /**拆分原始DATA組成SectionRecyclerView需求的樣式，分成Title List以及Data List*/
     private fun allDataReorganization(list: MutableList<ReservationGuests>) {
         var sortGuests =
             if (list.isNotEmpty()) getSortRequirement(SortOrder.BY_TIME, list) else list
@@ -318,6 +328,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         val groupItem = mutableListOf<List<ReservationGuests>>()
         var totalList: MutableList<Any> = mutableListOf()
 
+        /**是否過濾入席、已取消*/
         sortGuests = if (hideCancelled == CancelFilter.HIDE_CANCELLED) sortGuests.filter { it.status != Constants.CANCEL } as MutableList<ReservationGuests> else sortGuests
         sortGuests = if (hideCheck != HideCheck.HIDE_TRUE) sortGuests.filter { it.status != Constants.CHECK } as MutableList<ReservationGuests> else sortGuests
 
@@ -329,6 +340,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
                 var timeStr = dateStr[1].split(":")
                 timeTitle.add(timeStr[0] + ":00")
 
+                /**是不是第一個title*/
                 if (isFirst) {
                     tempValue = timeStr[0]
                 }
@@ -344,7 +356,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
             groupItem.add(tempItem.toMutableList())
 
 
-            /*用於SectionRecyclerView Swipe取得物件使用*/
+            /**用於SectionRecyclerView Swipe取得物件使用*/
             var title = timeTitle.toList()
             for (index in title.indices) {
                 totalList.add(title[index])
@@ -368,6 +380,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     }
 
 
+    /**字串搜尋功能，需要重建畫面*/
     fun searchForStr(status: SearchViewStatus) {
         isReload = true
         when (status) {
@@ -389,6 +402,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     }
 
 
+    /**改變狀態 (A:新增訂位、D:已取消、Ｃ:已入席)*/
     fun changeStatus(guest: ReservationGuests, status: String) =
         viewModelScope.launch {
             model.changeStatus(
@@ -414,7 +428,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
             }
         }
 
-
+    /**新增預約資料*/
     fun uploadReservation(dataPostToSet: PostToSetReservation) =
         viewModelScope.launch {
             model.uploadReservationData(serverDomain + Constants.SET_RESERVATION, dataPostToSet)
@@ -435,12 +449,14 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
                 }
         }
 
+    /**傳送簡訊*/
     private suspend fun sendSMS(project: String, phone: String, body: String) =
         model.sendSMS(Constants.SEND_SMS, project, phone, body).collect {
-
+                /**Do nothing*/
         }
 
 
+    /**依條件搜尋可供預約的時間*/
     fun fetchReservationTime(postData: String) =
         viewModelScope.launch {
             model.fetchReservationTime(
@@ -453,6 +469,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
             }
         }
 
+    /**排序*/
     private fun getSortRequirement(
         sortStatus: SortOrder,
         originalList: List<ReservationGuests>
@@ -524,6 +541,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         }
     }
 
+    /**隱藏已入席*/
     fun hideChecked(isHide: Boolean) {
         hideCheck = if (isHide) {
             HideCheck.HIDE_TRUE
@@ -536,22 +554,24 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         allDataReorganization(storageList)
     }
 
+    /**隱藏已取消*/
     fun hideCancelled(cancelFilter: CancelFilter) {
         hideCancelled = cancelFilter
         isReload = !isReload
         allDataReorganization(storageList)
     }
 
+    /**刪除後顯示回復按鈕*/
     private fun showUndoToast(guest:ReservationGuests) = viewModelScope.launch{
         tasksEventChannel.send(TasksEvent.ShowUndoDeleteTaskMessageR(guest))
     }
 
+    /**從刪除狀態回復*/
     fun onUndoFinish(guest: ReservationGuests) =
         viewModelScope.launch {
             Timber.d("Action: Undo all change")
             changeStatus(guest,Constants.ADD)
         }
-
 
 
     fun onDetachView(){
