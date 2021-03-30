@@ -1,14 +1,13 @@
 package com.citrus.mCitrusTablet.view.reservation
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.fragment.app.Fragment
+import android.widget.Adapter
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -30,7 +29,6 @@ import com.citrus.mCitrusTablet.util.ui.BaseFragment
 import com.citrus.mCitrusTablet.view.SharedViewModel
 import com.citrus.mCitrusTablet.view.adapter.ReservationAdapter
 import com.citrus.mCitrusTablet.view.dialog.*
-import com.citrus.mCitrusTablet.view.wait.Filter
 import com.citrus.util.onQueryTextChanged
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
@@ -52,6 +50,8 @@ class ReservationFragment : BaseFragment() {
     private val reservationFragmentViewModel: ReservationViewModel by viewModels()
     private var _binding: FragmentReservationBinding? = null
     private val binding get() = _binding!!
+
+    lateinit var arrayAdapter: Adapter
 
     private var mode = CalendarPickerView.SelectionMode.SINGLE
     private val itemPerLine: Int = 1
@@ -91,6 +91,9 @@ class ReservationFragment : BaseFragment() {
 
     private fun initView() {
         binding.apply {
+
+            binding.seat.setText("")
+
             date2Day(
                 reservationFragmentViewModel.dateRange.value?.get(0) ?: SimpleDateFormat(
                     "yyyy/MM/dd"
@@ -159,11 +162,11 @@ class ReservationFragment : BaseFragment() {
             contentSwap.setOnClickListener {
                 isSwapEmail = !isSwapEmail
                 if(isSwapEmail){
-                    phone.visibility = View.GONE
-                    mail.visibility = View.VISIBLE
+                    phoneTextInputLayout.visibility = View.GONE
+                    mailTextInputLayout.visibility = View.VISIBLE
                 }else{
-                    phone.visibility = View.VISIBLE
-                    mail.visibility = View.GONE
+                    phoneTextInputLayout.visibility = View.VISIBLE
+                    mailTextInputLayout.visibility = View.GONE
                 }
             }
 
@@ -231,9 +234,10 @@ class ReservationFragment : BaseFragment() {
             }
 
 
-            seatPicker.setOnValueChangedListener { _, _, newVal ->
-                tempSeat = seatData[newVal - 1]
+            seat.setOnItemClickListener{ _, _, index: Int, _ ->
+                tempSeat = seatData[index]
             }
+
 
 
             btReservation.setOnSlideCompleteListener {
@@ -244,12 +248,15 @@ class ReservationFragment : BaseFragment() {
                 var seat = tempSeat.split("-")
 
                 if(cusName.isEmpty()) {
+                    YoYo.with(Techniques.Shake).duration(1000).playOn(binding.nameTextInputLayout)
                     YoYo.with(Techniques.Shake).duration(1000).playOn(binding.name)
                     return@setOnSlideCompleteListener
                 }
 
                 if(cusPhone.isEmpty() && cusEmail.isEmpty() ) {
+                    YoYo.with(Techniques.Shake).duration(1000).playOn(binding.phoneTextInputLayout)
                     YoYo.with(Techniques.Shake).duration(1000).playOn(binding.phone)
+                    YoYo.with(Techniques.Shake).duration(1000).playOn(binding.mailTextInputLayout)
                     YoYo.with(Techniques.Shake).duration(1000).playOn(binding.mail)
                     return@setOnSlideCompleteListener
                 }
@@ -318,16 +325,19 @@ class ReservationFragment : BaseFragment() {
 
         reservationFragmentViewModel.seatData.observe(viewLifecycleOwner, { dataList ->
             if (dataList != null && dataList.isNotEmpty()) {
-                binding.seatPicker.visibility = View.VISIBLE
-                binding.tvSeat.visibility = View.VISIBLE
+                binding.seatTextInputLayout.visibility = View.VISIBLE
+
 
                 seatData.clear()
                 for (floor in dataList) {
                     seatData.add(floor.floorName + "-" + floor.roomName)
                 }
                 tempSeat = seatData[0]
-                binding.seatPicker.maxValue = seatData.size
-                binding.seatPicker.displayedValues = seatData.toTypedArray()
+
+                arrayAdapter = ArrayAdapter(requireContext(),R.layout.dropdown_item,seatData)
+                binding.seat.setAdapter(arrayAdapter as ArrayAdapter<String>)
+                binding.seat.setText(seatData[0],false)
+
             } else {
                     CustomAlertDialog(
                         requireActivity(),
@@ -483,8 +493,10 @@ class ReservationFragment : BaseFragment() {
             seatData.clear()
             seatData.add(seat)
             tempSeat = seatData[0]
-            binding.seatPicker.maxValue = seatData.size
-            binding.seatPicker.displayedValues = seatData.toTypedArray()
+
+            arrayAdapter = ArrayAdapter(requireContext(),R.layout.dropdown_item,seatData)
+            binding.seat.setAdapter(arrayAdapter as ArrayAdapter<String>)
+            binding.seat.setText(seatData[0],false)
         }
     }
 
@@ -531,13 +543,12 @@ class ReservationFragment : BaseFragment() {
         binding.phone.text.clear()
         binding.mail.text.clear()
         binding.memo.text.clear()
+        binding.seat.text.clear()
         if (isHideSeat) {
             tempSeat = ""
-            binding.tvSeat.visibility = View.INVISIBLE
-            binding.seatPicker.visibility = View.INVISIBLE
+            binding.seatTextInputLayout.visibility = View.INVISIBLE
         } else {
-            binding.tvSeat.visibility = View.VISIBLE
-            binding.seatPicker.visibility = View.VISIBLE
+            binding.seatTextInputLayout.visibility = View.VISIBLE
         }
     }
 

@@ -33,7 +33,7 @@
     <string name="Waiting">候位</string>
     <string name="check">入席</string>
     <string name="checked">已入席</string>
-    <string name="rsno">分店代號:</string>
+    <string name="rsno">分店代號</string>
     <string name="setting">設定</string>
     <string name="people">人</string>
     <string name="slide">滑動以新增</string>
@@ -85,4 +85,5 @@
     <string name="Undo">還原</string>
     <string name="filter">Filter</string>
     <string name="Report">報表</string>
+    <string name="Required">*必填</string>
 </resources>

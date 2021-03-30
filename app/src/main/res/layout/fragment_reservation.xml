@@ -220,7 +220,7 @@
         android:id="@+id/viewLine"
         android:layout_width="2dp"
         android:layout_height="0dp"
-        android:background="@color/deepGray"/>
+        android:background="@color/gray"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/reserve_block"
@@ -348,31 +348,8 @@
 
 
         <LinearLayout
-            android:visibility="gone"
-            android:id="@+id/no_result_block"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/horizontal_TimeStr40"
-            app:layout_constraintBottom_toTopOf="@id/horizontal_TimeStr80"
-            android:gravity="center"
-            >
-
-            <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/no_result_ani"
-                android:layout_width="match_parent"
-                android:layout_margin="@dimen/dp_2"
-                android:layout_height="match_parent"
-                app:lottie_autoPlay="false"
-                app:lottie_fileName="no_result.json"
-                app:lottie_loop="false" />
-
-        </LinearLayout>
-
-        <LinearLayout
             android:id="@+id/nameBlock"
-            android:layout_width="@dimen/dp_100"
+            android:layout_width="@dimen/dp_125"
             android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -382,25 +359,32 @@
             android:gravity="left|center"
             >
 
-            <EditText
-                android:id="@+id/name"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:id="@+id/nameTextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_marginBottom="@dimen/dp_5"
                 android:hint="@string/name"
-                android:textSize="@dimen/sp_12"
-                android:background="@null"
-                android:drawablePadding="5dp"
-                android:drawableStart="@drawable/ic_baseline_person_24"
-                android:imeOptions="actionNext"
-                android:singleLine="true"
-                />
+                app:endIconMode="clear_text"
+                app:startIconDrawable="@drawable/ic_baseline_person_24">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/gray"
-                />
-
+                <AutoCompleteTextView
+                    android:id="@+id/name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:paddingTop="@dimen/dp_2"
+                    android:paddingBottom="@dimen/dp_2"
+                    android:textSize="@dimen/sp_12"
+                    android:textStyle="bold"
+                    android:textColor="@color/primaryDarkColor"
+                    android:inputType="text"
+                    android:imeOptions="actionNext"
+                    android:singleLine="true"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
 
@@ -419,7 +403,7 @@
 
         <LinearLayout
             android:id="@+id/phoneBlock"
-            android:layout_width="@dimen/dp_100"
+            android:layout_width="@dimen/dp_125"
             android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -429,76 +413,144 @@
             android:gravity="left|center"
             >
 
-            <EditText
-                android:visibility="visible"
-                android:id="@+id/phone"
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:id="@+id/phoneTextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_marginBottom="@dimen/dp_5"
                 android:hint="@string/phone_number"
-                android:textSize="@dimen/sp_12"
-                android:background="@null"
-                android:drawablePadding="5dp"
-                android:drawableStart="@drawable/ic_baseline_phone_android_24"
-                android:nextFocusForward="@+id/memo"
-                android:imeOptions="actionNext"
-                android:singleLine="true"
-                android:inputType="number"
-                android:maxLength="10"
-                />
+                app:endIconMode="clear_text"
+                app:startIconDrawable="@drawable/ic_baseline_phone_android_24">
 
-            <EditText
+                <AutoCompleteTextView
+                    android:id="@+id/phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:paddingTop="@dimen/dp_2"
+                    android:paddingBottom="@dimen/dp_2"
+                    android:textSize="@dimen/sp_12"
+                    android:textStyle="bold"
+                    android:textColor="@color/primaryDarkColor"
+                    android:inputType="number"
+                    android:imeOptions="actionNext"
+                    android:singleLine="true"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:visibility="gone"
-                android:id="@+id/mail"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:id="@+id/mailTextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_marginBottom="@dimen/dp_5"
                 android:hint="E-mail"
-                android:textSize="@dimen/sp_12"
-                android:background="@null"
-                android:drawablePadding="5dp"
-                android:drawableStart="@drawable/ic_baseline_email_24"
-                android:nextFocusForward="@+id/memo"
-                android:imeOptions="actionNext"
-                android:singleLine="true"
-                />
+                app:endIconMode="clear_text"
+                app:startIconDrawable="@drawable/ic_baseline_email_24">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/gray"
-                />
-
+                <AutoCompleteTextView
+                    android:id="@+id/mail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:paddingTop="@dimen/dp_2"
+                    android:paddingBottom="@dimen/dp_2"
+                    android:textSize="@dimen/sp_12"
+                    android:textStyle="bold"
+                    android:textColor="@color/primaryDarkColor"
+                    android:inputType="number"
+                    android:imeOptions="actionNext"
+                    android:singleLine="true"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
 
         <LinearLayout
             android:id="@+id/memoBlock"
-            android:layout_width="@dimen/dp_100"
+            android:layout_width="@dimen/dp_125"
             android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/horizontal_TimeStr60"
-            app:layout_constraintBottom_toTopOf="@id/horizontal_TimeStr80"
+            app:layout_constraintBottom_toTopOf="@id/horizontal_TimeStr70"
             android:orientation="vertical"
             android:gravity="center"
             >
 
-            <EditText
-                android:id="@+id/memo"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:id="@+id/memoTextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_marginBottom="@dimen/dp_5"
                 android:hint="@string/memo"
-                android:textSize="@dimen/sp_12"
-                android:background="@null"
-                android:drawablePadding="5dp"
-                android:drawableStart="@drawable/ic_baseline_comment_24"
-                android:imeOptions="actionDone"
-                />
+                app:endIconMode="clear_text"
+                app:startIconDrawable="@drawable/ic_baseline_comment_24">
 
-            <View
+                <AutoCompleteTextView
+                    android:id="@+id/memo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:paddingTop="@dimen/dp_2"
+                    android:paddingBottom="@dimen/dp_2"
+                    android:textSize="@dimen/sp_12"
+                    android:textStyle="bold"
+                    android:textColor="@color/primaryDarkColor"
+                    android:inputType="text"
+                    android:imeOptions="actionDone"
+                    android:singleLine="true"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/seatBlock"
+            android:layout_width="@dimen/dp_125"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/horizontal_TimeStr70"
+            app:layout_constraintBottom_toTopOf="@+id/horizontal_TimeStr80"
+            android:orientation="vertical"
+            android:gravity="center"
+            >
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:visibility="gone"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:id="@+id/seatTextInputLayout"
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="@color/gray"
-                />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_marginBottom="@dimen/dp_5"
+                android:hint="@string/selectSeat"
+                app:startIconDrawable="@drawable/ic_baseline_event_seat_24">
+
+                <AutoCompleteTextView
+                    android:id="@+id/seat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:paddingTop="@dimen/dp_2"
+                    android:paddingBottom="@dimen/dp_2"
+                    android:textSize="@dimen/sp_12"
+                    android:textStyle="bold"
+                    android:textColor="@color/primaryDarkColor"
+                    android:inputType="none"
+                    android:imeOptions="actionDone"
+                    android:singleLine="true"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 
@@ -545,14 +597,14 @@
             app:layout_constraintGuide_percent="0.60" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/horizontal_TimeStr80"
+            android:id="@+id/horizontal_TimeStr70"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.70" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/horizontal_TimeStr90"
+            android:id="@+id/horizontal_TimeStr80"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -568,43 +620,6 @@
 
 
 
-        <TextView
-            android:layout_marginTop="@dimen/dp_10"
-            android:visibility="gone"
-            android:id="@+id/tv_seat"
-            android:layout_width="@dimen/dp_100"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:text="@string/selectSeat"
-            android:gravity="left"
-            android:drawableStart="@drawable/ic_baseline_event_seat_24"
-            android:textSize="@dimen/sp_12"
-            app:layout_constraintBottom_toTopOf="@+id/horizontal_TimeStr90"
-            app:layout_constraintTop_toBottomOf="@+id/horizontal_TimeStr80"
-            />
-
-        <com.shawnlin.numberpicker.NumberPicker
-            android:layout_marginTop="@dimen/dp_10"
-            android:layout_marginRight="@dimen/dp_30"
-            android:gravity="left"
-            android:visibility="gone"
-            android:id="@+id/seat_picker"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/dp_30"
-            android:layout_centerInParent="true"
-            app:np_selectedTextColor="@color/primaryColor"
-            app:np_selectedTextSize="@dimen/sp_12"
-            app:np_textColor="@color/light_blue"
-            app:np_textSize="@dimen/sp_8"
-            app:np_dividerColor="@color/gray"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/middle"
-            app:layout_constraintBottom_toTopOf="@+id/horizontal_TimeStr90"
-            app:layout_constraintTop_toBottomOf="@+id/horizontal_TimeStr80"/>
-
-
-
 
 
         <LinearLayout
@@ -612,7 +627,7 @@
             android:layout_height="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/horizontal_TimeStr90"
+            app:layout_constraintTop_toBottomOf="@id/horizontal_TimeStr80"
             app:layout_constraintBottom_toBottomOf="parent"
             android:gravity="center"
             >

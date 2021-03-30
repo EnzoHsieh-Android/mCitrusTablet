@@ -205,6 +205,7 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             var newLocale = Locale.getDefault()
             when (prefs.languagePos) {
+                0 -> newLocale = Locale.SIMPLIFIED_CHINESE
                 1 -> newLocale = Locale.TRADITIONAL_CHINESE
                 2 -> newLocale = Locale.US
             }
@@ -219,17 +220,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateLanguage(context: Context): Context {
         val newLocale = when (prefs.languagePos) {
+            0 -> Locale.SIMPLIFIED_CHINESE
             1 -> Locale.TRADITIONAL_CHINESE
             2 -> Locale.ENGLISH
             else -> {
                 when (Locale.getDefault().country) {
+                    "CN" -> {
+                        prefs.languagePos = 0
+                        Locale.SIMPLIFIED_CHINESE
+                    }
+
                     "TW" -> {
                         prefs.languagePos = 1
                         Locale.TRADITIONAL_CHINESE
-                    }
-                    "CN" -> {
-                        prefs.languagePos = 1
-                        Locale.SIMPLIFIED_CHINESE
                     }
                     else -> {
                         prefs.languagePos = 2

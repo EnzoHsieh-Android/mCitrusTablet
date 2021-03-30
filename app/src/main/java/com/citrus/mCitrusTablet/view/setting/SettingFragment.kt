@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
 import android.widget.EditText
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -20,6 +21,8 @@ import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.databinding.FragmentSettingBinding
 import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.view.SharedViewModel
+import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -29,11 +32,17 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
     private var _binding: FragmentSettingBinding? = null
     private val binding get() = _binding!!
     private val requestStorageCode = 888
-    var data = arrayOf("繁體中文", "English")
     var isLanChange = false
     var hasChange = true
     var chooseLan = prefs.languagePos
 
+
+    override fun onResume() {
+        super.onResume()
+        val languages = resources.getStringArray(R.array.language)
+        val arrayAdapter = ArrayAdapter(requireContext(),R.layout.dropdown_item,languages)
+        binding.languagePicker.setAdapter(arrayAdapter)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -90,15 +99,13 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
             }
 
 
-            languagePicker?.minValue = 1
-            languagePicker?.maxValue = data.size
-            languagePicker?.displayedValues = data
-
-
-            languagePicker!!.setOnValueChangedListener { _, _, newVal ->
+            languagePicker.setOnItemClickListener { _, _, position, _ ->
                 var lang = -1
                 isLanChange = true
-                when (newVal) {
+                when (position) {
+                    0 -> {
+                        lang = 0
+                    }
                     1 -> {
                         lang = 1
                     }
@@ -108,6 +115,8 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
                 }
                 chooseLan = lang
             }
+
+
         }
     }
 
@@ -115,37 +124,49 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
     private fun loadFromSharedPref() {
         val storeId = prefs.storeId
         val server = prefs.severDomain
+        val languages = resources.getStringArray(R.array.language)
 
 
-        when (prefs.languagePos) {
-            1 -> {
-                binding.languagePicker?.value = 1
-            }
-            2 -> {
-                binding.languagePicker?.value = 2
-            }
-            else -> {
-                var lanStr = resources.configuration.locale.language
-                if (lanStr == "zh") {
-                    binding.languagePicker?.value = 1
-                } else {
-                    binding.languagePicker?.value = 2
+        if(prefs.languagePos != -1){
+            binding.languagePicker.setText(languages[prefs.languagePos],false)
+        }else{
+            var lanStr = resources.configuration.locale.country
+            var index = when(lanStr){
+                "CN" -> {
+                    0
+                }
+                "TW" -> {
+                    1
+                }
+                else -> {
+                    2
                 }
             }
+            binding.languagePicker.setText(languages[index],false)
         }
+
+
 
         if (storeId == "" || server == "") {
             isCancelable = false
         }
-        binding.etStoreId!!.setText(storeId)
-        binding.etServerIp!!.setText(server)
+        binding.etStoreId!!.setText(storeId,false)
+        binding.etServerIp!!.setText(server,false)
     }
 
     private fun applyChangesToSharedPref(): Boolean {
 
         val storeIdText = binding.etStoreId!!.text.trim().toString()
         val serverText = binding.etServerIp!!.text.trim().toString()
-        if (storeIdText.isEmpty() || serverText.isEmpty()) {
+
+        if (storeIdText.isEmpty()) {
+            YoYo.with(Techniques.Shake).duration(1000).playOn(binding.storeIdInputLayout)
+            YoYo.with(Techniques.Shake).duration(1000).playOn(binding.etStoreId)
+            return false
+        }
+        if (serverText.isEmpty()) {
+            YoYo.with(Techniques.Shake).duration(1000).playOn(binding.serverIpTextInputLayout)
+            YoYo.with(Techniques.Shake).duration(1000).playOn(binding.etServerIp)
             return false
         }
 

@@ -3,6 +3,7 @@ package com.citrus.mCitrusTablet.view.wait
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -179,11 +180,11 @@ WaitFragment : BaseFragment() {
             contentSwap.setOnClickListener {
                 isSwapEmail = !isSwapEmail
                 if(isSwapEmail){
-                    phone.visibility = View.GONE
-                    mail.visibility = View.VISIBLE
+                    phoneTextInputLayout.visibility = View.GONE
+                    mailTextInputLayout.visibility = View.VISIBLE
                 }else{
-                    phone.visibility = View.VISIBLE
-                    mail.visibility = View.GONE
+                    phoneTextInputLayout.visibility = View.VISIBLE
+                    mailTextInputLayout.visibility = View.GONE
                 }
             }
 
@@ -225,14 +226,28 @@ WaitFragment : BaseFragment() {
                 }
             }
 
-            seat.setOnClickListener {
-                CustomNumberPickerDialog() { adultCount, childCount, totalCount ->
-                    seat.text = totalCount
-                    cusNum = totalCount.toInt()
-                    adultNum = adultCount.toInt()
-                    childNum = childCount.toInt()
-                }.show(requireActivity().supportFragmentManager, "CustomNumberPickerDialog")
+
+            seat.setOnFocusChangeListener { _ , hasFocus ->
+                if(hasFocus){
+                    CustomNumberPickerDialog { adultCount, childCount, totalCount ->
+                        seat.setText(totalCount,false)
+                        cusNum = totalCount.toInt()
+                        adultNum = adultCount.toInt()
+                        childNum = childCount.toInt()
+                    }.show(requireActivity().supportFragmentManager, "CustomNumberPickerDialog")
+                    seat.clearFocus()
+                }
             }
+
+
+//            seatTextInputLayout.setOnClickListener {
+//                CustomNumberPickerDialog { adultCount, childCount, totalCount ->
+//                    seat.setText(totalCount,false)
+//                    cusNum = totalCount.toInt()
+//                    adultNum = adultCount.toInt()
+//                    childNum = childCount.toInt()
+//                }.show(requireActivity().supportFragmentManager, "CustomNumberPickerDialog")
+//            }
 
 
             btReservation.setOnSlideCompleteListener {
@@ -416,7 +431,7 @@ WaitFragment : BaseFragment() {
         binding.phone.text.clear()
         binding.mail.text.clear()
         binding.memo.text.clear()
-        binding.seat.text = ""
+        binding.seat.text.clear()
     }
 
     @Throws(ParseException::class)

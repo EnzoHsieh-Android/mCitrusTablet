@@ -13,7 +13,7 @@
         <ScrollView
             android:id="@+id/scView"
             android:layout_width="@dimen/dp_300"
-            android:layout_height="@dimen/dp_200"
+            android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_20"
             app:layout_constraintBottom_toBottomOf="@id/horizontalBottomGuideline"
             app:layout_constraintEnd_toEndOf="parent"
@@ -26,35 +26,39 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_margin="@dimen/dp_5">
 
-                    <TextView
-                        android:layout_marginTop="@dimen/dp_2"
-                        android:layout_width="wrap_content"
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:id="@+id/storeIdInputLayout"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/dp_5"
-                        android:layout_marginRight="@dimen/dp_5"
-                        android:text="@string/rsno"
-                        android:textSize="@dimen/sp_13"
-                        android:textStyle="bold" />
+                        android:layout_marginTop="@dimen/dp_5"
+                        android:layout_marginBottom="@dimen/dp_5"
+                        android:hint="@string/rsno"
+                        app:endIconMode="clear_text"
+                        app:startIconDrawable="@drawable/ic_baseline_store_24">
 
-                    <EditText
-                        android:id="@+id/etStoreId"
-                        android:layout_width="@dimen/dp_200"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:background="@null"
-                        android:imeOptions="actionNext"
-                        android:hint="＊＊＊＊＊"
-                        android:inputType="text"
-                        android:textColor="@color/primaryDarkColor"
-                        android:textSize="@dimen/sp_16"
-                        android:textStyle="bold" />
+                        <AutoCompleteTextView
+                            android:id="@+id/etStoreId"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:paddingTop="@dimen/dp_2"
+                            android:paddingBottom="@dimen/dp_2"
+                            android:textSize="@dimen/sp_12"
+                            android:textStyle="bold"
+                            android:textColor="@color/primaryDarkColor"
+                            android:inputType="text"
+                            android:imeOptions="actionNext"
+                            android:singleLine="true"
+                            />
+                    </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
 
@@ -64,28 +68,33 @@
                     android:orientation="vertical"
                     android:layout_margin="@dimen/dp_5">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:id="@+id/serverIpTextInputLayout"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/dp_5"
-                        android:layout_marginRight="@dimen/dp_5"
-                        android:text="Server IP:"
-                        android:textSize="@dimen/sp_13"
-                        android:textStyle="bold" />
+                        android:layout_marginTop="@dimen/dp_5"
+                        android:layout_marginBottom="@dimen/dp_5"
+                        android:hint="Server IP"
+                        app:endIconMode="clear_text"
+                        app:startIconDrawable="@drawable/ic_baseline_computer_24">
 
-                    <EditText
-                        android:id="@+id/etServerIp"
-                        android:background="@null"
-                        android:layout_width="@dimen/dp_200"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:hint="＊＊＊＊＊＊"
-                        android:imeOptions="actionNext"
-                        android:inputType="text"
-                        android:textColor="@color/primaryDarkColor"
-                        android:textSize="@dimen/sp_16"
-                        android:textStyle="bold" />
+                        <AutoCompleteTextView
+                            android:id="@+id/etServerIp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:paddingTop="@dimen/dp_2"
+                            android:paddingBottom="@dimen/dp_2"
+                            android:textSize="@dimen/sp_12"
+                            android:textStyle="bold"
+                            android:textColor="@color/primaryDarkColor"
+                            android:inputType="text"
+                            android:imeOptions="actionDone"
+                            android:singleLine="true"
+                            />
+                    </com.google.android.material.textfield.TextInputLayout>
+
                 </LinearLayout>
 
 
@@ -95,29 +104,29 @@
                     android:orientation="vertical"
                     android:layout_margin="@dimen/dp_5">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:id="@+id/lanTextInputLayout"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/dp_5"
-                        android:text="@string/language"
-                        android:textSize="@dimen/sp_13"
-                        android:textStyle="bold" />
+                        android:layout_marginTop="@dimen/dp_5"
+                        android:layout_marginBottom="@dimen/dp_5"
+                        android:hint="@string/language"
+                        app:startIconDrawable="@drawable/ic_baseline_language_24">
 
-
-                        <com.shawnlin.numberpicker.NumberPicker
-                            android:layout_gravity="center"
+                        <AutoCompleteTextView
                             android:id="@+id/language_picker"
-                            android:layout_width="@dimen/dp_120"
-                            android:layout_height="@dimen/dp_60"
-                            android:layout_centerInParent="true"
-                            android:background="@color/ds_list_bg"
-                            android:layout_margin="@dimen/dp_10"
-                            app:np_selectedTextColor="@color/primaryDarkColor"
-                            app:np_selectedTextSize="@dimen/sp_15"
-                            app:np_textColor="@color/black"
-                            app:np_dividerColor="@color/gray"
-                            app:np_textSize="@dimen/sp_10"
-                            app:np_value="1" />
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:paddingTop="@dimen/dp_2"
+                            android:paddingBottom="@dimen/dp_2"
+                            android:textSize="@dimen/sp_12"
+                            android:textStyle="bold"
+                            android:textColor="@color/primaryDarkColor"
+                            android:inputType="none"
+                            />
+                    </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
             </LinearLayout>
@@ -129,6 +138,7 @@
     <Button
         android:id="@+id/btnOK"
         android:layout_marginTop="@dimen/dp_5"
+        android:layout_marginBottom="@dimen/dp_5"
         android:text="@string/apply"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_12"
