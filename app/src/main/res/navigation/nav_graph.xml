@@ -34,5 +34,15 @@
         android:name="com.citrus.mCitrusTablet.view.report.ReportFragment"
         android:label="fragment_report"
         tools:layout="@layout/fragment_report" />
+    <fragment
+        android:id="@+id/waitChildFragment"
+        android:name="com.citrus.mCitrusTablet.view.report.WaitChildFragment"
+        android:label="fragment_wait_child"
+        tools:layout="@layout/fragment_wait_child" />
+    <fragment
+        android:id="@+id/resChildFragment"
+        android:name="com.citrus.mCitrusTablet.view.report.ResChildFragment"
+        android:label="fragment_res_child"
+        tools:layout="@layout/fragment_res_child" />
 
 </navigation>

@@ -2,6 +2,7 @@ package com.citrus.mCitrusTablet.view.reservation
 
 
 
+import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -215,9 +216,11 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
                     onCusCount = { cusCount ->
                         _cusCount.postValue(cusCount)
                     },onWaitCount = {  num,guest ->
-                        newWaitGuestCount = num
-                        if (guest != null) {
-                            newWaitGuest = guest
+                        if(num != -1){
+                            newWaitGuestCount = num
+                            if (guest != null) {
+                                newWaitGuest = guest
+                            }
                         }
                     },onReservationCount = { _,_ ->
 

@@ -44,10 +44,15 @@ class Repository @Inject constructor(private val apiService: ApiService) {
                 data?.let { oData ->
                     oData.data?.let { list ->
                         if (fetchType == "reservation") {
-                            onWaitCount(list.wait.size,if (list.wait.isNotEmpty()) list.wait.last() else null)
+                            /**只提示今天的外部新增候位通知*/
+                            if(postToGetAllData.startDate == Constants.defaultTimeStr){
+                                onWaitCount(list.wait.size,if (list.wait.isNotEmpty()) list.wait.last() else null)
+                            }else{
+                                onWaitCount(-1,null)
+                            }
                             onCusCount(list.reservation.size.toString())
                             emit(list.reservation)
-                        } else {
+                        } else if(fetchType == "wait"){
                             onReservationCount(list.reservation.size, if (list.reservation.isNotEmpty()) list.reservation.last() else null)
                             onCusCount(list.wait.size.toString())
                             var distance = 0L
@@ -65,9 +70,23 @@ class Repository @Inject constructor(private val apiService: ApiService) {
                                 if (distance > 9) wait.isOverTime = true else false
                                 wait.updateDate = updateTimeStr
                             }
-
                             emit(list.wait)
                         }
+                    }
+                }
+            }
+    }.flowOn(Dispatchers.IO)
+
+    fun fetchAllDataForReport(
+        url: String,
+        postToGetAllData: PostToGetAllData,
+    ) = flow {
+        val jsonString = Gson().toJson(postToGetAllData)
+        apiService.getAllData(url, jsonString)
+            .suspendOnSuccess {
+                data?.let { oData ->
+                    oData.data?.let { list ->
+                        emit(list)
                     }
                 }
             }

@@ -31,7 +31,7 @@ data class ReservationGuests(
     val storeID: Int,
 
     @SerializedName("ReservationTime")
-    val reservationTime: String,
+    var reservationTime: String,
 
     @SerializedName("cust_num")
     val custNum: Int,
