@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.citrus.mCitrusTablet.R
@@ -16,16 +18,24 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ReportFragment : Fragment(R.layout.fragment_report) {
-    private val reportViewModel: ReportViewModel by viewModels()
+    private val reportViewModel: ReportViewModel by activityViewModels()
     private var _binding: FragmentReportBinding? = null
     private val binding get() = _binding!!
     private lateinit var titles:Array<String>
+
+    override fun onResume() {
+        super.onResume()
+        val type = resources.getStringArray(R.array.reportType)
+        val arrayAdapter = ArrayAdapter(requireContext(),R.layout.dropdown_item,type)
+        //binding.languagePicker.setAdapter(arrayAdapter)
+    }
+
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentReportBinding.bind(view)
 
-        reportViewModel.fetchAllData("2021/03/22","2021/03/28")
 
         binding.apply {
             initView()
@@ -50,10 +60,11 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
         override fun createFragment(position: Int): Fragment {
             // Return a NEW fragment instance in createFragment(int)
             when (position) {
-                0 -> return ResChildFragment()
-                1 -> return WaitChildFragment()
+                0 -> return DailyFragment()
+                1 -> return WeeklyFragment()
+                2 -> return MonthlyFragment()
             }
-            return ResChildFragment()
+            return DailyFragment()
         }
     }
 

@@ -29,6 +29,10 @@ class Prefs(private val context: Context) {
         get() = prefs.getString(Constants.KEY_STORE_NAME, "")?: ""
         set(value) = prefs.edit().putString(Constants.KEY_STORE_NAME, value).apply()
 
+    var storePic: String
+        get() = prefs.getString(Constants.KEY_STORE_PIC, "")?: ""
+        set(value) = prefs.edit().putString(Constants.KEY_STORE_PIC, value).apply()
+
     var rsno:String
         get() = prefs.getString(Constants.KEY_RSNO, "")?: ""
         set(value) = prefs.edit().putString(Constants.KEY_RSNO, value).apply()

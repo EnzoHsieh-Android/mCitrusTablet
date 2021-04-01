@@ -78,7 +78,7 @@
     <string name="refresh">重新整理</string>
     <string name="search_text">电话号码或Email</string>
     <string name="select_cusNum">选择人数</string>
-    <string name="child">小孩</string>
+    <string name="child">儿童</string>
     <string name="adult">成人</string>
     <string name="num_of_person">人数</string>
     <string name="FinishMsg">预约已取消</string>
@@ -86,4 +86,14 @@
     <string name="filter">Filter</string>
     <string name="Report">报表</string>
     <string name="Required">*必填</string>
+    <string name ="ThankYouForRes">感谢您</string>
+    <string name ="AlreadyRes">您的预约已成立</string>
+    <string name ="AnoteForRes">预约资讯</string>
+    <string name ="at">用餐时间</string>
+    <string name="gustertip">位</string>
+
+    <string-array name="reportType">
+        <item>订位</item>
+        <item>候位</item>
+    </string-array>
 </resources>

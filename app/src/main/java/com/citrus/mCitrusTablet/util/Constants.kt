@@ -26,6 +26,7 @@ object Constants {
     const val KEY_STORE_ID = "KEY_STORE_ID"
     const val KEY_RSNO = "KEY_RSNO"
     const val KEY_STORE_NAME = "KEY_STORE_NAME"
+    const val KEY_STORE_PIC = "KEY_STORE_PIC"
     const val KEY_SERVER_DOMAIN = "KEY_SERVER_DOMAIN"
     const val CHANGE_STATUS = "/POSServer/UploadDataWS/Service1.asmx/SetWaitData"
     const val GET_ALL_DATA = "/POSServer/UploadDataWS/Service1.asmx/GetAllReservationData"

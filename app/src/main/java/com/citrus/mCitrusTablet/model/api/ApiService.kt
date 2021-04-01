@@ -91,7 +91,8 @@ interface ApiService {
     suspend fun sendMail(
         @Url url: String,
         @Field("email") email: String,
-        @Field("htmlBody") htmlBody: String
+        @Field("htmlBody") htmlBody: String,
+        @Field("subject") subject: String
     ): ApiResponse<ReservationUpdateStatus>
 
 

@@ -20,6 +20,28 @@
         app:layout_constraintEnd_toEndOf="parent"
         >
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/head_spread_part"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.3"
+            />
+
+
+        <TextView
+            android:id="@+id/reportTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@+id/head_spread_part"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold"
+            android:text="Reservation Report"
+            />
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -55,6 +77,7 @@
             >
 
             <TextView
+                android:visibility="invisible"
                 android:id="@+id/tvDate"
                 android:layout_width="@dimen/dp_84"
                 android:layout_height="wrap_content"
@@ -65,6 +88,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:visibility="invisible"
                 android:id="@+id/tvDay"
                 android:layout_width="@dimen/dp_36"
                 android:layout_height="wrap_content"
@@ -89,7 +113,7 @@
 
 
         <LinearLayout
-            android:visibility="visible"
+            android:visibility="invisible"
             android:id="@+id/btn_Today"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

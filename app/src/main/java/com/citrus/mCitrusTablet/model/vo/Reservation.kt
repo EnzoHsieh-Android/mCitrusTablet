@@ -46,7 +46,9 @@ data class ReservationClass (
         val adultCount: Int,
 
         @SerializedName("KidCount")
-        val kidCount: Int
+        val kidCount: Int,
+
+        val day:String
 ):Serializable
 
 

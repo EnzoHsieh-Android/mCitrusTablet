@@ -259,17 +259,21 @@ WaitFragment : BaseFragment() {
 
 
                 if(cusName.isEmpty()) {
+                    YoYo.with(Techniques.Shake).duration(1000).playOn(binding.nameTextInputLayout)
                     YoYo.with(Techniques.Shake).duration(1000).playOn(binding.name)
                     return@setOnSlideCompleteListener
                 }
 
                 if(cusPhone.isEmpty() && cusEmail.isEmpty() ) {
+                    YoYo.with(Techniques.Shake).duration(1000).playOn(binding.phoneTextInputLayout)
                     YoYo.with(Techniques.Shake).duration(1000).playOn(binding.phone)
+                    YoYo.with(Techniques.Shake).duration(1000).playOn(binding.mailTextInputLayout)
                     YoYo.with(Techniques.Shake).duration(1000).playOn(binding.mail)
                     return@setOnSlideCompleteListener
                 }
 
                 if(seat.isEmpty() ) {
+                    YoYo.with(Techniques.Shake).duration(1000).playOn(binding.seatTextInputLayout)
                     YoYo.with(Techniques.Shake).duration(1000).playOn(binding.seat)
                     return@setOnSlideCompleteListener
                 }

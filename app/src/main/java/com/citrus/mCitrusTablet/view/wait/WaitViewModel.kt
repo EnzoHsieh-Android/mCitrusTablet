@@ -208,6 +208,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
             model.sendMail(
                 Constants.SEND_MAIL,
                 guest.email!!,
+                msg,
                 msg
             ).collect {
                 Timber.d("smsStatus%s", it.toString())

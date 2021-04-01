@@ -138,8 +138,8 @@ class Repository @Inject constructor(private val apiService: ApiService) {
             }
     }.flowOn(Dispatchers.IO)
 
-    fun sendMail(url: String,email: String,htmlBody: String) = flow {
-        apiService.sendMail(url,email,htmlBody)
+    fun sendMail(url: String,email: String,htmlBody: String,subject:String) = flow {
+        apiService.sendMail(url,email,htmlBody,subject)
             .suspendOnSuccess {
                 data?.let {
                     if (it.status == 1) {

@@ -132,12 +132,20 @@ class ReservationFragment : BaseFragment() {
                         }
 
                         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                            var guest =
-                                forDeleteData[viewHolder.adapterPosition] as ReservationGuests
 
-                            if(guest.status != "C" && guest.status != "D") {
-                                reservationFragmentViewModel.changeStatus(guest, Constants.CANCEL)
-                            }else{
+                            try {
+                                var guest =
+                                    forDeleteData[viewHolder.adapterPosition] as ReservationGuests
+
+                                if (guest.status != "C" && guest.status != "D") {
+                                    reservationFragmentViewModel.changeStatus(
+                                        guest,
+                                        Constants.CANCEL
+                                    )
+                                } else {
+                                    reservationFragmentViewModel.deleteNone()
+                                }
+                            }catch (e:ClassCastException){
                                 reservationFragmentViewModel.deleteNone()
                             }
                         }
@@ -164,9 +172,16 @@ class ReservationFragment : BaseFragment() {
                 if(isSwapEmail){
                     phoneTextInputLayout.visibility = View.GONE
                     mailTextInputLayout.visibility = View.VISIBLE
+                    mail.isFocusable = true;
+                    mail.requestFocus()
+                    mail.isFocusableInTouchMode = true
                 }else{
                     phoneTextInputLayout.visibility = View.VISIBLE
                     mailTextInputLayout.visibility = View.GONE
+                    phone.isFocusable = true;
+                    phone.requestFocus()
+                    phone.isFocusableInTouchMode = true;
+
                 }
             }
 
@@ -279,7 +294,8 @@ class ReservationFragment : BaseFragment() {
                             seat[0],
                             seat[1],
                             tempAdultCount,
-                            tempChildCount
+                            tempChildCount,
+                            binding.tvDay.text.toString()
                         )
                     )
                     reservationFragmentViewModel.uploadReservation(data)

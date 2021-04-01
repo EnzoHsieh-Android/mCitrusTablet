@@ -65,4 +65,9 @@
     <color name="ds_picker_box_bg">#67f45959</color>
     <color name="ds_list_selector_bg">#49067397</color>
     <color name="ds_list_bg">#ffffff</color>
+
+
+    <color name="chart_color_check">#c6ffac</color>
+    <color name="chart_color_cancel">#ff8674</color>
+    <color name="chart_color_wait">#b6e1ff</color>
 </resources>

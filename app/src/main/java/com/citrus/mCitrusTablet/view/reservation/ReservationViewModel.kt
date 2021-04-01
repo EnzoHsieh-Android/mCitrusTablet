@@ -1,13 +1,13 @@
 package com.citrus.mCitrusTablet.view.reservation
 
 
-
-import android.util.Log
+import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.model.Repository
 import com.citrus.mCitrusTablet.model.vo.*
@@ -16,7 +16,9 @@ import com.citrus.mCitrusTablet.util.Constants.TimeStrForDelete
 import com.citrus.mCitrusTablet.util.Constants.defaultTimeStr
 import com.citrus.mCitrusTablet.util.Constants.inputFormat
 import com.citrus.mCitrusTablet.util.HideCheck
+import com.citrus.mCitrusTablet.util.MailContentBuild
 import com.citrus.mCitrusTablet.util.SingleLiveEvent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
@@ -25,8 +27,11 @@ import java.text.SimpleDateFormat
 
 
 enum class SortOrder { BY_LESS, BY_TIME, BY_MORE }
-enum class CancelFilter {SHOW_CANCELLED, HIDE_CANCELLED}
-class ReservationViewModel @ViewModelInject constructor(private val model: Repository) :
+enum class CancelFilter { SHOW_CANCELLED, HIDE_CANCELLED }
+class ReservationViewModel @ViewModelInject constructor(
+    private val model: Repository,
+    @ApplicationContext val context: Context
+) :
     ViewModel() {
 
     private var serverDomain =
@@ -37,19 +42,23 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
 
     /**是否第一次撈取*/
     private var isFirstFetch = true
+
     /**是否需要畫面重建*/
     private var isReload = true
     private var hideCheck: HideCheck = HideCheck.HIDE_TRUE
-    private var hideCancelled:CancelFilter = CancelFilter.SHOW_CANCELLED
+    private var hideCancelled: CancelFilter = CancelFilter.SHOW_CANCELLED
     private var delayTime = Constants.DEFAULT_TIME
+
     /**記憶體暫存 Data List*/
     private var storageList = mutableListOf<ReservationGuests>()
+
     /**記憶體暫存memo展開的item*/
     private var expendList = mutableListOf<String>()
     private lateinit var fetchJob: Job
+
     /**記憶體暫存highLight的item*/
-    private lateinit var selectGuest:ReservationGuests
-            private fun isSelectGuestInit()=::selectGuest.isInitialized
+    private lateinit var selectGuest: ReservationGuests
+    private fun isSelectGuestInit() = ::selectGuest.isInitialized
 
     private val _highCheckEvent = MutableLiveData<HideCheck>()
     val highCheckEvent: LiveData<HideCheck>
@@ -108,7 +117,6 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     val tasksEvent = tasksEventChannel.receiveAsFlow()
 
 
-
     init {
         if (prefs.storeName == "") {
             fetchStoreInfo()
@@ -127,7 +135,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         }
     }
 
-     fun startFetchJob() {
+    fun startFetchJob() {
         fetchJob = viewModelScope.launch {
             createFetchJob().onEach { Timber.d("Res_onFetch: $it") }
                 .collect()
@@ -208,79 +216,80 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
 
     /**撈取今日reservation資料*/
     private fun fetchAllData(startTime: String, endTime: String) =
-            viewModelScope.launch {
-                model.fetchAllData(
-                    serverDomain + Constants.GET_ALL_DATA,
-                    "reservation",
-                    PostToGetAllData(prefs.rsno, startTime, endTime),
-                    onCusCount = { cusCount ->
-                        _cusCount.postValue(cusCount)
-                    },onWaitCount = {  num,guest ->
-                        if(num != -1){
-                            newWaitGuestCount = num
-                            if (guest != null) {
-                                newWaitGuest = guest
-                            }
+        viewModelScope.launch {
+            model.fetchAllData(
+                serverDomain + Constants.GET_ALL_DATA,
+                "reservation",
+                PostToGetAllData(prefs.rsno, startTime, endTime),
+                onCusCount = { cusCount ->
+                    _cusCount.postValue(cusCount)
+                }, onWaitCount = { num, guest ->
+                    if (num != -1) {
+                        newWaitGuestCount = num
+                        if (guest != null) {
+                            newWaitGuest = guest
                         }
-                    },onReservationCount = { _,_ ->
+                    }
+                }, onReservationCount = { _, _ ->
 
-                    }).collect { list ->
-                    if (list.isNotEmpty()) {
+                }).collect { list ->
+                if (list.isNotEmpty()) {
 
-                        /**第二次撈取後以儲存的候位人數來比對是否有來自外部的新增資料*/
-                        prefs.storageWaitNum = if(!isFirstFetch && (prefs.storageWaitNum != newWaitGuestCount)){
+                    /**第二次撈取後以儲存的候位人數來比對是否有來自外部的新增資料*/
+                    prefs.storageWaitNum =
+                        if (!isFirstFetch && (prefs.storageWaitNum != newWaitGuestCount)) {
                             _waitHasNewData.postValue(newWaitGuest)
                             prefs.storageWaitNum
-                        }else{
+                        } else {
                             newWaitGuestCount
                         }
 
 
-                        /**新的List keep上一次選中及展開的狀態*/
-                       var newList = list as MutableList<ReservationGuests>
-                        if(isSelectGuestInit()){
-                            for(item in newList){
-                                item.isSelect = item.tkey == selectGuest.tkey
-                                for(key in expendList){
-                                    if(key == item.tkey){
-                                        item.isExpend = true
-                                    }
+                    /**新的List keep上一次選中及展開的狀態*/
+                    var newList = list as MutableList<ReservationGuests>
+                    if (isSelectGuestInit()) {
+                        for (item in newList) {
+                            item.isSelect = item.tkey == selectGuest.tkey
+                            for (key in expendList) {
+                                if (key == item.tkey) {
+                                    item.isExpend = true
                                 }
                             }
                         }
-
-
-                        /**如果有不一樣才走removeSection，否則單純刷新畫面*/
-                        if(newList != storageList){
-                            storageList = newList
-
-                            /**判斷日期為本日才具備新增提醒功能*/
-                            if(startTime == defaultTimeStr) {
-                                if (prefs.storageReservationNum < storageList.size) {
-                                    var distance = storageList.size - prefs.storageReservationNum
-
-                                    for (index in storageList.size - distance + 1..storageList.size) {
-                                        storageList[index - 1].isNew = true
-                                    }
-                                    prefs.storageReservationNum = storageList.size
-                                }
-                            }
-
-                            isReload = true
-                            allDataReorganization(getSortRequirement(SortOrder.BY_TIME, storageList))
-                        }else{
-                            isReload = false
-                        }
-
-                        isFirstFetch = false
-
-                    } else {
-                        storageList = mutableListOf()
-                        _titleData.postValue(listOf())
-                        _allData.postValue(mutableListOf())
                     }
+
+
+                    /**如果有不一樣才走removeSection，否則單純刷新畫面*/
+                    if (newList != storageList) {
+                        storageList = newList
+
+                        /**判斷日期為本日才具備新增提醒功能*/
+                        if (startTime == defaultTimeStr) {
+                            if (prefs.storageReservationNum < storageList.size) {
+                                var distance = storageList.size - prefs.storageReservationNum
+
+                                for (index in storageList.size - distance + 1..storageList.size) {
+                                    storageList[index - 1].isNew = true
+                                }
+                                prefs.storageReservationNum = storageList.size
+                            }
+                        }
+
+                        isReload = true
+                        allDataReorganization(getSortRequirement(SortOrder.BY_TIME, storageList))
+                    } else {
+                        isReload = false
+                    }
+
+                    isFirstFetch = false
+
+                } else {
+                    storageList = mutableListOf()
+                    _titleData.postValue(listOf())
+                    _allData.postValue(mutableListOf())
                 }
             }
+        }
 
 
     /**撈取店鋪資料*/
@@ -290,6 +299,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
                 serverDomain + Constants.GET_STORE_INFO,
                 prefs.storeId
             ).collect {
+                prefs.storePic = it[0].pic
                 prefs.storeName = it[0].storeName
                 prefs.rsno = it[0].rsno
                 prefs.messageRes = it[0].message1
@@ -301,22 +311,22 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
 
 
     /** highLight功能 */
-    fun itemSelect(guest:ReservationGuests){
+    fun itemSelect(guest: ReservationGuests) {
         selectGuest = guest
-        for(item in storageList){
+        for (item in storageList) {
             item.isSelect = item == guest
         }
 
-        if(guest.isExpend){
+        if (guest.isExpend) {
             expendList.add(guest.tkey)
-        }else{
+        } else {
             expendList.remove(guest.tkey)
         }
 
         allDataReorganization(storageList)
     }
 
-    fun deleteNone(){
+    fun deleteNone() {
         allDataReorganization(storageList)
     }
 
@@ -332,8 +342,10 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         var totalList: MutableList<Any> = mutableListOf()
 
         /**是否過濾入席、已取消*/
-        sortGuests = if (hideCancelled == CancelFilter.HIDE_CANCELLED) sortGuests.filter { it.status != Constants.CANCEL } as MutableList<ReservationGuests> else sortGuests
-        sortGuests = if (hideCheck != HideCheck.HIDE_TRUE) sortGuests.filter { it.status != Constants.CHECK } as MutableList<ReservationGuests> else sortGuests
+        sortGuests =
+            if (hideCancelled == CancelFilter.HIDE_CANCELLED) sortGuests.filter { it.status != Constants.CANCEL } as MutableList<ReservationGuests> else sortGuests
+        sortGuests =
+            if (hideCheck != HideCheck.HIDE_TRUE) sortGuests.filter { it.status != Constants.CHECK } as MutableList<ReservationGuests> else sortGuests
 
         if (sortGuests.isNotEmpty()) {
             for (item in sortGuests) {
@@ -373,10 +385,10 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
         _forDeleteData.postValue(totalList)
         _titleData.postValue(timeTitle.toList())
 
-        if(isReload){
+        if (isReload) {
             _allData.postValue(groupItem)
             isReload = false
-        }else{
+        } else {
             _holdData.postValue(groupItem)
         }
 
@@ -394,8 +406,10 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
             is SearchViewStatus.NeedChange -> {
                 var tempGuestsList = mutableListOf<ReservationGuests>()
                 for (item: ReservationGuests in storageList) {
-                    if (item.phone?.contains(status.searchStr) == true || item.email?.split("@")?.get(0)
-                            ?.contains(status.searchStr) == true) {
+                    if (item.phone?.contains(status.searchStr) == true || item.email?.split("@")
+                            ?.get(0)
+                            ?.contains(status.searchStr) == true
+                    ) {
                         tempGuestsList.add(item)
                     }
                 }
@@ -441,21 +455,65 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
                         tasksEventChannel.send(TasksEvent.ShowSuccessMessage)
                         var time = dataPostToSet.reservation.reservationTime.split(" ")
                         fetchAllData(time[0], time[0])
-                        sendSMS(
-                            "celaviLAB",
-                            dataPostToSet.reservation.phone,
-                            prefs.storeName + " " + dataPostToSet.reservation.reservationTime + " "+ prefs.messageRes
-                        )
+
+                        if (dataPostToSet.reservation.phone != null && dataPostToSet.reservation.phone != "") {
+                            sendSMS(
+                                "celaviLAB",
+                                dataPostToSet.reservation.phone,
+                                prefs.storeName + " " + dataPostToSet.reservation.reservationTime + " " + prefs.messageRes
+                            )
+                        } else {
+                            var dateStr = dataPostToSet.reservation.reservationTime.split(" ")
+                            var subject = prefs.storeName + " " + dataPostToSet.reservation.reservationTime + " " + dataPostToSet.reservation.custNum + " " + context.resources.getString(
+                                R.string.gustertip
+                            ) + " " + context.resources.getString(
+                                R.string.AlreadyRes
+                            )
+                            var mailText = MailContentBuild(context).genericMsg(
+                                "$serverDomain/images/" + prefs.storePic,
+                                prefs.storeName,
+                                dataPostToSet.reservation.mName,
+                                dataPostToSet.reservation.day,
+                                dateStr[0].replace("/", "-"),
+                                dataPostToSet.reservation.adultCount.toString(),
+                                dataPostToSet.reservation.kidCount.toString(),
+                                dataPostToSet.reservation.memo,
+                                dateStr[1]
+                            )
+
+                            sendMail(
+                                dataPostToSet.reservation.email,
+                                mailText,
+                                subject
+                            )
+                        }
+
                     } else {
                         tasksEventChannel.send(TasksEvent.ShowFailMessage)
                     }
                 }
         }
 
+
+    /**傳送mail*/
+    private fun sendMail(email: String, msg: String, subject: String) {
+        viewModelScope.launch {
+            model.sendMail(
+                Constants.SEND_MAIL,
+                email,
+                msg,
+                subject
+            ).collect {
+                Timber.d("smsStatus%s", it.toString())
+            }
+        }
+    }
+
+
     /**傳送簡訊*/
     private suspend fun sendSMS(project: String, phone: String, body: String) =
         model.sendSMS(Constants.SEND_SMS, project, phone, body).collect {
-                /**Do nothing*/
+            /**Do nothing*/
         }
 
 
@@ -565,7 +623,7 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     }
 
     /**刪除後顯示回復按鈕*/
-    private fun showUndoToast(guest:ReservationGuests) = viewModelScope.launch{
+    private fun showUndoToast(guest: ReservationGuests) = viewModelScope.launch {
         tasksEventChannel.send(TasksEvent.ShowUndoDeleteTaskMessageR(guest))
     }
 
@@ -573,11 +631,11 @@ class ReservationViewModel @ViewModelInject constructor(private val model: Repos
     fun onUndoFinish(guest: ReservationGuests) =
         viewModelScope.launch {
             Timber.d("Action: Undo all change")
-            changeStatus(guest,Constants.ADD)
+            changeStatus(guest, Constants.ADD)
         }
 
 
-    fun onDetachView(){
+    fun onDetachView() {
         onCleared()
     }
 

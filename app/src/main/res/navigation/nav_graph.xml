@@ -35,14 +35,19 @@
         android:label="fragment_report"
         tools:layout="@layout/fragment_report" />
     <fragment
-        android:id="@+id/waitChildFragment"
-        android:name="com.citrus.mCitrusTablet.view.report.WaitChildFragment"
-        android:label="fragment_wait_child"
-        tools:layout="@layout/fragment_wait_child" />
+        android:id="@+id/monthlyFragment"
+        android:name="com.citrus.mCitrusTablet.view.report.MonthlyFragment"
+        android:label="fragment_monthly"
+        tools:layout="@layout/fragment_monthly" />
     <fragment
-        android:id="@+id/resChildFragment"
-        android:name="com.citrus.mCitrusTablet.view.report.ResChildFragment"
-        android:label="fragment_res_child"
-        tools:layout="@layout/fragment_res_child" />
+        android:id="@+id/weeklyFragment"
+        android:name="com.citrus.mCitrusTablet.view.report.WeeklyFragment"
+        android:label="fragment_weekly"
+        tools:layout="@layout/fragment_weekly" />
+    <fragment
+        android:id="@+id/dailyFragment"
+        android:name="com.citrus.mCitrusTablet.view.report.DailyFragment"
+        android:label="fragment_daily"
+        tools:layout="@layout/fragment_daily" />
 
 </navigation>
