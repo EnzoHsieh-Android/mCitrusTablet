@@ -47,6 +47,8 @@ class CustomSearchTableDialog(
 
     override fun initView() {
         setWindowWidthPercent()
+        floorBlock.visibility = View.GONE
+        roomBlock.visibility = View.GONE
 
             searchTimeRv.apply {
             val glm = GridLayoutManager(mContext, itemPerLine)
@@ -67,16 +69,16 @@ class CustomSearchTableDialog(
             when(i){
                 R.id.rb_people -> {
                     type = "CusNum"
-                    et_floor.visibility = View.INVISIBLE
-                    et_room.visibility = View.GONE
+                    floorBlock.visibility = View.GONE
+                    roomBlock.visibility = View.GONE
                     et_floor.text.clear()
                     et_room.text.clear()
                     clearView()
                 }
                 R.id.rb_seat -> {
                     type = "Seat"
-                    et_floor.visibility = View.VISIBLE
-                    et_room.visibility = View.VISIBLE
+                    floorBlock.visibility = View.VISIBLE
+                    roomBlock.visibility = View.VISIBLE
                     clearView()
                 }
             }
@@ -115,7 +117,8 @@ class CustomSearchTableDialog(
 
         btn_Search.setOnClickListener {
 
-            if (llDate.text.toString() == getString(R.string.select_time)) {
+            if (llDate.text.toString() == "") {
+                YoYo.with(Techniques.Shake).duration(1000).playOn(timeTextInputLayout)
                 YoYo.with(Techniques.Shake).duration(1000).playOn(llDate)
                 toast(R.string.select_time)
                 return@setOnClickListener
