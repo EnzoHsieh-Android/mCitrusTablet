@@ -3,7 +3,7 @@ package com.citrus.mCitrusTablet.view.report
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.databinding.FragmentWeeklyBinding
 import com.citrus.mCitrusTablet.model.vo.Report
@@ -21,11 +21,16 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
 
-    private val reportViewModel: ReportViewModel by viewModels()
+    private val reportViewModel: ReportViewModel by activityViewModels()
     private var _binding: FragmentWeeklyBinding? = null
     private val binding get() = _binding!!
     private var resReportList = mutableListOf<Report>()
     private var titleEntity = mutableListOf<String>()
+
+    override fun onResume() {
+        reportViewModel.setLocationPageType(ReportRange.BY_WEEKLY)
+        super.onResume()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -35,19 +40,60 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
             initObserver()
             initView()
         }
-        reportViewModel.fetchAllData("2021/03/21", "2021/03/27")
+
     }
 
     private fun initObserver() {
-        reportViewModel.resReportTitleData.observe(viewLifecycleOwner, { titleList ->
+        reportViewModel.weeklyReportTitleData.observe(viewLifecycleOwner, { titleList ->
             titleEntity = titleList
         })
 
-        reportViewModel.resReportData.observe(viewLifecycleOwner, { resDataList ->
-            resReportList = resDataList
-            drawBarChart()
-            binding.stackedBarChart.notifyDataSetChanged()
+        reportViewModel.weeklyReportData.observe(viewLifecycleOwner, { resDataList ->
 
+            var totalNum = 0
+            var checkNum = 0
+            var adultNum = 0
+            var childNum = 0
+            var cancelNum = 0
+            var notCheckNum = 0
+
+            for(item in resDataList){
+                totalNum += item.total
+                checkNum += item.check
+                adultNum += item.adult
+                childNum += item.child
+                cancelNum += item.cancel
+                notCheckNum += item.wait
+            }
+
+
+            binding.TvTotalNum.text = totalNum.toString() + "組"
+            binding.TvCheckNum.text = checkNum.toString() + "組"
+            binding.TvAdultNum.text = adultNum.toString() + "人"
+            binding.TvChildNum.text = childNum.toString() + "人"
+            binding.TvCancelNum.text = cancelNum.toString() + "組"
+            binding.TvUnCheckNum.text = notCheckNum.toString() + "組"
+
+            resReportList = resDataList
+            binding.stackedBarChart.clear()
+            drawBarChart()
+        })
+
+        reportViewModel.locationPageType.observe(viewLifecycleOwner,{
+            reportViewModel.reFetch()
+        })
+
+        reportViewModel.showType.observe(viewLifecycleOwner,{ showType ->
+            when(showType){
+                ShowType.BY_CHART -> {
+                    binding.stackedBarChart.visibility = View.VISIBLE
+                    binding.showTextBlock.visibility = View.INVISIBLE
+                }
+                ShowType.BY_TEXT -> {
+                    binding.stackedBarChart.visibility = View.INVISIBLE
+                    binding.showTextBlock.visibility = View.VISIBLE
+                }
+            }
         })
     }
 
@@ -89,9 +135,12 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
             setValueTextSize(valueSp.toFloat())
         }
         var axisValueFormatter =  chart.xAxis.valueFormatter
+
         val myMarkView = MyMarkView(requireContext(),resReportList,axisValueFormatter)
         myMarkView.chartView = chart
         chart.marker = myMarkView
+
+        chart.notifyDataSetChanged()
         chart.invalidate()
     }
 
@@ -148,6 +197,11 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
 
     private fun getResourceColor(resID: Int): Int {
         return resources.getColor(resID)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

@@ -30,6 +30,7 @@ import java.util.*
 sealed class CalendarType{
     object NoTimePickerForSearchReservation : CalendarType()
     object OneTimePickerForReservation : CalendarType()
+    object NeedHistoryForDate : CalendarType()
 }
 
 
@@ -71,16 +72,30 @@ class CustomDatePickerDialog(
                 tv_seatCountTitle.visibility = View.GONE
                 number_picker.visibility = View.GONE
             }
+            is CalendarType.NeedHistoryForDate -> {
+                tvStartTimeTitle.visibility = View.GONE
+                tvEndTimeTitle.visibility = View.GONE
+                tvStartTime.visibility = View.GONE
+                tvEndTime.visibility = View.GONE
+                rgDateMode.visibility = View.GONE
+            }
         }.exhaustive
 
-
-
-
         val calendar = Calendar.getInstance()
-        val minDate = calendar.time
-        calendar.add(Calendar.DAY_OF_MONTH, 90)
-        val maxDate = calendar.time
-        calendarView.init(minDate, maxDate).inMode(mode)
+        var minDate: Date
+        minDate = if(calendarType != CalendarType.NeedHistoryForDate) {
+            calendar.time
+        }else{
+            calendar.add(Calendar.DAY_OF_MONTH, -90)
+            calendar.time
+        }
+            minDate = calendar.time
+
+        val calendarMax = Calendar.getInstance()
+        calendarMax.add(Calendar.DAY_OF_MONTH, 90)
+            val maxDate = calendarMax.time
+            calendarView.init(minDate, maxDate).inMode(mode)
+
 
         try {
             val date: Date? = if(dateFormatSql.parse(startTime) < minDate) minDate else dateFormatSql.parse(startTime)
@@ -159,6 +174,15 @@ class CustomDatePickerDialog(
                     is CalendarType.OneTimePickerForReservation -> {
                         start = dateFormatSql.format(calendarView.selectedDates[0])+ " " + tvStartTime.text.toString()
                         end = start
+                    }
+                    else -> {
+                        start = dateFormatSql.format(calendarView.selectedDates[0])
+                        if (calendarView.selectedDates.size > 1) {
+                            end =
+                                dateFormatSql.format(calendarView.selectedDates[calendarView.selectedDates.size - 1])
+                        }else{
+                            end = dateFormatSql.format(calendarView.selectedDates[0])
+                        }
                     }
                 }.exhaustive
 

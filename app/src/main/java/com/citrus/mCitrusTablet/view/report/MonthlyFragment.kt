@@ -3,7 +3,7 @@ package com.citrus.mCitrusTablet.view.report
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.databinding.FragmentMonthlyBinding
 import com.citrus.mCitrusTablet.model.vo.Report
@@ -21,30 +21,32 @@ import timber.log.Timber
 @AndroidEntryPoint
 class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
 
-    private val reportViewModel: ReportViewModel by viewModels()
+    private val reportViewModel: ReportViewModel by activityViewModels()
     private var _binding: FragmentMonthlyBinding? = null
     private val binding get() = _binding!!
     private var resReportList = mutableListOf<Report>()
     private var titleEntity = mutableListOf<String>()
 
+    override fun onResume() {
+        reportViewModel.setLocationPageType(ReportRange.BY_MONTHLY)
+        super.onResume()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentMonthlyBinding.bind(view)
+        initObserver()
+        initView()
 
-        binding.apply {
-            initObserver()
-            initView()
-        }
-        reportViewModel.fetchAllData("2021/03/1","2021/03/31")
     }
 
     private fun initObserver() {
-        reportViewModel.resReportTitleData.observe(viewLifecycleOwner, { titleList ->
+        reportViewModel.monthlyReportTitleData.observe(viewLifecycleOwner, { titleList ->
             titleEntity = titleList
             Timber.d(titleEntity.toString())
         })
 
-        reportViewModel.resReportData.observe(viewLifecycleOwner, { resDataList ->
+        reportViewModel.monthlyReportData.observe(viewLifecycleOwner, { resDataList ->
             resReportList = resDataList
             Timber.d(resReportList.toString())
             drawBarChart()
@@ -118,7 +120,9 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
     }
 
     private fun initView() {
-        // drawBarChart()
+        binding.apply {
+
+        }
     }
 
     private fun getCusStackLabels(): Array<String>? {
@@ -142,5 +146,9 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
     }
 
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
 }

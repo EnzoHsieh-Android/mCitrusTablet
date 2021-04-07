@@ -92,7 +92,10 @@
     <string name="AnoteForRes">Reservation Info</string>
     <string name="at">at</string>
     <string name="gustertip">guests</string>
-
+    <string name="reportType">Report Type</string>
+    <string name="showType">Show Type</string>
+    <string name="resReport">Reservation Report</string>
+    <string name="waitReport">Wait Report</string>
 
     <string-array name="language">
         <item>简体中文</item>
@@ -103,6 +106,11 @@
     <string-array name="reportType">
         <item>Reservation</item>
         <item>Wait</item>
+    </string-array>
+
+    <string-array name="showType">
+        <item>Bar Chart</item>
+        <item>Text</item>
     </string-array>
 
 </resources>

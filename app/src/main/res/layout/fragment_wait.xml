@@ -385,6 +385,7 @@
                     android:textColor="@color/primaryDarkColor"
                     android:inputType="number"
                     android:imeOptions="actionNext"
+                    android:nextFocusUp="@id/memo"
                     android:singleLine="true"
                     />
             </com.google.android.material.textfield.TextInputLayout>
@@ -413,6 +414,7 @@
                     android:textColor="@color/primaryDarkColor"
                     android:inputType="number"
                     android:imeOptions="actionNext"
+                    android:nextFocusUp="@id/memo"
                     android:singleLine="true"
                     />
             </com.google.android.material.textfield.TextInputLayout>

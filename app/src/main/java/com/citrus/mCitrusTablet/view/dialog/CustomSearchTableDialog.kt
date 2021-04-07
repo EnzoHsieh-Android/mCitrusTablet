@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.model.vo.*
+import com.citrus.mCitrusTablet.util.Constants
 import com.citrus.mCitrusTablet.util.ui.BaseDialogFragment
 import com.citrus.mCitrusTablet.view.adapter.OtherSeatAdapter
 import com.citrus.mCitrusTablet.view.adapter.OtherTimeAdapter
@@ -66,7 +67,6 @@ class CustomSearchTableDialog(
             when(i){
                 R.id.rb_people -> {
                     type = "CusNum"
-                    tv_people.visibility = View.VISIBLE
                     et_floor.visibility = View.INVISIBLE
                     et_room.visibility = View.GONE
                     et_floor.text.clear()
@@ -75,7 +75,6 @@ class CustomSearchTableDialog(
                 }
                 R.id.rb_seat -> {
                     type = "Seat"
-                    tv_people.visibility = View.VISIBLE
                     et_floor.visibility = View.VISIBLE
                     et_room.visibility = View.VISIBLE
                     clearView()
@@ -83,30 +82,34 @@ class CustomSearchTableDialog(
             }
         }
 
-        llDate.setOnClickListener {
-            mContext?.let {
-                CustomDatePickerDialog(
-                    it,
-                    CalendarType.NoTimePickerForSearchReservation,
-                    CalendarPickerView.SelectionMode.SINGLE,
-               "",
-                  ""
-                ) { _, startTime, endTime, _ , _ , _->
-                    llDate.text = startTime
-                }.show(it.supportFragmentManager, "CustomDatePickerDialog")
+
+        llDate.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                activity?.let {
+                    CustomDatePickerDialog(
+                        it,
+                        CalendarType.NoTimePickerForSearchReservation,
+                        CalendarPickerView.SelectionMode.SINGLE,
+                        Constants.defaultTimeStr,
+                        ""
+                    ) { _, startTime, _, _, _, _ ->
+                        llDate.setText(startTime)
+                    }.show(it.supportFragmentManager, "CustomDatePickerDialog")
+                }
             }
+            llDate.clearFocus()
         }
 
-        tv_people.setOnClickListener {
-            clearView()
-            mContext?.let {
-                CustomNumberPickerDialog() { adultCount, childCount, totalCount ->
-                    tv_people.text = totalCount
+
+        seat.setOnFocusChangeListener { _ , hasFocus ->
+            if(hasFocus){
+                CustomNumberPickerDialog { adultCount, childCount, totalCount ->
+                    seat.setText(totalCount,false)
                     this.adultCount = adultCount
                     this.childCount = childCount
-                }.show(it.supportFragmentManager, "CustomNumberPickerDialog")
+                }.show(requireActivity().supportFragmentManager, "CustomNumberPickerDialog")
+                seat.clearFocus()
             }
-
         }
 
 
@@ -118,8 +121,9 @@ class CustomSearchTableDialog(
                 return@setOnClickListener
             }
 
-            if (tv_people.text.toString() == getString(R.string.number)) {
-                YoYo.with(Techniques.Shake).duration(1000).playOn(tv_people)
+            if (seat.text.toString() == getString(R.string.number)) {
+                YoYo.with(Techniques.Shake).duration(1000).playOn(seatTextInputLayout)
+                YoYo.with(Techniques.Shake).duration(1000).playOn(seat)
                 toast(R.string.submitErrorMsg)
                 return@setOnClickListener
             }
@@ -142,7 +146,7 @@ class CustomSearchTableDialog(
             jsonStr = if(type == "Seat"){
                 Gson().toJson(PostToGetOrderDateBySeat(prefs.rsno,formattedDate,et_floor.text.toString(),et_room.text.toString()))
             }else{
-                Gson().toJson(PostToGetOrderDateByCusNum(prefs.rsno,formattedDate,tv_people.text.toString().toInt()))
+                Gson().toJson(PostToGetOrderDateByCusNum(prefs.rsno,formattedDate,seat.text.toString().toInt()))
             }
 
             showLoadingDialog()
@@ -161,7 +165,7 @@ class CustomSearchTableDialog(
                         title[0],
                         item,
                         onButtonClick = { timeStr ->
-                            onSearchListener(timeStr,tv_people.text.toString(), if(type=="CusNum") "0" else et_floor.text.toString()+"-"+et_room.text.toString(),adultCount,childCount)
+                            onSearchListener(timeStr,seat.text.toString(), if(type=="CusNum") "0" else et_floor.text.toString()+"-"+et_room.text.toString(),adultCount,childCount)
                             dismiss()
                         }
                     )

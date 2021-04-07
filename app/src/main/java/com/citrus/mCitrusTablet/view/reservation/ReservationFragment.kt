@@ -1,5 +1,6 @@
 package com.citrus.mCitrusTablet.view.reservation
 
+import android.app.Application
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -83,6 +84,7 @@ class ReservationFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        context?.let { reservationFragmentViewModel.setContext(it) }
         _binding = FragmentReservationBinding.bind(view)
         initView()
         initObserver()
@@ -209,7 +211,7 @@ class ReservationFragment : BaseFragment() {
                         it,
                         CalendarType.NoTimePickerForSearchReservation,
                         mode,
-                        reservationFragmentViewModel.dateRange.value?.get(0) ?: "",
+                        reservationFragmentViewModel.dateRange.value?.get(0) ?: defaultTimeStr,
                         reservationFragmentViewModel.dateRange.value?.get(1) ?: ""
                     ) { _, startTime, endTime, _ ,_ , _->
                         reservationFragmentViewModel.setDateArray(arrayOf(startTime, endTime))
@@ -226,7 +228,7 @@ class ReservationFragment : BaseFragment() {
                         it,
                         CalendarType.OneTimePickerForReservation,
                         mode,
-                        reservationFragmentViewModel.dateRange.value?.get(0) ?: "",
+                        reservationFragmentViewModel.dateRange.value?.get(0) ?: defaultTimeStr,
                         reservationFragmentViewModel.dateRange.value?.get(1) ?: ""
                     ) { cusCount, startTime, _, _ ,adultCount, childCount ->
                         searchSeat(cusCount, startTime, "", true,adultCount,childCount)

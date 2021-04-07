@@ -92,7 +92,8 @@ interface ApiService {
         @Url url: String,
         @Field("email") email: String,
         @Field("htmlBody") htmlBody: String,
-        @Field("subject") subject: String
+        @Field("subject") subject: String,
+        @Field("fromName") fromName: String
     ): ApiResponse<ReservationUpdateStatus>
 
 

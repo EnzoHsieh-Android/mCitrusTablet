@@ -2,6 +2,7 @@ package com.citrus.mCitrusTablet.view.reservation
 
 
 import android.content.Context
+import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -18,7 +19,6 @@ import com.citrus.mCitrusTablet.util.Constants.inputFormat
 import com.citrus.mCitrusTablet.util.HideCheck
 import com.citrus.mCitrusTablet.util.MailContentBuild
 import com.citrus.mCitrusTablet.util.SingleLiveEvent
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
@@ -29,10 +29,11 @@ import java.text.SimpleDateFormat
 enum class SortOrder { BY_LESS, BY_TIME, BY_MORE }
 enum class CancelFilter { SHOW_CANCELLED, HIDE_CANCELLED }
 class ReservationViewModel @ViewModelInject constructor(
-    private val model: Repository,
-    @ApplicationContext val context: Context
+    private val model: Repository
 ) :
     ViewModel() {
+
+    private lateinit var context:Context
 
     private var serverDomain =
         "https://" + prefs.severDomain
@@ -484,7 +485,8 @@ class ReservationViewModel @ViewModelInject constructor(
                             sendMail(
                                 dataPostToSet.reservation.email,
                                 mailText,
-                                subject
+                                subject,
+                                "Citrus"
                             )
                         }
 
@@ -496,13 +498,14 @@ class ReservationViewModel @ViewModelInject constructor(
 
 
     /**傳送mail*/
-    private fun sendMail(email: String, msg: String, subject: String) {
+    private fun sendMail(email: String, msg: String, subject: String ,fromName:String) {
         viewModelScope.launch {
             model.sendMail(
                 Constants.SEND_MAIL,
                 email,
                 msg,
-                subject
+                subject,
+                fromName
             ).collect {
                 Timber.d("smsStatus%s", it.toString())
             }
@@ -642,6 +645,10 @@ class ReservationViewModel @ViewModelInject constructor(
     override fun onCleared() {
         stopFetchJob()
         super.onCleared()
+    }
+
+    fun setContext(context:Context){
+        this.context = context
     }
 
 }

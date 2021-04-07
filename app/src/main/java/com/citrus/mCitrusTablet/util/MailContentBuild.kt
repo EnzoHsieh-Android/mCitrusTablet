@@ -1,11 +1,14 @@
 package com.citrus.mCitrusTablet.util
 
 import android.content.Context
+import android.util.Log
 import com.citrus.mCitrusTablet.R
+import com.citrus.mCitrusTablet.di.resource
 
 
 open class MailContentBuild(context: Context) {
-    var context = context
+
+    var mailContext = context
 
     fun genericMsg(
         storePic: String,
@@ -45,8 +48,7 @@ open class MailContentBuild(context: Context) {
     }
 
 
-
     fun getString(id:Int):String{
-        return context.getString(id)
+        return mailContext.resources.getString(id)
     }
 }

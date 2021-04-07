@@ -228,10 +228,124 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
+        <LinearLayout
+            android:id="@+id/timeBlock"
+            android:layout_width="@dimen/dp_125"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/horizontal_TimeStr40"
+            app:layout_constraintBottom_toTopOf="@+id/horizontal_TimeStr50"
+            android:orientation="vertical"
+            android:gravity="center"
+            >
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:id="@+id/timeTextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_marginBottom="@dimen/dp_5"
+                android:hint="@string/select_time"
+                app:startIconDrawable="@drawable/ic_baseline_access_time_filled_24">
+
+                <AutoCompleteTextView
+                    android:id="@+id/time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:paddingTop="@dimen/dp_2"
+                    android:paddingBottom="@dimen/dp_2"
+                    android:textSize="@dimen/sp_12"
+                    android:textStyle="bold"
+                    android:textColor="@color/primaryDarkColor"
+                    android:inputType="none"
+                    android:imeOptions="actionDone"
+                    android:singleLine="true"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
 
 
+        <LinearLayout
+            android:id="@+id/typeBlock"
+            android:layout_width="@dimen/dp_125"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/horizontal_TimeStr50"
+            app:layout_constraintBottom_toTopOf="@+id/horizontal_TimeStr60"
+            android:orientation="vertical"
+            android:gravity="center"
+            >
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:id="@+id/typeTextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:hint="@string/reportType"
+            app:startIconDrawable="@drawable/ic_baseline_menu_book_24">
+
+            <AutoCompleteTextView
+                android:id="@+id/reportType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:paddingTop="@dimen/dp_2"
+                android:paddingBottom="@dimen/dp_2"
+                android:textSize="@dimen/sp_12"
+                android:textStyle="bold"
+                android:textColor="@color/primaryDarkColor"
+                android:inputType="none"
+                android:imeOptions="actionDone"
+                android:singleLine="true"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
 
 
+        <LinearLayout
+            android:id="@+id/showTypeBlock"
+            android:layout_width="@dimen/dp_125"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/horizontal_TimeStr60"
+            app:layout_constraintBottom_toTopOf="@+id/horizontal_TimeStr70"
+            android:orientation="vertical"
+            android:gravity="center"
+            >
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:id="@+id/showTypeTextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_marginBottom="@dimen/dp_5"
+                android:hint="@string/showType"
+                app:startIconDrawable="@drawable/ic_baseline_stacked_bar_chart_24">
+
+                <AutoCompleteTextView
+                    android:id="@+id/showType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:paddingTop="@dimen/dp_2"
+                    android:paddingBottom="@dimen/dp_2"
+                    android:textSize="@dimen/sp_12"
+                    android:textStyle="bold"
+                    android:textColor="@color/primaryDarkColor"
+                    android:inputType="none"
+                    android:imeOptions="actionDone"
+                    android:singleLine="true"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/horizontal_TimeStr20"

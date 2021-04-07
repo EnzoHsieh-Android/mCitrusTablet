@@ -91,9 +91,18 @@
     <string name="AnoteForRes">預約資訊</string>
     <string name="at">用餐時間</string>
     <string name="gustertip">位</string>
+    <string name="reportType">報表類型</string>
+    <string name="showType">呈現類型</string>
+    <string name="resReport">訂位報表</string>
+    <string name="waitReport">候位報表</string>
 
     <string-array name="reportType">
         <item>訂位</item>
         <item>候位</item>
+    </string-array>
+
+    <string-array name="showType">
+        <item>圖表</item>
+        <item>文字</item>
     </string-array>
 </resources>

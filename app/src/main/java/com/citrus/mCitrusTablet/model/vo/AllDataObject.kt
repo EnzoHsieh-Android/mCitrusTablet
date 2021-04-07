@@ -87,10 +87,10 @@ data class Wait (
     val storeID: Long,
 
     @SerializedName("ReservationTime")
-    val reservationTime: String,
+    var reservationTime: String,
 
     @SerializedName("cust_num")
-    val custNum: Long,
+    val custNum: Int,
 
     val mName: String,
 
@@ -104,16 +104,16 @@ data class Wait (
     var status: String,
 
     @SerializedName("MaleCount")
-    val maleCount: Long,
+    val maleCount: Int,
 
     @SerializedName("FemaleCount")
-    val femaleCount: Long,
+    val femaleCount: Int,
 
     @SerializedName("AdultCount")
-    val adultCount: Long,
+    val adultCount: Int,
 
     @SerializedName("KidCount")
-    val kidCount: Long,
+    val kidCount: Int,
 
     @SerializedName("Email")
     val email: String?,

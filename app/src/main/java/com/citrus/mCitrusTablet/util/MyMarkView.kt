@@ -42,10 +42,12 @@ class MyMarkView(
 
         when(index){
             "2" -> {
-                root?.visibility = View.VISIBLE
                 var tag = axisValueFormatter.getFormattedValue(e.getX(), null).toString()
                 for(data in resReportList){
                     if(data.date == tag){
+                        if(data.adult + data.child != 0){
+                            root?.visibility = View.VISIBLE
+                        }
                         msg = context.resources.getString(R.string.adult)+" "+data.adult+" "+context.resources.getString(R.string.child)+" "+data.child
                     }
                 }
@@ -57,6 +59,9 @@ class MyMarkView(
             }
 
             "0" -> {
+                root?.visibility = View.GONE
+            }
+            else -> {
                 root?.visibility = View.GONE
             }
 

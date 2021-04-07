@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         BackgroundLibrary.inject(this)
         super.onCreate(savedInstanceState)
-        updateLanguage(this)
+        updateLanguage(applicationContext)
         setContentView(R.layout.activity_main)
         val navController: NavController
         val navHostFragment =
