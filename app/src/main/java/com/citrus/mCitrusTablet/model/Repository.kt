@@ -5,6 +5,7 @@ import com.citrus.mCitrusTablet.model.api.ApiService
 import com.citrus.mCitrusTablet.model.vo.*
 import com.citrus.mCitrusTablet.util.Constants
 import com.google.gson.Gson
+import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.suspendOnSuccess
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
@@ -112,6 +113,8 @@ class Repository @Inject constructor(private val apiService: ApiService) {
             if (data?.status != 0) {
                 emit(data!!.data)
             }
+        }.onException {
+
         }
     }.flowOn(Dispatchers.IO)
 

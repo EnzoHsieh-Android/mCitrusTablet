@@ -26,10 +26,10 @@ data class Info (
     val businessEndHours: String,
 
     @SerializedName("Longitude")
-    val longitude: Long,
+    val longitude: Double,
 
     @SerializedName("Latitude")
-    val latitude: Long,
+    val latitude: Double,
 
     @SerializedName("Note")
     val note: String,

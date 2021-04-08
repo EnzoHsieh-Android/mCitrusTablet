@@ -29,6 +29,7 @@ class GlobalResponseOperator<T> constructor(
                 when (statusCode) {
                     StatusCode.InternalServerError -> toast("InternalServerError")
                     StatusCode.BadGateway -> toast("BadGateway")
+                    StatusCode.GatewayTimeout -> toast("GatewayTimeout")
                     else -> Timber.d("$statusCode(${statusCode.code}): ${message()}")
                 }
 
@@ -46,7 +47,7 @@ class GlobalResponseOperator<T> constructor(
         withContext(Dispatchers.Main) {
             apiResponse.run {
                 Timber.d(message())
-                //toast(message())
+                toast(message())
             }
         }
     }

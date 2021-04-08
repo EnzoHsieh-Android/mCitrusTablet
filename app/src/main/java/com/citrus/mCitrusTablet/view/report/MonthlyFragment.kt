@@ -27,6 +27,12 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
     private var resReportList = mutableListOf<Report>()
     private var titleEntity = mutableListOf<String>()
 
+    companion object {
+        fun newInstance(): MonthlyFragment {
+            return MonthlyFragment()
+        }
+    }
+
     override fun onResume() {
         reportViewModel.setLocationPageType(ReportRange.BY_MONTHLY)
         super.onResume()

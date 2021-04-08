@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat
 
 enum class SortOrder { BY_LESS, BY_TIME, BY_MORE }
 enum class CancelFilter { SHOW_CANCELLED, HIDE_CANCELLED }
+enum class CusNumType { SHOW_TOTAL, SHOW_DETAIL }
 class ReservationViewModel @ViewModelInject constructor(
     private val model: Repository
 ) :
@@ -120,6 +121,7 @@ class ReservationViewModel @ViewModelInject constructor(
 
     init {
         if (prefs.storeName == "") {
+            Log.e("-----","!!!!!!!")
             fetchStoreInfo()
         }
     }
@@ -300,6 +302,8 @@ class ReservationViewModel @ViewModelInject constructor(
                 serverDomain + Constants.GET_STORE_INFO,
                 prefs.storeId
             ).collect {
+
+                Log.e("------",it.toString())
                 prefs.storePic = it[0].pic
                 prefs.storeName = it[0].storeName
                 prefs.rsno = it[0].rsno
@@ -649,6 +653,11 @@ class ReservationViewModel @ViewModelInject constructor(
 
     fun setContext(context:Context){
         this.context = context
+    }
+
+    fun changeCusNum() {
+        isReload = true
+        allDataReorganization(storageList)
     }
 
 }

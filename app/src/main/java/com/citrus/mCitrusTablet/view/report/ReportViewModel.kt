@@ -153,7 +153,11 @@ class ReportViewModel @ViewModelInject constructor(private val model: Repository
 
                 when (locationPageType.value) {
                     ReportRange.BY_DAILY -> {
+                        if(originalList.isNotEmpty()) {
                             _dailyDetailReportData.postValue(originalList!! as MutableList<Any>)
+                        }else{
+                            _dailyDetailReportData.postValue(mutableListOf())
+                        }
                             _dailyReportTitleData.postValue(titleEntity)
                             _dailyReportData.postValue(reportList)
                     }

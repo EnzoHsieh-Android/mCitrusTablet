@@ -182,6 +182,8 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_margin="@dimen/dp_10"
+        android:id="@+id/rvReport"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         app:layout_constraintStart_toEndOf="@+id/middleLine"

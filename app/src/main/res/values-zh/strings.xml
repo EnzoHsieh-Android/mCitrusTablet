@@ -95,7 +95,8 @@
     <string name="showType">呈现類型</string>
     <string name="resReport">订位报表</string>
     <string name="waitReport">候位报表</string>
-
+    <string name="showTotal">总人数</string>
+    <string name="showDetail">详细人数</string>
     <string-array name="reportType">
         <item>订位</item>
         <item>候位</item>

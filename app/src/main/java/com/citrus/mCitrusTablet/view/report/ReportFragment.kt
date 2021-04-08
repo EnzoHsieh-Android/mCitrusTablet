@@ -1,6 +1,7 @@
 package com.citrus.mCitrusTablet.view.report
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.ArrayAdapter
@@ -58,6 +59,7 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
     private fun initView() {
         binding.apply {
             binding.reportTitle.text = resources.getString(R.string.resReport)
+            binding.viewPager.offscreenPageLimit = 1
             binding.viewPager.adapter = CollectionAdapter(requireParentFragment())
 
             TabLayoutMediator(
@@ -93,12 +95,12 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
                 when (position) {
                     0 -> {
                         showTypeTextInputLayout.startIconDrawable =
-                            resources.getDrawable(R.drawable.ic_baseline_stacked_bar_chart_24)
+                            resources.getDrawable(R.drawable.ic_baseline_stacked_bar_chart_24,null)
                         reportViewModel.setShowType(ShowType.BY_CHART)
                     }
                     1 -> {
                         showTypeTextInputLayout.startIconDrawable =
-                            resources.getDrawable(R.drawable.ic_baseline_text_format_24)
+                            resources.getDrawable(R.drawable.ic_baseline_text_format_24,null)
                         reportViewModel.setShowType(ShowType.BY_TEXT)
                     }
                 }
@@ -132,19 +134,24 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
         override fun getItemCount(): Int = 3
 
         override fun createFragment(position: Int): Fragment {
-            // Return a NEW fragment instance in createFragment(int)
-            when (position) {
-                0 -> return DailyFragment()
-                1 -> return WeeklyFragment()
-                2 -> return MonthlyFragment()
+            return when (position) {
+                0 -> DailyFragment.newInstance()
+                1 -> WeeklyFragment.newInstance()
+                2 -> MonthlyFragment.newInstance()
+                else -> DailyFragment.newInstance()
             }
-            return DailyFragment()
         }
+
     }
 
 
     override fun onDestroyView() {
+        _binding = null
         reportViewModel.setTime(Constants.defaultTimeStr)
         super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 }

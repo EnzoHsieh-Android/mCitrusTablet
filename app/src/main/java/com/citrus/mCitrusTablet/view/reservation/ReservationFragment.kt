@@ -52,7 +52,7 @@ class ReservationFragment : BaseFragment() {
     private var _binding: FragmentReservationBinding? = null
     private val binding get() = _binding!!
 
-    lateinit var arrayAdapter: Adapter
+    var arrayAdapter: Adapter? = null
 
     private var mode = CalendarPickerView.SelectionMode.SINGLE
     private val itemPerLine: Int = 1
@@ -65,6 +65,7 @@ class ReservationFragment : BaseFragment() {
     private var isHideCancelled = false
     private var isSwapEmail = false
     private var filterType = CancelFilter.SHOW_CANCELLED
+    private var cusNumType = CusNumType.SHOW_DETAIL
 
     private var forDeleteData = mutableListOf<Any>()
     private var seatData = mutableListOf<String>()
@@ -396,6 +397,7 @@ class ReservationFragment : BaseFragment() {
                                 requireActivity(),
                                 timeTitle[index],
                                 filterType,
+                                cusNumType,
                                 index,
                                 storeGuestsList[index],
                                 onItemClick = { Guest ->
@@ -416,6 +418,10 @@ class ReservationFragment : BaseFragment() {
                                         )
                                     }
                                     dialog!!.show()
+                                },
+                                onChangeTypeClick = { value ->
+                                    cusNumType = value
+                                    reservationFragmentViewModel.changeCusNum()
                                 }
                             )
                         )
@@ -575,6 +581,7 @@ class ReservationFragment : BaseFragment() {
     override fun onDestroyView() {
         reservationAdapter.removeAllSections()
         binding.reservationRv.adapter = null
+        arrayAdapter = null
         _binding = null
         reservationFragmentViewModel.onDetachView()
         super.onDestroyView()

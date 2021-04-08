@@ -58,6 +58,54 @@
 
     </LinearLayout>
 
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/changeType"
+        app:layout_constraintStart_toStartOf="@id/people_guildLine_start"
+        app:layout_constraintEnd_toEndOf="@id/people_guildLine_end"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="@dimen/dp_10"
+            android:layout_height="@dimen/dp_10"
+            android:src="@drawable/exchange"
+            android:scaleType="fitCenter"
+            />
+        <TextView
+            android:id="@+id/tv_changeType"
+            android:layout_marginStart="@dimen/dp_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/showDetail"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="@dimen/sp_6"
+            />
+
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/people_guildLine_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.36" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/people_guildLine_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.54" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/rv_title_guideline"
         android:layout_width="wrap_content"

@@ -103,6 +103,8 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:visibility="visible"
+                android:id="@+id/adultNum"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -135,6 +137,8 @@
 
 
             <LinearLayout
+                android:visibility="visible"
+                android:id="@+id/childNum"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -172,7 +176,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/primaryLightColor"
                 android:text="3"
-                android:textSize="@dimen/sp_14"
+                android:textSize="@dimen/sp_16"
                 android:textStyle="bold" />
         </LinearLayout>
 

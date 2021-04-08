@@ -5,6 +5,7 @@ import android.graphics.Point
 import android.util.Log
 import android.view.Gravity
 import android.view.View
+import android.widget.ArrayAdapter
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.citrus.mCitrusTablet.R
@@ -30,16 +31,16 @@ import java.text.SimpleDateFormat
 class CustomSearchTableDialog(
     private var mContext: FragmentActivity,
     private var viewModel: ReservationViewModel,
-    private var onSearchListener: (date:String,cusNum:String,seat:String,adultCount:String,childCount:String) -> Unit
+    private var onSearchListener: (date: String, cusNum: String, seat: String, adultCount: String, childCount: String) -> Unit
 ) : BaseDialogFragment() {
     private var otherTimeAdapter = SectionedRecyclerViewAdapter()
     private var itemPerLine = 6
     private var title = mutableListOf<String>()
     private var item = mutableListOf<OrderDateDatum>()
 
-    var type:String = "CusNum"
-    var adultCount:String ="0"
-    var childCount:String ="0"
+    var type: String = "CusNum"
+    var adultCount: String = "0"
+    var childCount: String = "0"
 
     override fun getLayoutId(): Int {
         return R.layout.dialog_search_table
@@ -47,10 +48,17 @@ class CustomSearchTableDialog(
 
     override fun initView() {
         setWindowWidthPercent()
-        floorBlock.visibility = View.GONE
-        roomBlock.visibility = View.GONE
 
-            searchTimeRv.apply {
+//        val name = resources.getStringArray(R.array.OtherDemo)
+//        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, name)
+//        language_picker.setAdapter(arrayAdapter)
+//
+//        val count = resources.getStringArray(R.array.OtherDemo2)
+//        val arrayAdapter2 = ArrayAdapter(requireContext(), R.layout.dropdown_item, count)
+//        people_picker.setAdapter(arrayAdapter2)
+
+
+        searchTimeRv.apply {
             val glm = GridLayoutManager(mContext, itemPerLine)
             glm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
@@ -66,7 +74,7 @@ class CustomSearchTableDialog(
 
 
         rb_group.setOnCheckedChangeListener { _, i ->
-            when(i){
+            when (i) {
                 R.id.rb_people -> {
                     type = "CusNum"
                     floorBlock.visibility = View.GONE
@@ -83,6 +91,25 @@ class CustomSearchTableDialog(
                 }
             }
         }
+
+
+//        people_picker.setOnItemClickListener { _, _, position, _ ->
+//
+//            when (position) {
+//                0 -> {
+//                    seat.setText("1", false)
+//                }
+//                1 -> {
+//                    seat.setText("2", false)
+//                }
+//                2 -> {
+//                    seat.setText("3", false)
+//                }
+//                3 -> {
+//                    seat.setText("4", false)
+//                }
+//            }
+//        }
 
 
         llDate.setOnFocusChangeListener { _, hasFocus ->
@@ -103,10 +130,10 @@ class CustomSearchTableDialog(
         }
 
 
-        seat.setOnFocusChangeListener { _ , hasFocus ->
-            if(hasFocus){
+        seat.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
                 CustomNumberPickerDialog { adultCount, childCount, totalCount ->
-                    seat.setText(totalCount,false)
+                    seat.setText(totalCount, false)
                     this.adultCount = adultCount
                     this.childCount = childCount
                 }.show(requireActivity().supportFragmentManager, "CustomNumberPickerDialog")
@@ -131,8 +158,8 @@ class CustomSearchTableDialog(
                 return@setOnClickListener
             }
 
-            if(type == "Seat"){
-                if (et_floor.text.toString() == "" ||et_room.text.toString() == "") {
+            if (type == "Seat") {
+                if (et_floor.text.toString() == "" || et_room.text.toString() == "") {
                     YoYo.with(Techniques.Shake).duration(1000).playOn(et_floor)
                     YoYo.with(Techniques.Shake).duration(1000).playOn(et_room)
                     toast(R.string.submitErrorMsg)
@@ -146,10 +173,23 @@ class CustomSearchTableDialog(
             val date = inputFormat.parse(llDate.text.toString())
             val formattedDate = outputFormat.format(date)
 
-            jsonStr = if(type == "Seat"){
-                Gson().toJson(PostToGetOrderDateBySeat(prefs.rsno,formattedDate,et_floor.text.toString(),et_room.text.toString()))
-            }else{
-                Gson().toJson(PostToGetOrderDateByCusNum(prefs.rsno,formattedDate,seat.text.toString().toInt()))
+            jsonStr = if (type == "Seat") {
+                Gson().toJson(
+                    PostToGetOrderDateBySeat(
+                        prefs.rsno,
+                        formattedDate,
+                        et_floor.text.toString(),
+                        et_room.text.toString()
+                    )
+                )
+            } else {
+                Gson().toJson(
+                    PostToGetOrderDateByCusNum(
+                        prefs.rsno,
+                        formattedDate,
+                        seat.text.toString().toInt()
+                    )
+                )
             }
 
             showLoadingDialog()
@@ -168,7 +208,13 @@ class CustomSearchTableDialog(
                         title[0],
                         item,
                         onButtonClick = { timeStr ->
-                            onSearchListener(timeStr,seat.text.toString(), if(type=="CusNum") "0" else et_floor.text.toString()+"-"+et_room.text.toString(),adultCount,childCount)
+                            onSearchListener(
+                                timeStr,
+                                seat.text.toString(),
+                                if (type == "CusNum") "0" else et_floor.text.toString() + "-" + et_room.text.toString(),
+                                adultCount,
+                                childCount
+                            )
                             dismiss()
                         }
                     )
@@ -177,7 +223,7 @@ class CustomSearchTableDialog(
 
                 animation_resultNotFound.visibility = View.GONE
                 searchTimeRv.visibility = View.VISIBLE
-            }else{
+            } else {
                 clearView()
                 activity?.let {
                     CustomAlertDialog(
@@ -194,15 +240,13 @@ class CustomSearchTableDialog(
         })
 
 
-
-
     }
 
     override fun initAction() {
     }
 
 
-    private fun clearView(){
+    private fun clearView() {
         otherTimeAdapter.removeAllSections()
         animation_resultNotFound.visibility = View.VISIBLE
         searchTimeRv.visibility = View.GONE

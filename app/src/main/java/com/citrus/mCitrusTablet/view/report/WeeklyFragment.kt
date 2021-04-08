@@ -1,6 +1,7 @@
 package com.citrus.mCitrusTablet.view.report
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -26,6 +27,12 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
     private val binding get() = _binding!!
     private var resReportList = mutableListOf<Report>()
     private var titleEntity = mutableListOf<String>()
+
+    companion object {
+        fun newInstance(): WeeklyFragment {
+            return WeeklyFragment()
+        }
+    }
 
     override fun onResume() {
         reportViewModel.setLocationPageType(ReportRange.BY_WEEKLY)

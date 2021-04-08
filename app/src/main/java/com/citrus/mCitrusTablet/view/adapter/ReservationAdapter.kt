@@ -2,7 +2,6 @@ package com.citrus.mCitrusTablet.view.adapter
 
 
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -14,23 +13,25 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.model.vo.ReservationGuests
 import com.citrus.mCitrusTablet.view.reservation.CancelFilter
+import com.citrus.mCitrusTablet.view.reservation.CusNumType
 import io.github.luizgrp.sectionedrecyclerviewadapter.Section
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters
 import kotlinx.android.synthetic.main.rv_reservation_item.view.*
 import kotlinx.android.synthetic.main.rv_title_item.view.*
 import java.text.SimpleDateFormat
-import kotlin.math.roundToInt
 
 
 class ReservationAdapter(
     val activity: FragmentActivity,
     private val header: String,
     private val cancelFilter: CancelFilter,
+    private var cusNumType: CusNumType,
     private val index:Int,
     private val item: List<ReservationGuests>,
     private val onItemClick: (ReservationGuests) -> Unit,
     private val onButtonClick: (ReservationGuests) -> Unit,
     private val onFilterClick: () -> Unit,
+    private val onChangeTypeClick: (CusNumType) -> Unit
 ) :
     Section(
         SectionParameters.builder()
@@ -57,16 +58,34 @@ class ReservationAdapter(
 
         if(index == 0){
             when(cancelFilter){
-                CancelFilter.SHOW_CANCELLED -> {headerHolder.tv_filterType.text = activity.getString(R.string.filter_cancelled)}
-                CancelFilter.HIDE_CANCELLED -> {headerHolder.tv_filterType.text = activity.getString(R.string.filter_cancelled_H)}
+                CancelFilter.SHOW_CANCELLED -> {headerHolder.tvFilterType.text = activity.getString(R.string.filter_cancelled)}
+                CancelFilter.HIDE_CANCELLED -> {headerHolder.tvFilterType.text = activity.getString(R.string.filter_cancelled_H)}
             }
             headerHolder.statusFilter.visibility = View.VISIBLE
             headerHolder.statusFilter.setOnClickListener {
                 onFilterClick()
             }
 
+
+            var changeValue:CusNumType = when(cusNumType){
+                CusNumType.SHOW_DETAIL -> {
+                    headerHolder.tv_changeType.text = activity.resources.getString(R.string.showDetail)
+                    CusNumType.SHOW_TOTAL
+                }
+                CusNumType.SHOW_TOTAL -> {
+                    headerHolder.tv_changeType.text = activity.resources.getString(R.string.showTotal)
+                    CusNumType.SHOW_DETAIL
+                }
+            }
+            headerHolder.changeType.visibility = View.VISIBLE
+            headerHolder.changeType.setOnClickListener {
+                onChangeTypeClick(changeValue)
+                cusNumType = changeValue
+            }
+
         }else{
             headerHolder.statusFilter.visibility = View.GONE
+            headerHolder.changeType.visibility = View.GONE
         }
 
         headerHolder.headerText.text = header
@@ -84,6 +103,20 @@ class ReservationAdapter(
 
 
         var guest = item[position]
+
+
+        when(cusNumType){
+            CusNumType.SHOW_DETAIL -> {
+                itemHolder.adultBlock.visibility = View.VISIBLE
+                itemHolder.childBlock.visibility = View.VISIBLE
+                itemHolder.itemCount.visibility = View.GONE
+            }
+            CusNumType.SHOW_TOTAL -> {
+                itemHolder.adultBlock.visibility = View.GONE
+                itemHolder.childBlock.visibility = View.GONE
+                itemHolder.itemCount.visibility = View.VISIBLE
+            }
+        }
 
         itemHolder.itemRoot.setBackgroundColor(Color.WHITE)
         itemHolder.itemName.text = guest.mName
@@ -190,7 +223,9 @@ class ReservationAdapter(
     internal inner class HeaderViewHolder(itemView: View) : ViewHolder(itemView) {
         val headerText: TextView = itemView.time
         val statusFilter:LinearLayout = itemView.statusFilter
-        val tv_filterType:TextView = itemView.tv_filterType
+        val tvFilterType:TextView = itemView.tv_filterType
+        val changeType:LinearLayout = itemView.changeType
+        val tv_changeType:TextView = itemView.tv_changeType
     }
 
     internal inner class ItemViewHolder(itemView: View) : ViewHolder(itemView) {
@@ -211,6 +246,8 @@ class ReservationAdapter(
         val tvUpdateTime:TextView = itemView.tv_updateTime
         val tvStatus:TextView = itemView.tv_status
         val hintNew:ImageView = itemView.new_hint
+        val adultBlock:LinearLayout = itemView.adultNum
+        val childBlock:LinearLayout = itemView.childNum
     }
 
 }

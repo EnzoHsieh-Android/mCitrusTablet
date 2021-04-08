@@ -93,6 +93,7 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
                 if (applyChangesToSharedPref()) {
                     if (hasChange) {
                         sharedViewModel.hasSetLanguage()
+                        prefs.storeName = ""
                     }
                     dismiss()
                 }
