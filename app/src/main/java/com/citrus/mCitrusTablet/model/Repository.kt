@@ -193,4 +193,10 @@ class Repository @Inject constructor(private val apiService: ApiService) {
     }.flowOn(Dispatchers.IO)
 
 
+    fun getShortURL(url: String, address:String) = flow {
+        apiService.getShortURL(url,address).suspendOnSuccess {
+            emit(this.response.body().toString())
+        }
+    }.flowOn(Dispatchers.IO)
+
 }

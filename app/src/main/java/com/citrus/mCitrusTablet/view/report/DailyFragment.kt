@@ -93,7 +93,6 @@ class DailyFragment : Fragment(R.layout.fragment_daily) {
         })
 
         reportViewModel.locationPageType.reObserve(viewLifecycleOwner, {
-            Log.e("fragment hash code",this.hashCode().toString())
             reportViewModel.reFetch()
         })
     }

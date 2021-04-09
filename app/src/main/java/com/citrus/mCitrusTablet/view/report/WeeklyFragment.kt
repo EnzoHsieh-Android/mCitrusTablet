@@ -51,6 +51,7 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
     }
 
     private fun initObserver() {
+
         reportViewModel.weeklyReportTitleData.observe(viewLifecycleOwner, { titleList ->
             titleEntity = titleList
         })
@@ -140,6 +141,7 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
                 drawValue
             }
             setValueTextSize(valueSp.toFloat())
+            setDrawValues(false)
         }
         var axisValueFormatter =  chart.xAxis.valueFormatter
 

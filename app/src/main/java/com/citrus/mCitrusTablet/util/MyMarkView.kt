@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.model.vo.Report
 import com.github.mikephil.charting.components.MarkerView
@@ -21,7 +22,7 @@ class MyMarkView(
     private val axisValueFormatter: IAxisValueFormatter
 ) : MarkerView(context, R.layout.mark_view) {
     private var tv1: TextView? = null
-    private var root: RelativeLayout? =null
+    private var root: ConstraintLayout? =null
 
     init {
         initView()
@@ -39,27 +40,48 @@ class MyMarkView(
         val values = barEntry.yVals
         var msg =""
 
-
+        var tag = axisValueFormatter.getFormattedValue(e.getX(), null).toString()
         when(index){
             "2" -> {
-                var tag = axisValueFormatter.getFormattedValue(e.getX(), null).toString()
                 for(data in resReportList){
                     if(data.date == tag){
                         if(data.adult + data.child != 0){
                             root?.visibility = View.VISIBLE
+                        }else{
+                            root?.visibility = View.GONE
                         }
-                        msg = context.resources.getString(R.string.adult)+" "+data.adult+" "+context.resources.getString(R.string.child)+" "+data.child
+                        msg = context.resources.getString(R.string.check)+" "+data.check+ "組"+"\n"+ context.resources.getString(R.string.adult)+" "+data.adult+" "+context.resources.getString(R.string.child)+" "+data.child
                     }
                 }
                 tv1?.text = msg
             }
 
             "1" -> {
-                root?.visibility = View.GONE
+                for(data in resReportList){
+                    if(data.date == tag){
+                        if(data.wait != 0){
+                            root?.visibility = View.VISIBLE
+                        }else{
+                            root?.visibility = View.GONE
+                        }
+                        msg = context.resources.getString(R.string.Waiting)+" "+data.wait+" "+"組"
+                    }
+                }
+                tv1?.text = msg
             }
 
             "0" -> {
-                root?.visibility = View.GONE
+                for(data in resReportList){
+                    if(data.date == tag){
+                        if(data.cancel != 0){
+                            root?.visibility = View.VISIBLE
+                        }else{
+                            root?.visibility = View.GONE
+                        }
+                        msg = context.resources.getString(R.string.cancel)+" "+data.cancel+" "+"組"
+                    }
+                }
+                tv1?.text = msg
             }
             else -> {
                 root?.visibility = View.GONE

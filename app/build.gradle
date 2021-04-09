@@ -70,6 +70,7 @@ dependencies {
     // Retrofit、Sandwich
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-simplexml:$retrofitVersion"
     implementation "com.github.skydoves:sandwich:$sandwichVersion"
 
     // Coroutines

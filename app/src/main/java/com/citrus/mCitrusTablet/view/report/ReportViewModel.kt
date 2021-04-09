@@ -1,7 +1,6 @@
 package com.citrus.mCitrusTablet.view.report
 
 
-import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -142,7 +141,7 @@ class ReportViewModel @ViewModelInject constructor(private val model: Repository
                                 reportList[index].cancel + if (guest.status == Constants.CANCEL) 1 else 0
                             reportList[index].cancel + if (guest.status == Constants.CANCEL) 1 else 0
                             reportList[index].wait =
-                                reportList[index].wait + if (guest.status == Constants.ADD) 1 else 0
+                                reportList[index].wait + if (guest.status == Constants.ADD || guest.status == Constants.NOTICE) 1 else 0
                             reportList[index].check =
                                 reportList[index].check + if (guest.status == Constants.CHECK) 1 else 0
                             reportList[index].date = tempDate
@@ -170,6 +169,7 @@ class ReportViewModel @ViewModelInject constructor(private val model: Repository
                             _monthlyReportData.postValue(reportList)
                     }
                 }
+
             }
         }
 
@@ -201,7 +201,7 @@ class ReportViewModel @ViewModelInject constructor(private val model: Repository
             ReportRange.BY_MONTHLY -> {
                 var standardTime = storageTime
                 startTime = countDays(Constants.dateFormatSql.parse(standardTime), -15)
-                endTime = countDays(Constants.dateFormatSql.parse(startTime), 15)
+                endTime = countDays(Constants.dateFormatSql.parse(standardTime), 15)
             }
         }
 

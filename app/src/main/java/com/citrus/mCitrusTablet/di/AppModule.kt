@@ -3,6 +3,7 @@ package com.citrus.mCitrusTablet.di
 
 
 import com.citrus.mCitrusTablet.model.api.ApiService
+import com.citrus.mCitrusTablet.util.JsonOrXmlConverterFactory
 import com.skydoves.sandwich.coroutines.CoroutinesResponseCallAdapterFactory
 import dagger.Module
 import dagger.Provides
@@ -39,7 +40,7 @@ object AppModule {
             .baseUrl(ApiService.BASE_URL)
             .client(okHttpClient)
             .addCallAdapterFactory(CoroutinesResponseCallAdapterFactory())
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(JsonOrXmlConverterFactory.create())
             .build()
 
     @Provides

@@ -146,8 +146,9 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
 
 
     override fun onDestroyView() {
-        _binding = null
+        reportViewModel.setReportType(ReportType.RESERVATION)
         reportViewModel.setTime(Constants.defaultTimeStr)
+        _binding = null
         super.onDestroyView()
     }
 

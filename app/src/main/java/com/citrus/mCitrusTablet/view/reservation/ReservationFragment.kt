@@ -94,7 +94,7 @@ class ReservationFragment : BaseFragment() {
 
     private fun initView() {
         binding.apply {
-
+            Log.e("fragment hash code",this.hashCode().toString())
             binding.seat.setText("")
 
             date2Day(

@@ -50,42 +50,42 @@
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
-<!--        <LinearLayout-->
-<!--            android:id="@+id/demoBlock"-->
-<!--            android:visibility="visible"-->
-<!--            android:layout_width="@dimen/dp_120"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:orientation="vertical"-->
-<!--            android:layout_marginStart="@dimen/dp_2"-->
-<!--            android:gravity="center"-->
-<!--            >-->
+        <LinearLayout
+            android:id="@+id/demoBlock"
+            android:visibility="visible"
+            android:layout_width="@dimen/dp_120"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/dp_2"
+            android:gravity="center"
+            >
 
-<!--            <com.google.android.material.textfield.TextInputLayout-->
-<!--                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"-->
-<!--                android:id="@+id/lanTextInputLayout"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:hint="選擇設計師"-->
-<!--                app:startIconDrawable="@drawable/ic_baseline_person_24">-->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:id="@+id/lanTextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="選擇設計師"
+                app:startIconDrawable="@drawable/ic_baseline_person_24">
 
-<!--                <AutoCompleteTextView-->
-<!--                    android:id="@+id/language_picker"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:maxLines="1"-->
-<!--                    android:paddingTop="@dimen/dp_2"-->
-<!--                    android:paddingBottom="@dimen/dp_2"-->
-<!--                    android:textSize="@dimen/sp_8"-->
-<!--                    android:textStyle="bold"-->
-<!--                    android:textColor="@color/primaryDarkColor"-->
-<!--                    android:inputType="none"-->
-<!--                    />-->
-<!--            </com.google.android.material.textfield.TextInputLayout>-->
+                <AutoCompleteTextView
+                    android:id="@+id/language_picker"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:paddingTop="@dimen/dp_2"
+                    android:paddingBottom="@dimen/dp_2"
+                    android:textSize="@dimen/sp_8"
+                    android:textStyle="bold"
+                    android:textColor="@color/primaryDarkColor"
+                    android:inputType="none"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
 
-<!--        </LinearLayout>-->
+        </LinearLayout>
 
         <LinearLayout
-            android:visibility="visible"
+            android:visibility="gone"
             android:id="@+id/choseType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -130,41 +130,41 @@
         app:layout_constraintStart_toStartOf="@+id/select_day_hint"
         app:layout_constraintTop_toBottomOf="@+id/select_day_hint">
 
-<!--        <LinearLayout-->
-<!--            android:id="@+id/demoBlock2"-->
-<!--            android:visibility="visible"-->
-<!--            android:layout_width="@dimen/dp_100"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:orientation="vertical"-->
-<!--            android:layout_marginStart="@dimen/dp_2"-->
-<!--            android:gravity="center"-->
-<!--            >-->
-
-<!--            <com.google.android.material.textfield.TextInputLayout-->
-<!--                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"-->
-<!--                android:id="@+id/numTextInputLayout"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:hint="人數"-->
-<!--                app:startIconDrawable="@drawable/ic_baseline_person_add_alt_1_24">-->
-
-<!--                <AutoCompleteTextView-->
-<!--                    android:id="@+id/people_picker"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:maxLines="1"-->
-<!--                    android:paddingTop="@dimen/dp_2"-->
-<!--                    android:paddingBottom="@dimen/dp_2"-->
-<!--                    android:textSize="@dimen/sp_8"-->
-<!--                    android:textStyle="bold"-->
-<!--                    android:textColor="@color/primaryDarkColor"-->
-<!--                    android:inputType="none"-->
-<!--                    />-->
-<!--            </com.google.android.material.textfield.TextInputLayout>-->
-
-<!--        </LinearLayout>-->
         <LinearLayout
+            android:id="@+id/demoBlock2"
             android:visibility="visible"
+            android:layout_width="@dimen/dp_100"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/dp_2"
+            android:gravity="center"
+            >
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:id="@+id/numTextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="人數"
+                app:startIconDrawable="@drawable/ic_baseline_person_add_alt_1_24">
+
+                <AutoCompleteTextView
+                    android:id="@+id/people_picker"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:paddingTop="@dimen/dp_2"
+                    android:paddingBottom="@dimen/dp_2"
+                    android:textSize="@dimen/sp_8"
+                    android:textStyle="bold"
+                    android:textColor="@color/primaryDarkColor"
+                    android:inputType="none"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:visibility="gone"
             android:layout_width="@dimen/dp_100"
             android:layout_height="wrap_content"
             android:gravity="center"

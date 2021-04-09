@@ -176,9 +176,9 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
               for(key in smsQueue){
                   if(guest.tkey == key){
                       if(guest.phone != null && guest.phone != "") {
-                          sendSMS(guest,prefs.storeName + " " + prefs.messageWait + "\n" + guest.url)
+                          shortURL(guest,guest.url,"P",Constants.ADD)
                       }else{
-                          sendMail(guest,prefs.storeName + " " + prefs.messageWait + "\n" + guest.url)
+                          shortURL(guest,guest.url,"M",Constants.ADD)
                       }
                   }
               }
@@ -213,6 +213,36 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
                 "Citrus"
             ).collect {
                 Timber.d("smsStatus%s", it.toString())
+            }
+        }
+    }
+
+    /**縮短網址*/
+    private fun shortURL(guest:Wait,address:String,sendType:String, sendStatus:String) {
+        viewModelScope.launch {
+            model.getShortURL(serverDomain+Constants.GET_SHORT_URL,address).collect { shortURL ->
+                if(shortURL != null && shortURL != ""){
+                    var msg = ""
+
+                    when(sendStatus){
+                        Constants.ADD -> {
+                            msg = prefs.storeName + " " + prefs.messageWait + "\n" + shortURL
+                        }
+                        Constants.NOTICE -> {
+                            msg = prefs.storeName+ " " + prefs.messageNotice + "\n" + shortURL
+                        }
+                    }
+
+
+                    when(sendType){
+                        "P" -> {
+                            sendSMS(guest,msg)
+                        }
+                        "M" -> {
+                            sendMail(guest,msg)
+                        }
+                    }
+                }
             }
         }
     }
@@ -281,11 +311,10 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
                 when (status) {
                     1 -> {
                         if(statusStr == Constants.NOTICE && !undo){
-                            var msg = prefs.storeName+ " " + prefs.messageNotice + "\n" + wait.url
                             if(wait.phone != null && wait.phone != ""){
-                                sendSMS(wait, msg)
+                                shortURL(wait,wait.url,"P",Constants.NOTICE)
                             }else{
-                                sendMail(wait,msg)
+                                shortURL(wait,wait.url,"M",Constants.NOTICE)
                             }
                         }
 

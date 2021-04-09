@@ -47,6 +47,7 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
     }
 
     private fun initObserver() {
+
         reportViewModel.monthlyReportTitleData.observe(viewLifecycleOwner, { titleList ->
             titleEntity = titleList
             Timber.d(titleEntity.toString())
@@ -89,6 +90,7 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
                 value.toInt().toString()
             }
             setValueTextSize(valueSp.toFloat())
+            setDrawValues(false)
         }
 
         chart.invalidate()
