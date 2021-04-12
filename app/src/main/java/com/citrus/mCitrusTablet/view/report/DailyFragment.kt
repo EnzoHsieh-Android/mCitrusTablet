@@ -27,7 +27,7 @@ class DailyFragment : Fragment(R.layout.fragment_daily) {
     private val binding get() = _binding!!
     private var reportType:ReportType = ReportType.RESERVATION
     private val reportAdapter by lazy {
-        ReportAdapter(mutableListOf(), reportType)
+        ReportAdapter(requireContext(),mutableListOf(), reportType)
     }
 
 
@@ -101,6 +101,7 @@ class DailyFragment : Fragment(R.layout.fragment_daily) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        _binding?.rvReport?.adapter = null
         _binding = null
     }
 

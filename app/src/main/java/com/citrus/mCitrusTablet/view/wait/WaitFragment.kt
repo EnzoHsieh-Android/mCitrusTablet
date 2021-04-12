@@ -28,6 +28,7 @@ import com.citrus.mCitrusTablet.view.dialog.CustomAlertDialog
 import com.citrus.mCitrusTablet.view.dialog.CustomFilterCheckBoxDialog
 import com.citrus.mCitrusTablet.view.dialog.CustomNumberPickerDialog
 import com.citrus.mCitrusTablet.view.dialog.CustomOrderDeliveryDialog
+import com.citrus.mCitrusTablet.view.reservation.CusNumType
 import com.citrus.mCitrusTablet.view.reservation.SearchViewStatus
 import com.citrus.mCitrusTablet.view.reservation.TasksEvent
 import com.citrus.util.onQueryTextChanged
@@ -52,6 +53,7 @@ WaitFragment : BaseFragment() {
     private var sortOrderByTime: SortOrder = SortOrder.BY_TIME_MORE
     private var sortOrderByCount: SortOrder = SortOrder.BY_LESS
     private var filterType = Filter.SHOW_ALL
+    private var cusNumType = CusNumType.SHOW_DETAIL
     private var isHideCheck = false
     private var isSwapEmail = false
     private var cusNum = 0
@@ -61,6 +63,7 @@ WaitFragment : BaseFragment() {
     private val waitAdapter by lazy {
         WaitAdapter(
             mutableListOf(),
+            cusNumType,
             requireActivity(),
             onImgClick = { wait ->
                 waitViewModel.itemSelect(wait) },
@@ -157,6 +160,18 @@ WaitFragment : BaseFragment() {
                 dialog!!.show()
             }
 
+
+            changeType.setOnClickListener {
+                cusNumType = when(cusNumType) {
+                    CusNumType.SHOW_DETAIL -> {
+                        CusNumType.SHOW_TOTAL
+                    }
+                    CusNumType.SHOW_TOTAL -> {
+                        CusNumType.SHOW_DETAIL
+                    }
+                }
+              waitAdapter.changeType(cusNumType)
+            }
 
             sortByCount.setOnClickListener {
                 sortOrderByCount = if (sortOrderByCount == SortOrder.BY_LESS) {

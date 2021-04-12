@@ -13,12 +13,13 @@ import com.citrus.mCitrusTablet.databinding.RvWaitItemBinding
 import com.citrus.mCitrusTablet.model.vo.Wait
 import com.citrus.mCitrusTablet.util.AsyncDiffUtil
 import com.citrus.mCitrusTablet.util.Constants
+import com.citrus.mCitrusTablet.view.reservation.CusNumType
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.jetbrains.anko.textColor
 import java.text.SimpleDateFormat
 import java.util.*
 
-class WaitAdapter(var waitList:MutableList<Wait>,@ApplicationContext val context: Context,val onItemClick: (Wait) -> Unit,val onButtonClick: (Wait) -> Unit,val onNoticeClick: (Wait) -> Unit,val onImgClick:(Wait) -> Unit,val onDeliveryClick:(Wait) -> Unit) :RecyclerView.Adapter<WaitAdapter.TasksViewHolder>() {
+class WaitAdapter(var waitList:MutableList<Wait>,var cusNumType: CusNumType  ,@ApplicationContext val context: Context, val onItemClick: (Wait) -> Unit, val onButtonClick: (Wait) -> Unit, val onNoticeClick: (Wait) -> Unit, val onImgClick:(Wait) -> Unit, val onDeliveryClick:(Wait) -> Unit) :RecyclerView.Adapter<WaitAdapter.TasksViewHolder>() {
 
 
 
@@ -36,6 +37,11 @@ class WaitAdapter(var waitList:MutableList<Wait>,@ApplicationContext val context
         }
     }
 
+
+    fun  changeType(cusNumType: CusNumType) {
+        this.cusNumType = cusNumType
+        this.notifyDataSetChanged()
+    }
 
 
     fun update(items: MutableList<Wait>) {
@@ -69,6 +75,20 @@ class WaitAdapter(var waitList:MutableList<Wait>,@ApplicationContext val context
                     newHint.visibility = View.GONE
                 }
                 wait.isNew = false
+
+
+                when(cusNumType){
+                    CusNumType.SHOW_DETAIL -> {
+                        adultNum.visibility = View.VISIBLE
+                        childNum.visibility = View.VISIBLE
+                        count.visibility = View.GONE
+                    }
+                    CusNumType.SHOW_TOTAL -> {
+                        adultNum.visibility = View.GONE
+                        childNum.visibility = View.GONE
+                        count.visibility = View.VISIBLE
+                    }
+                }
 
                 adult.text = wait.adultCount.toString()
                 child.text = wait.kidCount.toString()

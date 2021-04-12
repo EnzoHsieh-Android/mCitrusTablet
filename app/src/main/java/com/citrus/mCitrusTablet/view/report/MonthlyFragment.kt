@@ -4,9 +4,13 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.databinding.FragmentMonthlyBinding
 import com.citrus.mCitrusTablet.model.vo.Report
+import com.citrus.mCitrusTablet.util.MyMarkView
+import com.citrus.mCitrusTablet.view.adapter.ReportAdapter
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -24,8 +28,12 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
     private val reportViewModel: ReportViewModel by activityViewModels()
     private var _binding: FragmentMonthlyBinding? = null
     private val binding get() = _binding!!
+    private var reportType:ReportType = ReportType.RESERVATION
     private var resReportList = mutableListOf<Report>()
     private var titleEntity = mutableListOf<String>()
+    private val reportAdapter by lazy {
+        ReportAdapter(requireContext(),mutableListOf(), reportType)
+    }
 
     companion object {
         fun newInstance(): MonthlyFragment {
@@ -48,21 +56,67 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
 
     private fun initObserver() {
 
+        reportViewModel.reportType.observe(viewLifecycleOwner,{ reportType ->
+            this.reportType = reportType
+        })
+
+        reportViewModel.monthlyDetailReportData.observe(viewLifecycleOwner,{ originalList ->
+            reportAdapter.setList(originalList,reportType)
+        })
+
         reportViewModel.monthlyReportTitleData.observe(viewLifecycleOwner, { titleList ->
             titleEntity = titleList
             Timber.d(titleEntity.toString())
         })
 
         reportViewModel.monthlyReportData.observe(viewLifecycleOwner, { resDataList ->
+            var totalNum = 0
+            var checkNum = 0
+            var adultNum = 0
+            var childNum = 0
+            var cancelNum = 0
+            var notCheckNum = 0
+
+            for(item in resDataList){
+                totalNum += item.total
+                checkNum += item.check
+                adultNum += item.adult
+                childNum += item.child
+                cancelNum += item.cancel
+                notCheckNum += item.wait
+            }
+
+
+            binding.TvTotalNum.text = totalNum.toString() + "組"
+            binding.TvCheckNum.text = checkNum.toString() + "組"
+            binding.TvAdultNum.text = adultNum.toString() + "人"
+            binding.TvChildNum.text = childNum.toString() + "人"
+            binding.TvCancelNum.text = cancelNum.toString() + "組"
+            binding.TvUnCheckNum.text = notCheckNum.toString() + "組"
+
             resReportList = resDataList
-            Timber.d(resReportList.toString())
+            binding.stackedBarChart.clear()
             drawBarChart()
+        })
+
+        reportViewModel.showType.observe(viewLifecycleOwner,{ showType ->
+            when(showType){
+                ShowType.BY_CHART -> {
+                    binding.stackedBarChart.visibility = View.VISIBLE
+                    binding.TextBlock.visibility = View.INVISIBLE
+                }
+                ShowType.BY_TEXT -> {
+                    binding.stackedBarChart.visibility = View.INVISIBLE
+                    binding.TextBlock.visibility = View.VISIBLE
+                }
+            }
         })
     }
 
     private fun drawBarChart() {
         val textSp = resources.getDimensionPixelSize(R.dimen.sp_16)
-        val valueSp = resources.getDimensionPixelSize(R.dimen.sp_4)
+        val formSize = resources.getDimensionPixelSize(R.dimen.sp_6)
+        val valueSp = resources.getDimensionPixelSize(R.dimen.sp_3)
         val chart = binding.stackedBarChart
         chart.xAxis.apply {
             textColor = getResourceColor(R.color.primaryColor)
@@ -78,21 +132,35 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
             setDrawValueAboveBar(true)
             description.isEnabled = false
             isClickable = true
+
+            /** legend- 底下色塊描述設定*/
             legend.isEnabled = true
             legend.textSize = textSp.toFloat()
+            legend.formSize = formSize.toFloat()
+
             axisRight.isEnabled = false
             axisLeft.textSize = textSp.toFloat()
             setScaleEnabled(false)
         }
 
         chart.data = BarData(getBarData()).apply {
+            /** 圖內value*/
             setValueFormatter { value, _, _, _ ->
                 value.toInt().toString()
             }
-            setValueTextSize(valueSp.toFloat())
             setDrawValues(false)
         }
+        /** X軸標籤Rotation*/
+        chart.xAxis.labelRotationAngle = 70f
+        chart.xAxis.textSize = valueSp.toFloat()
 
+        /** 點擊呈現MarkView相關*/
+        var axisValueFormatter =  chart.xAxis.valueFormatter
+        val myMarkView = MyMarkView(requireContext(),resReportList,axisValueFormatter,ReportRange.BY_MONTHLY)
+        myMarkView.chartView = chart
+        chart.marker = myMarkView
+
+        chart.notifyDataSetChanged()
         chart.invalidate()
     }
 
@@ -129,7 +197,16 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
 
     private fun initView() {
         binding.apply {
-
+            rvReport.apply {
+                adapter = reportAdapter
+                addItemDecoration(
+                    DividerItemDecoration(
+                        this.context,
+                        DividerItemDecoration.VERTICAL
+                    )
+                )
+                layoutManager = LinearLayoutManager(requireContext())
+            }
         }
     }
 
@@ -156,6 +233,7 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        _binding?.rvReport?.adapter = null
         _binding = null
     }
 

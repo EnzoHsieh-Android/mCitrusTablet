@@ -707,7 +707,7 @@
                     <LinearLayout
                         android:layout_marginLeft="@dimen/dp_10"
                         android:layout_marginRight="@dimen/dp_10"
-                        android:id="@+id/sortByCount"
+                        android:id="@+id/countBlock"
                         app:layout_constraintStart_toStartOf="@id/guideline3"
                         app:layout_constraintEnd_toEndOf="@id/guideline4"
                         app:layout_constraintTop_toTopOf="parent"
@@ -715,24 +715,42 @@
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:orientation="horizontal"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:weightSum="2">
 
                         <ImageView
+                            android:id="@+id/changeType"
+                            android:layout_weight="1"
                             android:layout_width="@dimen/dp_10"
                             android:layout_height="@dimen/dp_10"
-                            android:src="@drawable/people"
+                            android:src="@drawable/exchange"
                             android:scaleType="fitCenter"
                             />
 
-                        <ImageView
-                            android:visibility="invisible"
-                            android:id="@+id/groupSortStatus"
-                            android:layout_width="@dimen/dp_5"
-                            android:layout_height="@dimen/dp_5"
-                            android:src="@drawable/down"
-                            android:scaleType="fitCenter"
-                            />
+                        <LinearLayout
+                            android:gravity="center"
+                            android:id="@+id/sortByCount"
+                            android:layout_weight="1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
 
+                            <ImageView
+                                android:layout_width="@dimen/dp_10"
+                                android:layout_height="@dimen/dp_10"
+                                android:src="@drawable/people"
+                                android:scaleType="fitCenter"
+                                />
+
+                            <ImageView
+                                android:visibility="invisible"
+                                android:id="@+id/groupSortStatus"
+                                android:layout_width="@dimen/dp_5"
+                                android:layout_height="@dimen/dp_5"
+                                android:src="@drawable/down"
+                                android:scaleType="fitCenter"
+                                />
+                        </LinearLayout>
                     </LinearLayout>
 
 

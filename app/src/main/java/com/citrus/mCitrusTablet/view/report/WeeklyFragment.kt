@@ -5,10 +5,14 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.databinding.FragmentWeeklyBinding
 import com.citrus.mCitrusTablet.model.vo.Report
 import com.citrus.mCitrusTablet.util.MyMarkView
+import com.citrus.mCitrusTablet.view.adapter.ReportAdapter
+import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -17,6 +21,7 @@ import com.github.mikephil.charting.formatter.IValueFormatter
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_report.*
 
 
 @AndroidEntryPoint
@@ -25,8 +30,12 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
     private val reportViewModel: ReportViewModel by activityViewModels()
     private var _binding: FragmentWeeklyBinding? = null
     private val binding get() = _binding!!
+    private var reportType:ReportType = ReportType.RESERVATION
     private var resReportList = mutableListOf<Report>()
     private var titleEntity = mutableListOf<String>()
+    private val reportAdapter by lazy {
+        ReportAdapter(requireContext(),mutableListOf(), reportType)
+    }
 
     companion object {
         fun newInstance(): WeeklyFragment {
@@ -43,17 +52,25 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentWeeklyBinding.bind(view)
 
-        binding.apply {
-            initObserver()
-            initView()
-        }
+
+        initObserver()
+        initView()
+
 
     }
 
     private fun initObserver() {
 
+        reportViewModel.reportType.observe(viewLifecycleOwner,{ reportType ->
+            this.reportType = reportType
+        })
+
         reportViewModel.weeklyReportTitleData.observe(viewLifecycleOwner, { titleList ->
             titleEntity = titleList
+        })
+
+        reportViewModel.weeklyDetailReportData.observe(viewLifecycleOwner,{ originalList ->
+            reportAdapter.setList(originalList,reportType)
         })
 
         reportViewModel.weeklyReportData.observe(viewLifecycleOwner, { resDataList ->
@@ -95,11 +112,11 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
             when(showType){
                 ShowType.BY_CHART -> {
                     binding.stackedBarChart.visibility = View.VISIBLE
-                    binding.showTextBlock.visibility = View.INVISIBLE
+                    binding.TextBlock.visibility = View.INVISIBLE
                 }
                 ShowType.BY_TEXT -> {
                     binding.stackedBarChart.visibility = View.INVISIBLE
-                    binding.showTextBlock.visibility = View.VISIBLE
+                    binding.TextBlock.visibility = View.VISIBLE
                 }
             }
         })
@@ -107,6 +124,7 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
 
     private fun drawBarChart() {
         val textSp = resources.getDimensionPixelSize(R.dimen.sp_12)
+        val formSize = resources.getDimensionPixelSize(R.dimen.sp_6)
         val valueSp = resources.getDimensionPixelSize(R.dimen.sp_4)
         val chart = binding.stackedBarChart
         chart.xAxis.apply {
@@ -126,6 +144,7 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
             isClickable = true
             legend.isEnabled = true
             legend.textSize = textSp.toFloat()
+            legend.formSize = formSize.toFloat()
             axisRight.isEnabled = false
             axisLeft.textSize = textSp.toFloat()
             setScaleEnabled(false)
@@ -145,7 +164,7 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
         }
         var axisValueFormatter =  chart.xAxis.valueFormatter
 
-        val myMarkView = MyMarkView(requireContext(),resReportList,axisValueFormatter)
+        val myMarkView = MyMarkView(requireContext(),resReportList,axisValueFormatter,ReportRange.BY_WEEKLY)
         myMarkView.chartView = chart
         chart.marker = myMarkView
 
@@ -185,6 +204,18 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
     }
 
     private fun initView() {
+        binding.apply {
+            rvReport.apply {
+                adapter = reportAdapter
+                addItemDecoration(
+                    DividerItemDecoration(
+                        this.context,
+                        DividerItemDecoration.VERTICAL
+                    )
+                )
+                layoutManager = LinearLayoutManager(requireContext())
+            }
+        }
         // drawBarChart()
     }
 
@@ -210,6 +241,7 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        _binding?.rvReport?.adapter = null
         _binding = null
     }
 

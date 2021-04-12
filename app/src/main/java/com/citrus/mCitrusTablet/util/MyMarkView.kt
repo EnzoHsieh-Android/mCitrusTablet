@@ -8,6 +8,8 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.model.vo.Report
+import com.citrus.mCitrusTablet.view.report.ReportRange
+import com.citrus.mCitrusTablet.view.report.ReportType
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
@@ -19,7 +21,8 @@ import com.github.mikephil.charting.utils.MPPointF
 class MyMarkView(
     context: Context?,
     private val resReportList: MutableList<Report>,
-    private val axisValueFormatter: IAxisValueFormatter
+    private val axisValueFormatter: IAxisValueFormatter,
+    private val type: ReportRange,
 ) : MarkerView(context, R.layout.mark_view) {
     private var tv1: TextView? = null
     private var root: ConstraintLayout? =null
@@ -96,9 +99,19 @@ class MyMarkView(
 
     private var mOffset: MPPointF? = null
     override fun getOffset(): MPPointF {
-        if (mOffset == null) {
-            mOffset = MPPointF((-(width / 2)).toFloat(), (-height).toFloat())
+        when(type){
+            ReportRange.BY_WEEKLY -> {
+                if (mOffset == null) {
+                    mOffset = MPPointF((-(width / 2)).toFloat(), (-height/2).toFloat())
+                }
+            }
+            ReportRange.BY_MONTHLY -> {
+                if (mOffset == null) {
+                    mOffset = MPPointF((-(width/1.5)).toFloat(), (-height).toFloat())
+                }
+            }
         }
+
         return mOffset!!
     }
 

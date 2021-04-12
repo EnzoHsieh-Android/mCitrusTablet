@@ -23,6 +23,7 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
     private var _binding: FragmentReportBinding? = null
     private val binding get() = _binding!!
     private lateinit var titles: Array<String>
+    private lateinit var collectionAdapter:CollectionAdapter
 
     override fun onResume() {
         super.onResume()
@@ -57,10 +58,12 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
     }
 
     private fun initView() {
+        collectionAdapter = CollectionAdapter(this)
+
         binding.apply {
             binding.reportTitle.text = resources.getString(R.string.resReport)
             binding.viewPager.offscreenPageLimit = 1
-            binding.viewPager.adapter = CollectionAdapter(requireParentFragment())
+            binding.viewPager.adapter = collectionAdapter
 
             TabLayoutMediator(
                 binding.tabLayout, binding.viewPager
@@ -130,6 +133,7 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
 
 
     inner class CollectionAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
+
 
         override fun getItemCount(): Int = 3
 

@@ -395,6 +395,7 @@
 
     <!-- font size,you can add if there is no one -->
     <dimen name="sp_2">2sp</dimen>
+    <dimen name="sp_3">3sp</dimen>
     <dimen name="sp_4">4sp</dimen>
     <dimen name="sp_6">6sp</dimen>
     <dimen name="sp_7">7sp</dimen>

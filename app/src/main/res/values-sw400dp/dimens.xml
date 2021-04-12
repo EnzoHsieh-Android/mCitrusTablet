@@ -388,6 +388,7 @@
 	<dimen name="dp_640">711.1111dp</dimen>
 	<dimen name="dp_720">800.0000dp</dimen>
 	<dimen name="sp_2">2.2222sp</dimen>
+	<dimen name="sp_3">3.3333sp</dimen>
 	<dimen name="sp_4">4.4444sp</dimen>
 	<dimen name="sp_6">6.6667sp</dimen>
 	<dimen name="sp_7">7.7778sp</dimen>

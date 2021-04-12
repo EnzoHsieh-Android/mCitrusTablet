@@ -136,6 +136,7 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/adultNum"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -168,6 +169,7 @@
 
 
             <LinearLayout
+                android:id="@+id/childNum"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"

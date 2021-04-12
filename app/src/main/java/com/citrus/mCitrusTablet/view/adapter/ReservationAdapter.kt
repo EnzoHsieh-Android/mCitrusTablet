@@ -77,6 +77,7 @@ class ReservationAdapter(
                     CusNumType.SHOW_DETAIL
                 }
             }
+
             headerHolder.changeType.visibility = View.VISIBLE
             headerHolder.changeType.setOnClickListener {
                 onChangeTypeClick(changeValue)

@@ -18,180 +18,256 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:visibility="invisible"
         android:layout_marginBottom="@dimen/dp_20"
-        android:id="@+id/showTextBlock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/TextBlock"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:orientation="vertical"
-        android:gravity="top|center">
+        >
+
+
+        <TextView
+            android:id="@+id/textTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/middleLine"
+            android:layout_marginTop="@dimen/dp_2"
+            android:text="總數統計"
+            android:textStyle="bold"
+            android:textSize="@dimen/sp_20"
+            android:textColor="@color/colorPrimaryText"
+            />
+
+        <TextView
+            android:id="@+id/rvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/middleLine"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/dp_2"
+            android:text="賓客清單"
+            android:textStyle="bold"
+            android:textSize="@dimen/sp_20"
+            android:textColor="@color/colorPrimaryText"
+            />
 
         <LinearLayout
-            android:layout_width="@dimen/dp_130"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_20"
-            android:gravity="center|start"
-            android:orientation="vertical">
+            android:id="@+id/showTextBlock"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:gravity="top|center"
+            android:orientation="vertical"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/middleLine"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textTitle">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/dp_130"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginTop="@dimen/dp_10"
+                android:gravity="center|start"
+                android:orientation="vertical">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="總計："
-                    android:textSize="@dimen/sp_16"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/TvTotalNum"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="總計："
+                        android:textSize="@dimen/sp_16"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/TvTotalNum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="43組"
+                        android:textSize="@dimen/sp_16"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="@dimen/dp_130"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_20"
+                android:gravity="center|start"
+                android:orientation="vertical">
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="43組"
-                    android:textSize="@dimen/sp_16"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="入席數："
+                        android:textSize="@dimen/sp_16"
+                        android:textStyle="bold"
+                        android:textColor="@color/chart_color_check"/>
+
+                    <TextView
+                        android:id="@+id/TvCheckNum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="20組"
+                        android:textSize="@dimen/sp_16"
+                        android:textStyle="bold"
+                        android:textColor="@color/chart_color_check"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="大人 "
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="@color/chart_color_check"
+                        />
+
+                    <TextView
+                        android:id="@+id/TvAdultNum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="47人"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="@color/chart_color_check"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="兒童 "
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="@color/chart_color_check"
+                        />
+
+                    <TextView
+                        android:id="@+id/TvChildNum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="16人"
+                        android:textSize="@dimen/sp_12"
+                        android:textColor="@color/chart_color_check"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="@dimen/dp_130"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_20"
+                android:gravity="center|start"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="取消數："
+                        android:textSize="@dimen/sp_16"
+                        android:textStyle="bold"
+                        android:textColor="@color/chart_color_cancel"/>
+
+                    <TextView
+                        android:id="@+id/TvCancelNum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="20組"
+                        android:textSize="@dimen/sp_16"
+                        android:textStyle="bold"
+                        android:textColor="@color/chart_color_cancel"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="@dimen/dp_130"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_20"
+                android:gravity="center|start"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="尚未入席："
+                        android:textSize="@dimen/sp_16"
+                        android:textStyle="bold"
+                        android:textColor="@color/chart_color_wait"/>
+
+                    <TextView
+                        android:id="@+id/TvUnCheckNum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3組"
+                        android:textSize="@dimen/sp_16"
+                        android:textStyle="bold"
+                        android:textColor="@color/chart_color_wait"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
 
-        <LinearLayout
-            android:layout_marginTop="@dimen/dp_20"
-            android:layout_width="@dimen/dp_130"
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_margin="@dimen/dp_10"
+            android:id="@+id/rvReport"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toEndOf="@+id/middleLine"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rvTitle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="@+id/middleLine"
+            app:layout_constraintEnd_toEndOf="@id/middleLine"
+            android:background="@color/gray"
+            />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/middleLine"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="center|start">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="入席數："
-                    android:textStyle="bold"
-                    android:textSize="@dimen/sp_16"
-                    />
-                <TextView
-                    android:id="@+id/TvCheckNum"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="20組"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/sp_16"
-                    />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="start"
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="大人 "
-                    android:textStyle="bold"
-                    android:textSize="@dimen/sp_12"
-                    />
-                <TextView
-                    android:id="@+id/TvAdultNum"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="47人"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/sp_12"
-                    />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="start"
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="兒童 "
-                    android:textStyle="bold"
-                    android:textSize="@dimen/sp_12"
-                    />
-                <TextView
-                    android:id="@+id/TvChildNum"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="16人"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/sp_12"
-                    />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_marginTop="@dimen/dp_20"
-            android:layout_width="@dimen/dp_130"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center|start">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="取消數："
-                    android:textStyle="bold"
-                    android:textSize="@dimen/sp_16"
-                    />
-                <TextView
-                    android:id="@+id/TvCancelNum"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="20組"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/sp_16"
-                    />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_marginTop="@dimen/dp_20"
-            android:layout_width="@dimen/dp_130"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center|start">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="尚未入席："
-                    android:textStyle="bold"
-                    android:textSize="@dimen/sp_16"
-                    />
-                <TextView
-                    android:id="@+id/TvUnCheckNum"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="3組"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/sp_16"
-                    />
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
+            app:layout_constraintGuide_percent="0.5" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

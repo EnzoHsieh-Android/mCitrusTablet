@@ -30,7 +30,6 @@ class PreferencesManager @Inject constructor(@ApplicationContext context: Contex
     val preferencesFlow = dataStore.data
         .catch { exception ->
             if (exception is IOException) {
-                Log.e(TAG, "Error reading preferences", exception)
                 emit(emptyPreferences())
             } else {
                 throw exception

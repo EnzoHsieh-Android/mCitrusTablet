@@ -51,6 +51,12 @@ class ReportViewModel @ViewModelInject constructor(private val model: Repository
     val dailyReportTitleData: LiveData<MutableList<String>>
         get() = _dailyReportTitleData
 
+
+    private val _weeklyDetailReportData = MutableLiveData<MutableList<Any>>()
+    val weeklyDetailReportData: LiveData<MutableList<Any>>
+        get() = _weeklyDetailReportData
+
+
     private val _weeklyReportData = MutableLiveData<MutableList<Report>>()
     val weeklyReportData: LiveData<MutableList<Report>>
         get() = _weeklyReportData
@@ -58,6 +64,10 @@ class ReportViewModel @ViewModelInject constructor(private val model: Repository
     private val _weeklyReportTitleData = MutableLiveData<MutableList<String>>()
     val weeklyReportTitleData: LiveData<MutableList<String>>
         get() = _weeklyReportTitleData
+
+    private val _monthlyDetailReportData = MutableLiveData<MutableList<Any>>()
+    val monthlyDetailReportData: LiveData<MutableList<Any>>
+        get() = _monthlyDetailReportData
 
     private val _monthlyReportData = MutableLiveData<MutableList<Report>>()
     val monthlyReportData: LiveData<MutableList<Report>>
@@ -161,10 +171,20 @@ class ReportViewModel @ViewModelInject constructor(private val model: Repository
                             _dailyReportData.postValue(reportList)
                     }
                     ReportRange.BY_WEEKLY -> {
+                        if(originalList.isNotEmpty()) {
+                            _weeklyDetailReportData.postValue(originalList!! as MutableList<Any>)
+                        }else{
+                            _weeklyDetailReportData.postValue(mutableListOf())
+                        }
                             _weeklyReportTitleData.postValue(titleEntity)
                             _weeklyReportData.postValue(reportList)
                     }
                     ReportRange.BY_MONTHLY -> {
+                        if(originalList.isNotEmpty()) {
+                            _monthlyDetailReportData.postValue(originalList!! as MutableList<Any>)
+                        }else{
+                            _monthlyDetailReportData.postValue(mutableListOf())
+                        }
                             _monthlyReportTitleData.postValue(titleEntity)
                             _monthlyReportData.postValue(reportList)
                     }
