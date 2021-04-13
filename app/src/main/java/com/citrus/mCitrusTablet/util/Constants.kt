@@ -9,6 +9,9 @@ import java.util.*
 enum class HideCheck { HIDE_TRUE, HIDE_FALSE }
 object Constants {
 
+
+    const val KEY_CHART_TYPE = "KEY_CHART_TYPE"
+    const val KEY_REPORT_TYPE = "KEY_REPORT_TYPE"
     const val KEY_WAIT_NUM ="KEY_WAIT_NUM"
     const val KEY_RESERVATION_NUM ="KEY_RESERVATION_NUM"
     const val KEY_MESSAGE_RES = "KEY_MESSAGE_RES"

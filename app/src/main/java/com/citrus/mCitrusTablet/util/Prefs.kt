@@ -21,6 +21,14 @@ class Prefs(private val context: Context) {
         get() = prefs.getInt(Constants.KEY_LANGUAGE, -1)
         set(value) = prefs.edit().putInt(Constants.KEY_LANGUAGE, value).apply()
 
+    var reportTypePos: Int
+        get() = prefs.getInt(Constants.KEY_REPORT_TYPE, -1)
+        set(value) = prefs.edit().putInt(Constants.KEY_REPORT_TYPE, value).apply()
+
+    var chartTypePos: Int
+        get() = prefs.getInt(Constants.KEY_CHART_TYPE, -1)
+        set(value) = prefs.edit().putInt(Constants.KEY_CHART_TYPE, value).apply()
+
     var storeId: String
         get() = prefs.getString(Constants.KEY_STORE_ID, "")?: ""
         set(value) = prefs.edit().putString(Constants.KEY_STORE_ID, value).apply()

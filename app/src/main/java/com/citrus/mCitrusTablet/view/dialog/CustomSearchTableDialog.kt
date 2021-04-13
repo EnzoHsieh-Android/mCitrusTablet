@@ -49,13 +49,13 @@ class CustomSearchTableDialog(
     override fun initView() {
         setWindowWidthPercent()
 
-        val name = resources.getStringArray(R.array.OtherDemo)
-        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, name)
-        language_picker.setAdapter(arrayAdapter)
-
-        val count = resources.getStringArray(R.array.OtherDemo2)
-        val arrayAdapter2 = ArrayAdapter(requireContext(), R.layout.dropdown_item, count)
-        people_picker.setAdapter(arrayAdapter2)
+//        val name = resources.getStringArray(R.array.OtherDemo)
+//        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, name)
+//        language_picker.setAdapter(arrayAdapter)
+//
+//        val count = resources.getStringArray(R.array.OtherDemo2)
+//        val arrayAdapter2 = ArrayAdapter(requireContext(), R.layout.dropdown_item, count)
+//        people_picker.setAdapter(arrayAdapter2)
 
 
         searchTimeRv.apply {
@@ -93,23 +93,23 @@ class CustomSearchTableDialog(
         }
 
 
-        people_picker.setOnItemClickListener { _, _, position, _ ->
-
-            when (position) {
-                0 -> {
-                    seat.setText("1", false)
-                }
-                1 -> {
-                    seat.setText("2", false)
-                }
-                2 -> {
-                    seat.setText("3", false)
-                }
-                3 -> {
-                    seat.setText("4", false)
-                }
-            }
-        }
+//        people_picker.setOnItemClickListener { _, _, position, _ ->
+//
+//            when (position) {
+//                0 -> {
+//                    seat.setText("1", false)
+//                }
+//                1 -> {
+//                    seat.setText("2", false)
+//                }
+//                2 -> {
+//                    seat.setText("3", false)
+//                }
+//                3 -> {
+//                    seat.setText("4", false)
+//                }
+//            }
+//        }
 
 
         llDate.setOnFocusChangeListener { _, hasFocus ->
@@ -141,23 +141,23 @@ class CustomSearchTableDialog(
             }
         }
 
-        language_picker.setOnItemClickListener { _, _, position, _ ->
-            type = "Seat"
-            when (position) {
-                0 -> {
-                    et_floor.setText("A")
-                    et_room.setText("Angela")
-                }
-                1 -> {
-                    et_floor.setText("A")
-                    et_room.setText("Bill")
-                }
-                2 -> {
-                    et_floor.setText("A")
-                    et_room.setText("Shirley")
-                }
-            }
-        }
+//        language_picker.setOnItemClickListener { _, _, position, _ ->
+//            type = "Seat"
+//            when (position) {
+//                0 -> {
+//                    et_floor.setText("A")
+//                    et_room.setText("Angela")
+//                }
+//                1 -> {
+//                    et_floor.setText("A")
+//                    et_room.setText("Bill")
+//                }
+//                2 -> {
+//                    et_floor.setText("A")
+//                    et_room.setText("Shirley")
+//                }
+//            }
+//        }
 
 
         btn_Search.setOnClickListener {

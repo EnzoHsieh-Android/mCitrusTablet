@@ -9,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.databinding.FragmentReportBinding
+import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.util.Constants
 import com.citrus.mCitrusTablet.view.dialog.CalendarType
 import com.citrus.mCitrusTablet.view.dialog.CustomDatePickerDialog
@@ -24,6 +25,7 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
     private val binding get() = _binding!!
     private lateinit var titles: Array<String>
     private lateinit var collectionAdapter:CollectionAdapter
+
 
     override fun onResume() {
         super.onResume()
@@ -45,6 +47,7 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
     }
 
     private fun initObserver() {
+        /**ReportFragment 統籌locationPageType進行資料撈取*/
         reportViewModel.locationPageType.observe(viewLifecycleOwner, { reportRange ->
             when (reportRange) {
                 ReportRange.BY_DAILY -> {
@@ -54,13 +57,18 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
                     binding.showTypeBlock.visibility = View.VISIBLE
                 }
             }
+            reportViewModel.reFetch()
         })
+
+
+
     }
 
     private fun initView() {
         collectionAdapter = CollectionAdapter(this)
 
         binding.apply {
+            Log.e("binding","first")
             binding.reportTitle.text = resources.getString(R.string.resReport)
             binding.viewPager.offscreenPageLimit = 1
             binding.viewPager.adapter = collectionAdapter
@@ -74,21 +82,31 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
 
             val typeArray = resources.getStringArray(R.array.reportType)
             val showTypeArray = resources.getStringArray(R.array.showType)
-            reportType.setText(typeArray[0], false)
-            showType.setText(showTypeArray[0], false)
+
+            if(prefs.reportTypePos != -1){
+                reportType.setText(typeArray[prefs.reportTypePos], false)
+            }else{
+                reportType.setText(typeArray[0], false)
+            }
+
+            if(prefs.chartTypePos != -1){
+                showType.setText(showTypeArray[prefs.chartTypePos], false)
+            }else{
+                showType.setText(showTypeArray[0], false)
+            }
+
             time.setText(Constants.defaultTimeStr, false)
-            reportViewModel.fetchReportData(Constants.defaultTimeStr, Constants.defaultTimeStr)
 
 
             reportType.setOnItemClickListener { _, _, position, _ ->
                 when (position) {
                     0 -> {
                         binding.reportTitle.text = resources.getString(R.string.resReport)
-                        reportViewModel.setReportType(ReportType.RESERVATION)
+                        reportViewModel.setReportTypePos(position)
                     }
                     1 -> {
                         binding.reportTitle.text = resources.getString(R.string.waitReport)
-                        reportViewModel.setReportType(ReportType.WAIT)
+                        reportViewModel.setReportTypePos(position)
                     }
                 }
             }
@@ -99,12 +117,12 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
                     0 -> {
                         showTypeTextInputLayout.startIconDrawable =
                             resources.getDrawable(R.drawable.ic_baseline_stacked_bar_chart_24,null)
-                        reportViewModel.setShowType(ShowType.BY_CHART)
+                        reportViewModel.setShowTypePos(position)
                     }
                     1 -> {
                         showTypeTextInputLayout.startIconDrawable =
                             resources.getDrawable(R.drawable.ic_baseline_text_format_24,null)
-                        reportViewModel.setShowType(ShowType.BY_TEXT)
+                        reportViewModel.setShowTypePos(position)
                     }
                 }
             }
@@ -150,8 +168,8 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
 
 
     override fun onDestroyView() {
-        reportViewModel.setReportType(ReportType.RESERVATION)
         reportViewModel.setTime(Constants.defaultTimeStr)
+        _binding?.viewPager?.adapter = null
         _binding = null
         super.onDestroyView()
     }

@@ -1,6 +1,7 @@
 package com.citrus.mCitrusTablet.view.report
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.fragment.app.activityViewModels
@@ -8,9 +9,11 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.databinding.FragmentMonthlyBinding
+import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.model.vo.Report
 import com.citrus.mCitrusTablet.util.MyMarkView
 import com.citrus.mCitrusTablet.view.adapter.ReportAdapter
+import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -28,11 +31,10 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
     private val reportViewModel: ReportViewModel by activityViewModels()
     private var _binding: FragmentMonthlyBinding? = null
     private val binding get() = _binding!!
-    private var reportType:ReportType = ReportType.RESERVATION
     private var resReportList = mutableListOf<Report>()
     private var titleEntity = mutableListOf<String>()
     private val reportAdapter by lazy {
-        ReportAdapter(requireContext(),mutableListOf(), reportType)
+        ReportAdapter(requireContext(),mutableListOf(), prefs.reportTypePos)
     }
 
     companion object {
@@ -56,17 +58,23 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
 
     private fun initObserver() {
 
-        reportViewModel.reportType.observe(viewLifecycleOwner,{ reportType ->
-            this.reportType = reportType
+        reportViewModel.chartTypeChange.observe(viewLifecycleOwner,{ pos ->
+            if(pos == 0){
+                binding.stackedBarChart.visibility = View.VISIBLE
+                binding.TextBlock.visibility = View.INVISIBLE
+            }else{
+                binding.stackedBarChart.visibility = View.INVISIBLE
+                binding.TextBlock.visibility = View.VISIBLE
+            }
         })
 
+
         reportViewModel.monthlyDetailReportData.observe(viewLifecycleOwner,{ originalList ->
-            reportAdapter.setList(originalList,reportType)
+            reportAdapter.setList(originalList,prefs.reportTypePos)
         })
 
         reportViewModel.monthlyReportTitleData.observe(viewLifecycleOwner, { titleList ->
             titleEntity = titleList
-            Timber.d(titleEntity.toString())
         })
 
         reportViewModel.monthlyReportData.observe(viewLifecycleOwner, { resDataList ->
@@ -99,18 +107,7 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
             drawBarChart()
         })
 
-        reportViewModel.showType.observe(viewLifecycleOwner,{ showType ->
-            when(showType){
-                ShowType.BY_CHART -> {
-                    binding.stackedBarChart.visibility = View.VISIBLE
-                    binding.TextBlock.visibility = View.INVISIBLE
-                }
-                ShowType.BY_TEXT -> {
-                    binding.stackedBarChart.visibility = View.INVISIBLE
-                    binding.TextBlock.visibility = View.VISIBLE
-                }
-            }
-        })
+
     }
 
     private fun drawBarChart() {
@@ -160,6 +157,9 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
         myMarkView.chartView = chart
         chart.marker = myMarkView
 
+
+
+        chart.animateXY(0, 500)
         chart.notifyDataSetChanged()
         chart.invalidate()
     }
@@ -206,6 +206,14 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
                     )
                 )
                 layoutManager = LinearLayoutManager(requireContext())
+            }
+
+            if(prefs.chartTypePos == 1){
+                stackedBarChart.visibility = View.INVISIBLE
+                TextBlock.visibility = View.VISIBLE
+            }else{
+                stackedBarChart.visibility = View.VISIBLE
+                TextBlock.visibility = View.INVISIBLE
             }
         }
     }

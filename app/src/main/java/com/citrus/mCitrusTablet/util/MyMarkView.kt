@@ -9,7 +9,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.model.vo.Report
 import com.citrus.mCitrusTablet.view.report.ReportRange
-import com.citrus.mCitrusTablet.view.report.ReportType
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry

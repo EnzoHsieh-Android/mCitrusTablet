@@ -1,6 +1,7 @@
 package com.citrus.mCitrusTablet.view.report
 
 
+import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -20,24 +21,19 @@ import java.util.*
 
 
 enum class ReportRange { BY_DAILY, BY_WEEKLY, BY_MONTHLY }
-enum class ShowType { BY_CHART, BY_TEXT }
-enum class ReportType { RESERVATION, WAIT }
 class ReportViewModel @ViewModelInject constructor(private val model: Repository) :
     ViewModel() {
     private var serverDomain = "https://" + prefs.severDomain
     private var storageTime = Constants.defaultTimeStr
 
+
+    private val _chartTypeChange = MutableLiveData<Int>()
+    val chartTypeChange:LiveData<Int>
+        get() = _chartTypeChange
+
     private val _locationPageType = MutableLiveData<ReportRange>()
     val locationPageType: LiveData<ReportRange>
         get() = _locationPageType
-
-    private val _showType = MutableLiveData<ShowType>()
-    val showType: LiveData<ShowType>
-        get() = _showType
-
-    private val _reportType = MutableLiveData<ReportType>()
-    val reportType: LiveData<ReportType>
-        get() = _reportType
 
     private val _dailyDetailReportData = MutableLiveData<MutableList<Any>>()
     val dailyDetailReportData: LiveData<MutableList<Any>>
@@ -46,11 +42,6 @@ class ReportViewModel @ViewModelInject constructor(private val model: Repository
     private val _dailyReportData = MutableLiveData<MutableList<Report>>()
     val dailyReportData: LiveData<MutableList<Report>>
         get() = _dailyReportData
-
-    private val _dailyReportTitleData = MutableLiveData<MutableList<String>>()
-    val dailyReportTitleData: LiveData<MutableList<String>>
-        get() = _dailyReportTitleData
-
 
     private val _weeklyDetailReportData = MutableLiveData<MutableList<Any>>()
     val weeklyDetailReportData: LiveData<MutableList<Any>>
@@ -78,12 +69,9 @@ class ReportViewModel @ViewModelInject constructor(private val model: Repository
         get() = _monthlyReportTitleData
 
 
-    init {
-        _reportType.postValue(ReportType.RESERVATION)
-    }
 
 
-    fun fetchReportData(startTime: String, endTime: String) =
+    private fun fetchReportData(startTime: String, endTime: String) =
         viewModelScope.launch {
             model.fetchAllDataForReport(
                 serverDomain + Constants.GET_ALL_DATA,
@@ -167,7 +155,6 @@ class ReportViewModel @ViewModelInject constructor(private val model: Repository
                         }else{
                             _dailyDetailReportData.postValue(mutableListOf())
                         }
-                            _dailyReportTitleData.postValue(titleEntity)
                             _dailyReportData.postValue(reportList)
                     }
                     ReportRange.BY_WEEKLY -> {
@@ -194,9 +181,13 @@ class ReportViewModel @ViewModelInject constructor(private val model: Repository
         }
 
 
+
+
     /**報表每頁通知當頁處理類型，以此判別fetchReportData發送的liveData*/
     fun setLocationPageType(type: ReportRange) {
-        _locationPageType.postValue(type)
+        if(_locationPageType.value != type) {
+            _locationPageType.postValue(type)
+        }
     }
 
     /**改變時間時重新撈取資料*/
@@ -229,16 +220,28 @@ class ReportViewModel @ViewModelInject constructor(private val model: Repository
     }
 
     private fun isTypeRes(): Boolean {
-        return reportType.value == ReportType.RESERVATION
+        var reportType = prefs.reportTypePos
+
+        return when(reportType){
+            0,-1 -> true
+            1 -> false
+            else -> true
+        }
     }
 
-    fun setShowType(showType: ShowType) {
-        _showType.postValue(showType)
+
+    fun setReportTypePos(position: Int) {
+        if(prefs.reportTypePos != position) {
+            prefs.reportTypePos = position
+            reFetch()
+        }
     }
 
-    fun setReportType(reportType: ReportType) {
-        _reportType.postValue(reportType)
-        reFetch()
+    fun setShowTypePos(position:Int) {
+        if(prefs.chartTypePos != position) {
+            prefs.chartTypePos = position
+            _chartTypeChange.postValue(position)
+        }
     }
 
     private fun countDays(date: Date?, days: Int): String {

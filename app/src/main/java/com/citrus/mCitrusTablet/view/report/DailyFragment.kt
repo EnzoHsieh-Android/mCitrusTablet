@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.databinding.FragmentDailyBinding
+import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.model.vo.Report
 import com.citrus.mCitrusTablet.model.vo.ReservationGuests
 import com.citrus.mCitrusTablet.model.vo.Wait
@@ -25,9 +26,8 @@ class DailyFragment : Fragment(R.layout.fragment_daily) {
     private val reportViewModel: ReportViewModel by activityViewModels()
     private var _binding: FragmentDailyBinding? = null
     private val binding get() = _binding!!
-    private var reportType:ReportType = ReportType.RESERVATION
     private val reportAdapter by lazy {
-        ReportAdapter(requireContext(),mutableListOf(), reportType)
+        ReportAdapter(requireContext(),mutableListOf(), prefs.reportTypePos)
     }
 
 
@@ -69,16 +69,12 @@ class DailyFragment : Fragment(R.layout.fragment_daily) {
 
     private fun initObserver() {
 
-        reportViewModel.reportType.reObserve(viewLifecycleOwner,{ reportType ->
-            this.reportType = reportType
+
+        reportViewModel.dailyDetailReportData.observe(viewLifecycleOwner,{ originalList ->
+            reportAdapter.setList(originalList, prefs.reportTypePos)
         })
 
-
-        reportViewModel.dailyDetailReportData.reObserve(viewLifecycleOwner,{ originalList ->
-            reportAdapter.setList(originalList,reportType)
-        })
-
-        reportViewModel.dailyReportData.reObserve(viewLifecycleOwner, { resDataList ->
+        reportViewModel.dailyReportData.observe(viewLifecycleOwner, { resDataList ->
             var guestsData = Report(0, 0, 0, 0, 0, 0, "")
             if(resDataList.isNotEmpty()) {
                  guestsData = resDataList[0]
@@ -92,9 +88,7 @@ class DailyFragment : Fragment(R.layout.fragment_daily) {
 
         })
 
-        reportViewModel.locationPageType.reObserve(viewLifecycleOwner, {
-            reportViewModel.reFetch()
-        })
+
     }
 
 
@@ -105,8 +99,8 @@ class DailyFragment : Fragment(R.layout.fragment_daily) {
         _binding = null
     }
 
-    private inline fun <T> LiveData<T>.reObserve(owner: LifecycleOwner, crossinline func: (T) -> (Unit)) {
-        removeObservers(owner)
-        observe(owner, { t -> func(t) })
-    }
+//    private inline fun <T> LiveData<T>.reObserve(owner: LifecycleOwner, crossinline func: (T) -> (Unit)) {
+//        removeObservers(owner)
+//        observe(owner, { t -> func(t) })
+//    }
 }

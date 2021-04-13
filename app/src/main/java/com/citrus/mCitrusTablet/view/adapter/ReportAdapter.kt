@@ -11,10 +11,10 @@ import com.citrus.mCitrusTablet.databinding.RvReportItemBinding
 import com.citrus.mCitrusTablet.model.vo.ReservationGuests
 import com.citrus.mCitrusTablet.model.vo.Wait
 import com.citrus.mCitrusTablet.util.Constants
-import com.citrus.mCitrusTablet.view.report.ReportType
 
 
-class ReportAdapter(var context: Context,var list:MutableList<Any>,var reportType: ReportType):RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
+
+class ReportAdapter(var context: Context,var list:MutableList<Any>,var reportType: Int):RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReportViewHolder {
@@ -33,7 +33,7 @@ class ReportAdapter(var context: Context,var list:MutableList<Any>,var reportTyp
        return list.size
     }
 
-    fun setList(list: MutableList<Any>, type: ReportType){
+    fun setList(list: MutableList<Any>, type: Int){
         this.list.clear()
         this.list.addAll(list)
         this.reportType = type
@@ -46,13 +46,13 @@ class ReportAdapter(var context: Context,var list:MutableList<Any>,var reportTyp
     ) {
         fun bind(any: Any) {
             when(reportType){
-                ReportType.RESERVATION -> {
+                0,-1 -> {
                     binding.tvName.text = (any as ReservationGuests).mName
                     binding.tvContact.text = if(any.phone != null && any.phone != "")  any.phone else any.email
                     changeBackground(any.status)
                 }
 
-                ReportType.WAIT -> {
+                1 -> {
                     binding.tvName.text = (any as Wait).mName
                     binding.tvContact.text = if(any.phone != null && any.phone != "")  any.phone else any.email
                     changeBackground(any.status)

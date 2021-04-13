@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.databinding.FragmentWeeklyBinding
+import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.model.vo.Report
 import com.citrus.mCitrusTablet.util.MyMarkView
 import com.citrus.mCitrusTablet.view.adapter.ReportAdapter
@@ -30,11 +31,10 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
     private val reportViewModel: ReportViewModel by activityViewModels()
     private var _binding: FragmentWeeklyBinding? = null
     private val binding get() = _binding!!
-    private var reportType:ReportType = ReportType.RESERVATION
     private var resReportList = mutableListOf<Report>()
     private var titleEntity = mutableListOf<String>()
     private val reportAdapter by lazy {
-        ReportAdapter(requireContext(),mutableListOf(), reportType)
+        ReportAdapter(requireContext(),mutableListOf(), prefs.reportTypePos)
     }
 
     companion object {
@@ -61,16 +61,23 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
 
     private fun initObserver() {
 
-        reportViewModel.reportType.observe(viewLifecycleOwner,{ reportType ->
-            this.reportType = reportType
+        reportViewModel.chartTypeChange.observe(viewLifecycleOwner,{ pos ->
+            if(pos == 0){
+                binding.stackedBarChart.visibility = View.VISIBLE
+                binding.TextBlock.visibility = View.INVISIBLE
+            }else{
+                binding.stackedBarChart.visibility = View.INVISIBLE
+                binding.TextBlock.visibility = View.VISIBLE
+            }
         })
+
 
         reportViewModel.weeklyReportTitleData.observe(viewLifecycleOwner, { titleList ->
             titleEntity = titleList
         })
 
         reportViewModel.weeklyDetailReportData.observe(viewLifecycleOwner,{ originalList ->
-            reportAdapter.setList(originalList,reportType)
+            reportAdapter.setList(originalList,prefs.reportTypePos)
         })
 
         reportViewModel.weeklyReportData.observe(viewLifecycleOwner, { resDataList ->
@@ -104,22 +111,6 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
             drawBarChart()
         })
 
-        reportViewModel.locationPageType.observe(viewLifecycleOwner,{
-            reportViewModel.reFetch()
-        })
-
-        reportViewModel.showType.observe(viewLifecycleOwner,{ showType ->
-            when(showType){
-                ShowType.BY_CHART -> {
-                    binding.stackedBarChart.visibility = View.VISIBLE
-                    binding.TextBlock.visibility = View.INVISIBLE
-                }
-                ShowType.BY_TEXT -> {
-                    binding.stackedBarChart.visibility = View.INVISIBLE
-                    binding.TextBlock.visibility = View.VISIBLE
-                }
-            }
-        })
     }
 
     private fun drawBarChart() {
@@ -168,6 +159,7 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
         myMarkView.chartView = chart
         chart.marker = myMarkView
 
+        chart.animateXY(0, 500)
         chart.notifyDataSetChanged()
         chart.invalidate()
     }
@@ -215,8 +207,18 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
                 )
                 layoutManager = LinearLayoutManager(requireContext())
             }
+
+
+            if(prefs.chartTypePos == 1){
+                binding.stackedBarChart.visibility = View.INVISIBLE
+                binding.TextBlock.visibility = View.VISIBLE
+            }else{
+                binding.stackedBarChart.visibility = View.VISIBLE
+                binding.TextBlock.visibility = View.INVISIBLE
+            }
+
+
         }
-        // drawBarChart()
     }
 
     private fun getCusStackLabels(): Array<String>? {
