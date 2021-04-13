@@ -6,13 +6,14 @@
     android:padding="@dimen/padding_15">
 
     <TextView
+        android:gravity="left"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/sp_16"
+        android:textSize="@dimen/sp_14"
         android:text="@string/order_delivery"
         android:textStyle="bold"
         android:textColor="@color/primaryDarkColor"/>
@@ -22,20 +23,74 @@
         android:id="@+id/describe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/sp_16"
+        android:textSize="@dimen/sp_14"
         android:text="@string/order_delivery_item"
         android:textStyle="bold"
         android:textColor="@color/primaryDarkColor"/>
 
+    <LinearLayout
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintBottom_toBottomOf="@+id/describe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/dp_10"
+        >
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="轉單"
+            android:textStyle="bold"
+            android:textSize="@dimen/sp_10"
+            android:textColor="@color/white"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="列印"
+            android:textStyle="bold"
+            android:textSize="@dimen/sp_10"
+            android:textColor="@color/white"
+            android:layout_marginStart="@dimen/dp_5"
+            />
+
+    </LinearLayout>
+
+    <View
+        android:layout_margin="@dimen/dp_2"
+        android:id="@+id/viewLine"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/describe"
+        app:layout_constraintBottom_toTopOf="@+id/deliveryRv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_2"
+        android:background="@color/deepGray"/>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/deliveryRv"
-        app:layout_constraintTop_toBottomOf="@id/describe"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/viewLine"
+        app:layout_constraintBottom_toTopOf="@+id/totalPrice"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="@dimen/dp_5"
         />
+
+
+    <TextView
+        android:id="@+id/totalPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/deliveryRv"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="@dimen/sp_16"
+        android:text="總計： $400"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

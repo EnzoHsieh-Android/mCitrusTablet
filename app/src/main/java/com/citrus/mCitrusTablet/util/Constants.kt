@@ -10,6 +10,8 @@ enum class HideCheck { HIDE_TRUE, HIDE_FALSE }
 object Constants {
 
 
+    const val KEY_PRINTER_IP = "KEY_PRINTER_IP"
+    const val KEY_PRINTER_PORT = "KEY_PRINTER_PORT"
     const val KEY_CHART_TYPE = "KEY_CHART_TYPE"
     const val KEY_REPORT_TYPE = "KEY_REPORT_TYPE"
     const val KEY_WAIT_NUM ="KEY_WAIT_NUM"

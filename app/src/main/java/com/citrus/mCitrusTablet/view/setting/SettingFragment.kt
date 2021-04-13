@@ -40,8 +40,12 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
     override fun onResume() {
         super.onResume()
         val languages = resources.getStringArray(R.array.language)
-        val arrayAdapter = ArrayAdapter(requireContext(),R.layout.dropdown_item,languages)
-        binding.languagePicker.setAdapter(arrayAdapter)
+        val lanArrayAdapter = ArrayAdapter(requireContext(),R.layout.dropdown_item,languages)
+
+        val printLan = resources.getStringArray(R.array.printLan)
+        val printArrayAdapter = ArrayAdapter(requireContext(),R.layout.dropdown_item,printLan)
+        binding.languagePicker.setAdapter(lanArrayAdapter)
+        binding.printLan.setAdapter(printArrayAdapter)
     }
 
     override fun onCreateView(
@@ -125,8 +129,12 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
     private fun loadFromSharedPref() {
         val storeId = prefs.storeId
         val server = prefs.severDomain
+        val printerIP = prefs.printerIP
+        val printerPort = prefs.printerPort
         val languages = resources.getStringArray(R.array.language)
 
+
+        binding.printLan.setText(prefs.charSet,false)
 
         if(prefs.languagePos != -1){
             binding.languagePicker.setText(languages[prefs.languagePos],false)
@@ -151,14 +159,20 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
         if (storeId == "" || server == "") {
             isCancelable = false
         }
+
         binding.etStoreId!!.setText(storeId,false)
         binding.etServerIp!!.setText(server,false)
+        binding.printIp!!.setText(printerIP,false)
+        binding.printPort!!.setText(printerPort,false)
     }
 
     private fun applyChangesToSharedPref(): Boolean {
 
         val storeIdText = binding.etStoreId!!.text.trim().toString()
         val serverText = binding.etServerIp!!.text.trim().toString()
+        val printLan = binding.printLan!!.text.trim().toString()
+        val printIp = binding.printIp!!.text.trim().toString()
+        val printPort = binding.printPort!!.text.trim().toString()
 
         if (storeIdText.isEmpty()) {
             YoYo.with(Techniques.Shake).duration(1000).playOn(binding.storeIdInputLayout)
@@ -177,6 +191,15 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
         prefs.storeId = storeIdText
         prefs.severDomain = serverText
         prefs.languagePos = chooseLan
+        prefs.charSet = printLan
+
+        if(printIp.isNotEmpty()){
+            prefs.printerIP = printIp
+        }
+
+        if(printPort.isNotEmpty()){
+            prefs.printerPort = printPort
+        }
 
         return true
     }

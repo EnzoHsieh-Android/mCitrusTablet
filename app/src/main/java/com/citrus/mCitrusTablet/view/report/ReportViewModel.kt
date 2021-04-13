@@ -183,7 +183,7 @@ class ReportViewModel @ViewModelInject constructor(private val model: Repository
 
 
 
-    /**報表每頁通知當頁處理類型，以此判別fetchReportData發送的liveData*/
+    /**報表切換每頁送回當頁處理類型，讓model以此判別fetchReportData發送的liveData*/
     fun setLocationPageType(type: ReportRange) {
         if(_locationPageType.value != type) {
             _locationPageType.postValue(type)
@@ -219,6 +219,7 @@ class ReportViewModel @ViewModelInject constructor(private val model: Repository
         fetchReportData(startTime, endTime)
     }
 
+    /**判斷報表類型是否為訂位*/
     private fun isTypeRes(): Boolean {
         var reportType = prefs.reportTypePos
 
@@ -230,6 +231,7 @@ class ReportViewModel @ViewModelInject constructor(private val model: Repository
     }
 
 
+    /**改變報表類型時重新撈取資料*/
     fun setReportTypePos(position: Int) {
         if(prefs.reportTypePos != position) {
             prefs.reportTypePos = position
@@ -237,6 +239,7 @@ class ReportViewModel @ViewModelInject constructor(private val model: Repository
         }
     }
 
+    /**圖表類型切換*/
     fun setShowTypePos(position:Int) {
         if(prefs.chartTypePos != position) {
             prefs.chartTypePos = position

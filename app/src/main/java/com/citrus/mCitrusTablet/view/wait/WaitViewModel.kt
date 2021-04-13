@@ -79,8 +79,8 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
         get() = _resHasNewData
 
 
-    private val _deliveryInfo = SingleLiveEvent<List<OrdersItemDelivery>>()
-    val deliveryInfo: SingleLiveEvent<List<OrdersItemDelivery>>
+    private val _deliveryInfo = SingleLiveEvent<DeliveryInfo>()
+    val deliveryInfo: SingleLiveEvent<DeliveryInfo>
         get() = _deliveryInfo
 
     private val tasksEventChannel = Channel<TasksEvent>()
@@ -293,7 +293,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
                 serverDomain + Constants.GET_ORDERS_DELIVERY,
                 postToGetDelivery,
                 onEmpty = {
-                    _deliveryInfo.postValue(mutableListOf())
+
                 }).collect {
                 _deliveryInfo.postValue(it)
             }

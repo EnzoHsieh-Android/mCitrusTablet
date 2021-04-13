@@ -109,6 +109,7 @@ WaitFragment : BaseFragment() {
 
 
             btn_reloadBlock.setOnClickListener {
+                binding.loading.visibility = View.VISIBLE
                 waitViewModel.reload()
             }
 
@@ -324,6 +325,7 @@ WaitFragment : BaseFragment() {
 
 
         waitViewModel.allData.observe(viewLifecycleOwner, { waitList ->
+            binding.loading.visibility = View.GONE
             if (waitList.isNotEmpty()) {
                 tempWaitList = waitList as MutableList<Wait>
                 waitAdapter?.update(waitList)

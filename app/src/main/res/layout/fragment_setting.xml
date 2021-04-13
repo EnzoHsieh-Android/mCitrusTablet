@@ -13,7 +13,7 @@
         <ScrollView
             android:id="@+id/scView"
             android:layout_width="@dimen/dp_300"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dp_150"
             android:layout_margin="@dimen/dp_20"
             app:layout_constraintBottom_toBottomOf="@id/horizontalBottomGuideline"
             app:layout_constraintEnd_toEndOf="parent"
@@ -116,6 +116,102 @@
 
                         <AutoCompleteTextView
                             android:id="@+id/language_picker"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:paddingTop="@dimen/dp_2"
+                            android:paddingBottom="@dimen/dp_2"
+                            android:textSize="@dimen/sp_12"
+                            android:textStyle="bold"
+                            android:textColor="@color/primaryDarkColor"
+                            android:inputType="none"
+                            />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="@dimen/dp_5">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:id="@+id/printIpInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_5"
+                        android:layout_marginBottom="@dimen/dp_5"
+                        android:hint="列印 IP"
+                        app:startIconDrawable="@drawable/ic_baseline_print_24">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/printIp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:paddingTop="@dimen/dp_2"
+                            android:paddingBottom="@dimen/dp_2"
+                            android:textSize="@dimen/sp_12"
+                            android:textStyle="bold"
+                            android:textColor="@color/primaryDarkColor"
+                            android:inputType="none"
+                            />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="@dimen/dp_5">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:id="@+id/printPortTextInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_5"
+                        android:layout_marginBottom="@dimen/dp_5"
+                        android:hint="列印 Port"
+                        app:startIconDrawable="@drawable/ic_baseline_print_24">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/printPort"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:paddingTop="@dimen/dp_2"
+                            android:paddingBottom="@dimen/dp_2"
+                            android:textSize="@dimen/sp_12"
+                            android:textStyle="bold"
+                            android:textColor="@color/primaryDarkColor"
+                            android:inputType="none"
+                            />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="@dimen/dp_5">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:id="@+id/printLanTextInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_5"
+                        android:layout_marginBottom="@dimen/dp_5"
+                        android:hint="列印語系"
+                        app:startIconDrawable="@drawable/ic_baseline_print_24">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/printLan"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:maxLines="1"

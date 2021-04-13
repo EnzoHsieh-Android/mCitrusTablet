@@ -157,6 +157,7 @@ class ReservationFragment : BaseFragment() {
 
 
             btn_reloadBlock.setOnClickListener {
+                binding.loading.visibility = View.VISIBLE
                 reservationFragmentViewModel.reload()
             }
 
@@ -308,6 +309,10 @@ class ReservationFragment : BaseFragment() {
 
     private fun initObserver() {
 
+        reservationFragmentViewModel.noNeedChange.observe(viewLifecycleOwner,{
+            binding.loading.visibility = View.GONE
+        })
+
         reservationFragmentViewModel.waitHasNewData.observe(viewLifecycleOwner,{
             sharedViewModel.newDataNotify(Constants.KEY_WAIT_NUM,it)
         })
@@ -384,6 +389,7 @@ class ReservationFragment : BaseFragment() {
 
 
         reservationFragmentViewModel.allData.observe(viewLifecycleOwner, { guestsList ->
+            binding.loading.visibility = View.GONE
             if (guestsList.isNotEmpty()) {
                 storeGuestsList = guestsList
                 binding.reservationRv.visibility = View.VISIBLE
@@ -437,6 +443,7 @@ class ReservationFragment : BaseFragment() {
 
 
         reservationFragmentViewModel.holdData.observe(viewLifecycleOwner,{ guestList ->
+            binding.loading.visibility = View.GONE
             storeGuestsList = guestList
             reservationAdapter.notifyDataSetChanged()
         })

@@ -185,7 +185,8 @@ class Repository @Inject constructor(private val apiService: ApiService) {
         val jsonString = Gson().toJson(postToGetDelivery)
         apiService.getOrdersDeliveryData(url, jsonString).suspendOnSuccess {
             if (data?.status != 0) {
-                emit(data?.data?.ordersItemDelivery)
+                Log.e("Delivery",data?.data?.ordersDelivery.toString())
+                emit(data?.data)
             } else {
                 onEmpty()
             }

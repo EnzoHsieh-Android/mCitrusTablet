@@ -110,6 +110,10 @@ class ReservationViewModel @ViewModelInject constructor(
     val isFirst: SingleLiveEvent<Boolean>
         get() = _isFirst
 
+    private val _noNeedChange = SingleLiveEvent<Boolean>()
+    val noNeedChange: SingleLiveEvent<Boolean>
+        get() = _noNeedChange
+
 
     private val _cusCount = MutableLiveData<String>()
     val cusCount: LiveData<String>
@@ -281,6 +285,7 @@ class ReservationViewModel @ViewModelInject constructor(
                         isReload = true
                         allDataReorganization(getSortRequirement(SortOrder.BY_TIME, storageList))
                     } else {
+                        _noNeedChange.postValue(true)
                         isReload = false
                     }
 

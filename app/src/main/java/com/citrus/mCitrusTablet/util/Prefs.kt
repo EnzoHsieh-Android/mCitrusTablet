@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.citrus.mCitrusTablet.util.Constants.KEY_RESERVATION_NUM
 import com.citrus.mCitrusTablet.util.Constants.KEY_WAIT_NUM
+import com.google.gson.Gson
 
 
 class Prefs(private val context: Context) {
@@ -61,5 +62,16 @@ class Prefs(private val context: Context) {
         get() = prefs.getString(Constants.KEY_MESSAGE_NOTICE, "")?: ""
         set(value) = prefs.edit().putString(Constants.KEY_MESSAGE_NOTICE, value).apply()
 
+    var charSet: String
+        get() = prefs.getString("charSet", "UTF-8") ?: ""
+        set(value) = prefs.edit().putString("charSet", value).apply()
+
+    var printerIP: String
+        get() = prefs.getString(Constants.KEY_PRINTER_IP, "") ?: ""
+        set(value) = prefs.edit().putString(Constants.KEY_PRINTER_IP, value).apply()
+
+    var printerPort: String
+        get() = prefs.getString(Constants.KEY_PRINTER_PORT, "") ?: ""
+        set(value) = prefs.edit().putString(Constants.KEY_PRINTER_PORT, value).apply()
 
 }

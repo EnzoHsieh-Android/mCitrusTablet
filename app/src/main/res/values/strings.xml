@@ -111,6 +111,13 @@
         <item>4</item>
     </string-array>
 
+    <string-array name="printLan">
+        <item>UTF-8</item>
+        <item>BIG5</item>
+        <item>GBK</item>
+        <item>JIS</item>
+    </string-array>
+
     <string-array name="language">
         <item>简体中文</item>
         <item>繁體中文</item>
