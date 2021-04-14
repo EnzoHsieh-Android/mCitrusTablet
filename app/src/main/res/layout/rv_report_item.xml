@@ -10,24 +10,34 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Andy"
-        android:textSize="@dimen/sp_16"
+        android:textSize="@dimen/sp_12"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/middleLine"/>
 
-    <TextView
-        android:gravity="left"
-        android:id="@+id/tvContact"
+    <HorizontalScrollView
+        android:id="@+id/scrollview"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="0910000222"
-        android:textSize="@dimen/sp_10"
-        android:textStyle="bold"
+        android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/middleLine"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toTopOf="@+id/tvName"
+        app:layout_constraintBottom_toBottomOf="@+id/tvName">
+
+        <TextView
+            android:gravity="left|center"
+            android:id="@+id/tvContact"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="0910000222"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+            />
+
+    </HorizontalScrollView>
+
+
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/middleLine"

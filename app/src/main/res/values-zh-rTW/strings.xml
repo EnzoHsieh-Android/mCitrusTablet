@@ -103,7 +103,7 @@
     </string-array>
 
     <string-array name="showType">
-        <item>圖表</item>
-        <item>文字</item>
+        <item>每日</item>
+        <item>總計</item>
     </string-array>
 </resources>

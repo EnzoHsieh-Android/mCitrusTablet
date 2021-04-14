@@ -43,16 +43,25 @@ class OrderDeliveryAdapter :RecyclerView.Adapter<OrderDeliveryAdapter.TasksViewH
     ) {
         fun bind(item: OrdersItemDelivery, currentList: List<OrdersItemDelivery>) {
             binding.apply {
+                flavor.visibility =  View.GONE
                 gName.text = item.gname
                 price.text = "$"+item.price.toString()
                 qty.text = "x" + item.qty
+
                 if(item.addName.isNotEmpty() && item.addName != ""){
+                    flavor.visibility =  View.VISIBLE
                     addName.visibility = View.VISIBLE
                     addName.text = item.addName
+                }else{
+                    addName.visibility = View.GONE
                 }
+
                 if(item.flavorName.isNotEmpty() && item.flavorName != ""){
+                    flavor.visibility =  View.VISIBLE
                     flavorName.visibility = View.VISIBLE
                     flavorName.text = item.flavorName
+                }else{
+                    flavorName.visibility = View.GONE
                 }
             }
         }

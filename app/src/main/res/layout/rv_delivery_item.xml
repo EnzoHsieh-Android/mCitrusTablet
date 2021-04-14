@@ -22,12 +22,12 @@
 
 
         <TextView
-            android:layout_weight="5"
+            android:layout_weight="6"
             android:id="@+id/gName"
             android:layout_width="@dimen/dp_120"
             android:layout_height="wrap_content"
             tool:text="XXXXXX"
-            android:textSize="@dimen/sp_16"
+            android:textSize="@dimen/sp_12"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -40,20 +40,20 @@
             android:layout_width="@dimen/dp_30"
             android:layout_height="wrap_content"
             tool:text="x1"
-            android:textSize="@dimen/sp_16"
+            android:textSize="@dimen/sp_12"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/gName"
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
-            android:gravity="center"
-            android:layout_weight="4"
+            android:gravity="right"
+            android:layout_weight="3"
             android:layout_marginStart="@dimen/dp_20"
             android:id="@+id/price"
             android:layout_width="@dimen/dp_50"
             android:layout_height="wrap_content"
             tool:text="x1"
-            android:textSize="@dimen/sp_16"
+            android:textSize="@dimen/sp_12"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/gName"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -63,6 +63,7 @@
 
     <LinearLayout
         android:gravity="start"
+        android:visibility="gone"
         android:id="@+id/flavor"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

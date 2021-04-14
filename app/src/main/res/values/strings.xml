@@ -130,8 +130,8 @@
     </string-array>
 
     <string-array name="showType">
-        <item>Bar Chart</item>
-        <item>Text</item>
+        <item>Per Day</item>
+        <item>Total</item>
     </string-array>
 
 </resources>

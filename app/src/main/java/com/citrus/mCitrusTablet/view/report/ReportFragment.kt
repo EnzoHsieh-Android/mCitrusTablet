@@ -71,6 +71,7 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
             binding.reportTitle.text = resources.getString(R.string.resReport)
             binding.viewPager.offscreenPageLimit = 1
             binding.viewPager.adapter = collectionAdapter
+           // binding.viewPager.isUserInputEnabled = false
 
             TabLayoutMediator(
                 binding.tabLayout, binding.viewPager

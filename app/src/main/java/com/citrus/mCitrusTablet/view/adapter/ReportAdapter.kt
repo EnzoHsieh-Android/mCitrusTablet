@@ -46,6 +46,13 @@ class ReportAdapter(var context: Context,var list:MutableList<Any>):RecyclerView
         binding.root
     ) {
         fun bind(any: Any) {
+
+//            binding.scrollview.setOnTouchListener { v, event ->
+//                v.parent.requestDisallowInterceptTouchEvent(false)
+//                return@setOnTouchListener true
+//            }
+
+
             try {
                 when (prefs.reportTypePos) {
                     0, -1 -> {
