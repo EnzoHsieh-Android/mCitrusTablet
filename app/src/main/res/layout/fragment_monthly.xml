@@ -41,7 +41,7 @@
             android:layout_marginTop="@dimen/dp_2"
             android:text="總數統計"
             android:textStyle="bold"
-            android:textSize="@dimen/sp_20"
+            android:textSize="@dimen/sp_16"
             android:textColor="@color/colorPrimaryText"
             />
 
@@ -55,7 +55,7 @@
             android:layout_marginTop="@dimen/dp_2"
             android:text="賓客清單"
             android:textStyle="bold"
-            android:textSize="@dimen/sp_20"
+            android:textSize="@dimen/sp_16"
             android:textColor="@color/colorPrimaryText"
             />
 

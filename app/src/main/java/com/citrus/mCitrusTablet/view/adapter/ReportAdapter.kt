@@ -3,18 +3,20 @@ package com.citrus.mCitrusTablet.view.adapter
 import android.content.Context
 import android.graphics.Color
 import android.provider.SyncStateContract
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.databinding.RvReportItemBinding
+import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.model.vo.ReservationGuests
 import com.citrus.mCitrusTablet.model.vo.Wait
 import com.citrus.mCitrusTablet.util.Constants
+import timber.log.Timber
 
 
-
-class ReportAdapter(var context: Context,var list:MutableList<Any>,var reportType: Int):RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
+class ReportAdapter(var context: Context,var list:MutableList<Any>):RecyclerView.Adapter<ReportAdapter.ReportViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReportViewHolder {
@@ -33,10 +35,9 @@ class ReportAdapter(var context: Context,var list:MutableList<Any>,var reportTyp
        return list.size
     }
 
-    fun setList(list: MutableList<Any>, type: Int){
+    fun updateList(list: MutableList<Any>){
         this.list.clear()
         this.list.addAll(list)
-        this.reportType = type
         notifyDataSetChanged()
     }
 
@@ -45,18 +46,24 @@ class ReportAdapter(var context: Context,var list:MutableList<Any>,var reportTyp
         binding.root
     ) {
         fun bind(any: Any) {
-            when(reportType){
-                0,-1 -> {
-                    binding.tvName.text = (any as ReservationGuests).mName
-                    binding.tvContact.text = if(any.phone != null && any.phone != "")  any.phone else any.email
-                    changeBackground(any.status)
-                }
+            try {
+                when (prefs.reportTypePos) {
+                    0, -1 -> {
+                        binding.tvName.text = (any as ReservationGuests).mName
+                        binding.tvContact.text =
+                            if (any.phone != null && any.phone != "") any.phone else any.email
+                        changeBackground(any.status)
+                    }
 
-                1 -> {
-                    binding.tvName.text = (any as Wait).mName
-                    binding.tvContact.text = if(any.phone != null && any.phone != "")  any.phone else any.email
-                    changeBackground(any.status)
+                    1 -> {
+                        binding.tvName.text = (any as Wait).mName
+                        binding.tvContact.text =
+                            if (any.phone != null && any.phone != "") any.phone else any.email
+                        changeBackground(any.status)
+                    }
                 }
+            }catch(e:ClassCastException){
+                Timber.d("viewPage2 mess up, just ignore this message")
             }
         }
 
@@ -67,6 +74,10 @@ class ReportAdapter(var context: Context,var list:MutableList<Any>,var reportTyp
                     binding.tvContact.setTextColor(context.resources.getColor(R.color.chart_color_wait,null))
                 }
                 Constants.NOTICE -> {
+                    binding.tvName.setTextColor(context.resources.getColor(R.color.chart_color_wait,null))
+                    binding.tvContact.setTextColor(context.resources.getColor(R.color.chart_color_wait,null))
+                }
+                Constants.CONFIRM -> {
                     binding.tvName.setTextColor(context.resources.getColor(R.color.chart_color_wait,null))
                     binding.tvContact.setTextColor(context.resources.getColor(R.color.chart_color_wait,null))
                 }

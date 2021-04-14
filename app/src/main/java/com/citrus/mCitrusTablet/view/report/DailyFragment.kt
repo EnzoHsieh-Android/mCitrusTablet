@@ -1,25 +1,16 @@
 package com.citrus.mCitrusTablet.view.report
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.databinding.FragmentDailyBinding
-import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.model.vo.Report
-import com.citrus.mCitrusTablet.model.vo.ReservationGuests
-import com.citrus.mCitrusTablet.model.vo.Wait
-import com.citrus.mCitrusTablet.util.Constants
 import com.citrus.mCitrusTablet.view.adapter.ReportAdapter
-import com.citrus.mCitrusTablet.view.adapter.WaitAdapter
-import com.citrus.mCitrusTablet.view.dialog.CustomOrderDeliveryDialog
+
 
 
 class DailyFragment : Fragment(R.layout.fragment_daily) {
@@ -27,7 +18,7 @@ class DailyFragment : Fragment(R.layout.fragment_daily) {
     private var _binding: FragmentDailyBinding? = null
     private val binding get() = _binding!!
     private val reportAdapter by lazy {
-        ReportAdapter(requireContext(),mutableListOf(), prefs.reportTypePos)
+        ReportAdapter(requireContext(),mutableListOf())
     }
 
 
@@ -71,11 +62,11 @@ class DailyFragment : Fragment(R.layout.fragment_daily) {
 
 
         reportViewModel.dailyDetailReportData.observe(viewLifecycleOwner,{ originalList ->
-            reportAdapter.setList(originalList, prefs.reportTypePos)
+            reportAdapter.updateList(originalList)
         })
 
         reportViewModel.dailyReportData.observe(viewLifecycleOwner, { resDataList ->
-            var guestsData = Report(0, 0, 0, 0, 0, 0, "")
+            var guestsData = Report(0, 0, 0, 0, 0, 0, "",0)
             if(resDataList.isNotEmpty()) {
                  guestsData = resDataList[0]
             }
@@ -85,6 +76,12 @@ class DailyFragment : Fragment(R.layout.fragment_daily) {
                 binding.TvChildNum.text = guestsData.child.toString() + "人"
                 binding.TvCancelNum.text = guestsData.cancel.toString() + "組"
                 binding.TvUnCheckNum.text = guestsData.wait.toString() + "組"
+
+//            if(guestsData.waitTime != 0){
+//                Log.e("total waitTime",guestsData.waitTime.toString())
+//                Log.e("avg waitTime",(guestsData.waitTime/guestsData.check).toString())
+//            }
+
 
         })
 

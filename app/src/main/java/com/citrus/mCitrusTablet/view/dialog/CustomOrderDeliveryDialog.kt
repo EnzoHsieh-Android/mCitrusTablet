@@ -54,7 +54,7 @@ class CustomOrderDeliveryDialog(
             val outputFormat = SimpleDateFormat("yyyy/MM/dd HH:mm")
             val date = inputFormat.parse(it.ordersDelivery.orderTime)
             val formattedDate = outputFormat.format(date)
-            describe.text = "日期：$formattedDate"
+            describe.text = formattedDate
             orderDeliveryAdapter.update(it.ordersItemDelivery)
             totalPrice.text = "總計：" + "$"+it.ordersDelivery.subtotal
         })

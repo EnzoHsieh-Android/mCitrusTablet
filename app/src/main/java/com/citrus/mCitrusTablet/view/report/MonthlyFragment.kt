@@ -34,7 +34,7 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
     private var resReportList = mutableListOf<Report>()
     private var titleEntity = mutableListOf<String>()
     private val reportAdapter by lazy {
-        ReportAdapter(requireContext(),mutableListOf(), prefs.reportTypePos)
+        ReportAdapter(requireContext(),mutableListOf())
     }
 
     companion object {
@@ -70,7 +70,7 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
 
 
         reportViewModel.monthlyDetailReportData.observe(viewLifecycleOwner,{ originalList ->
-            reportAdapter.setList(originalList,prefs.reportTypePos)
+            reportAdapter.updateList(originalList)
         })
 
         reportViewModel.monthlyReportTitleData.observe(viewLifecycleOwner, { titleList ->

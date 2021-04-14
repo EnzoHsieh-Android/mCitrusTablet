@@ -68,7 +68,6 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
         collectionAdapter = CollectionAdapter(this)
 
         binding.apply {
-            Log.e("binding","first")
             binding.reportTitle.text = resources.getString(R.string.resReport)
             binding.viewPager.offscreenPageLimit = 1
             binding.viewPager.adapter = collectionAdapter

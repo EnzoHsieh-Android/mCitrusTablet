@@ -412,7 +412,7 @@
                     android:textSize="@dimen/sp_12"
                     android:textStyle="bold"
                     android:textColor="@color/primaryDarkColor"
-                    android:inputType="number"
+                    android:inputType="text"
                     android:imeOptions="actionNext"
                     android:nextFocusUp="@id/memo"
                     android:singleLine="true"

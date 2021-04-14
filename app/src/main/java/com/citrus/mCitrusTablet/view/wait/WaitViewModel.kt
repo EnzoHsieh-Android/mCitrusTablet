@@ -203,13 +203,13 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
     }
 
     /**傳送mail*/
-    private fun sendMail(guest:Wait,msg:String){
+    private fun sendMail(guest:Wait,msg:String,subTitle:String){
         viewModelScope.launch {
             model.sendMail(
                 Constants.SEND_MAIL,
                 guest.email!!,
                 msg,
-                msg,
+                subTitle,
                 "Citrus"
             ).collect {
                 Timber.d("smsStatus%s", it.toString())
@@ -223,13 +223,16 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
             model.getShortURL(serverDomain+Constants.GET_SHORT_URL,address).collect { shortURL ->
                 if(shortURL != null && shortURL != ""){
                     var msg = ""
+                    var subTitle = ""
 
                     when(sendStatus){
                         Constants.ADD -> {
-                            msg = prefs.storeName + " " + prefs.messageWait + "\n" + shortURL
+                            subTitle = prefs.messageWait
+                            msg = prefs.storeName + " " + subTitle + "\n" + shortURL
                         }
                         Constants.NOTICE -> {
-                            msg = prefs.storeName+ " " + prefs.messageNotice + "\n" + shortURL
+                            subTitle = prefs.messageNotice
+                            msg = prefs.storeName+ " " + subTitle + "\n" + shortURL
                         }
                     }
 
@@ -239,7 +242,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
                             sendSMS(guest,msg)
                         }
                         "M" -> {
-                            sendMail(guest,msg)
+                            sendMail(guest,msg,subTitle)
                         }
                     }
                 }

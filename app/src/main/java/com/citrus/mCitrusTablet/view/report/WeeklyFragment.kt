@@ -34,7 +34,7 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
     private var resReportList = mutableListOf<Report>()
     private var titleEntity = mutableListOf<String>()
     private val reportAdapter by lazy {
-        ReportAdapter(requireContext(),mutableListOf(), prefs.reportTypePos)
+        ReportAdapter(requireContext(),mutableListOf())
     }
 
     companion object {
@@ -77,7 +77,7 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
         })
 
         reportViewModel.weeklyDetailReportData.observe(viewLifecycleOwner,{ originalList ->
-            reportAdapter.setList(originalList,prefs.reportTypePos)
+            reportAdapter.updateList(originalList)
         })
 
         reportViewModel.weeklyReportData.observe(viewLifecycleOwner, { resDataList ->

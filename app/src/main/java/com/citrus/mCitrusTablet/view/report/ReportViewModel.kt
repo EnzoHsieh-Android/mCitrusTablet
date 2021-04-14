@@ -80,11 +80,13 @@ class ReportViewModel @ViewModelInject constructor(private val model: Repository
                 var originalList: Any?
                 var tempDate = ""
                 var index = 0
+                var checkCount = 0
                 originalList = if (isTypeRes()) {
                     allObject.reservation.sortedBy { it.reservationTime }
                 } else {
                     allObject.wait.sortedBy { it.reservationTime }
                 }
+
                 val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
                 val outputFormat = SimpleDateFormat("MM/dd")
                 var reportList = mutableListOf<Report>()
@@ -101,6 +103,17 @@ class ReportViewModel @ViewModelInject constructor(private val model: Repository
                             inputFormat.parse((guest as Wait).reservationTime)
                         }
 
+                        if(!isTypeRes()){
+                            if((guest as Wait).status == Constants.CHECK) {
+                                checkCount++
+                                var date2: Date = inputFormat.parse(guest.updateDate)
+                                var int = countTimeDifference(date!!, date2)
+                                guest.waitTime = int
+                            }
+                        }
+
+
+
                         val formattedDate = outputFormat.format(date)
                         if (isTypeRes()) {
                             (guest as ReservationGuests).reservationTime = formattedDate
@@ -112,7 +125,7 @@ class ReportViewModel @ViewModelInject constructor(private val model: Repository
                             tempDate = formattedDate
                             titleEntity.add(tempDate)
                             index = titleEntity.indexOf(tempDate)
-                            reportList.add(index, Report(0, 0, 0, 0, 0, 0, ""))
+                            reportList.add(index, Report(0, 0, 0, 0, 0, 0, "", 0))
                         }
 
 
@@ -139,10 +152,12 @@ class ReportViewModel @ViewModelInject constructor(private val model: Repository
                                 reportList[index].cancel + if (guest.status == Constants.CANCEL) 1 else 0
                             reportList[index].cancel + if (guest.status == Constants.CANCEL) 1 else 0
                             reportList[index].wait =
-                                reportList[index].wait + if (guest.status == Constants.ADD || guest.status == Constants.NOTICE) 1 else 0
+                                reportList[index].wait + if (guest.status == Constants.ADD || guest.status == Constants.NOTICE || guest.status == Constants.CONFIRM) 1 else 0
                             reportList[index].check =
                                 reportList[index].check + if (guest.status == Constants.CHECK) 1 else 0
                             reportList[index].date = tempDate
+                            reportList[index].waitTime =  reportList[index].waitTime + if (guest.waitTime != -1) guest.waitTime else 0
+
                         }
                     }
                 }
@@ -150,30 +165,30 @@ class ReportViewModel @ViewModelInject constructor(private val model: Repository
 
                 when (locationPageType.value) {
                     ReportRange.BY_DAILY -> {
-                        if(originalList.isNotEmpty()) {
+                        if (originalList.isNotEmpty()) {
                             _dailyDetailReportData.postValue(originalList!! as MutableList<Any>)
-                        }else{
+                        } else {
                             _dailyDetailReportData.postValue(mutableListOf())
                         }
-                            _dailyReportData.postValue(reportList)
+                        _dailyReportData.postValue(reportList)
                     }
                     ReportRange.BY_WEEKLY -> {
-                        if(originalList.isNotEmpty()) {
+                        if (originalList.isNotEmpty()) {
                             _weeklyDetailReportData.postValue(originalList!! as MutableList<Any>)
-                        }else{
+                        } else {
                             _weeklyDetailReportData.postValue(mutableListOf())
                         }
-                            _weeklyReportTitleData.postValue(titleEntity)
-                            _weeklyReportData.postValue(reportList)
+                        _weeklyReportTitleData.postValue(titleEntity)
+                        _weeklyReportData.postValue(reportList)
                     }
                     ReportRange.BY_MONTHLY -> {
-                        if(originalList.isNotEmpty()) {
+                        if (originalList.isNotEmpty()) {
                             _monthlyDetailReportData.postValue(originalList!! as MutableList<Any>)
-                        }else{
+                        } else {
                             _monthlyDetailReportData.postValue(mutableListOf())
                         }
-                            _monthlyReportTitleData.postValue(titleEntity)
-                            _monthlyReportData.postValue(reportList)
+                        _monthlyReportTitleData.postValue(titleEntity)
+                        _monthlyReportData.postValue(reportList)
                     }
                 }
 
@@ -224,7 +239,7 @@ class ReportViewModel @ViewModelInject constructor(private val model: Repository
         var reportType = prefs.reportTypePos
 
         return when(reportType){
-            0,-1 -> true
+            0, -1 -> true
             1 -> false
             else -> true
         }
@@ -240,7 +255,7 @@ class ReportViewModel @ViewModelInject constructor(private val model: Repository
     }
 
     /**圖表類型切換*/
-    fun setShowTypePos(position:Int) {
+    fun setShowTypePos(position: Int) {
         if(prefs.chartTypePos != position) {
             prefs.chartTypePos = position
             _chartTypeChange.postValue(position)
@@ -255,5 +270,12 @@ class ReportViewModel @ViewModelInject constructor(private val model: Repository
         Constants.dateFormatSql.format(date)
         return Constants.dateFormatSql.format(date)
     }
+
+    private fun countTimeDifference(start: Date, end: Date): Int {
+        val between = end.time - start.time
+        val min = between / (60 * 1000)
+        return min.toInt()
+    }
+
 
 }

@@ -135,7 +135,8 @@ data class Wait (
     var isOverTime:Boolean = false,
     var isSelect:Boolean = false,
     var isExpend:Boolean = false,
-    var isNew:Boolean = false
+    var isNew:Boolean = false,
+    var waitTime:Int = -1
 ):Serializable
 
 
