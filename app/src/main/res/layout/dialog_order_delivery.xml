@@ -39,7 +39,19 @@
         android:layout_marginEnd="@dimen/dp_10"
         >
 
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/hasUpdatePost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="已轉單"
+            android:textStyle="bold"
+            android:textSize="@dimen/sp_10"
+            />
+
         <Button
+            android:visibility="visible"
+            android:id="@+id/updatePost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="轉單"
@@ -49,6 +61,7 @@
             />
 
         <Button
+            android:id="@+id/printDelivery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="列印"

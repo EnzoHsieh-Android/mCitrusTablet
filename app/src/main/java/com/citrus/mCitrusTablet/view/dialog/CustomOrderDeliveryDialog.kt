@@ -8,9 +8,10 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.di.prefs
-import com.citrus.mCitrusTablet.model.vo.OrdersDelivery
+import com.citrus.mCitrusTablet.model.vo.DeliveryInfo
 import com.citrus.mCitrusTablet.model.vo.PostToGetDelivery
 import com.citrus.mCitrusTablet.model.vo.Wait
+import com.citrus.mCitrusTablet.util.PrintDelivery
 import com.citrus.mCitrusTablet.util.ui.BaseDialogFragment
 import com.citrus.mCitrusTablet.view.adapter.OrderDeliveryAdapter
 import com.citrus.mCitrusTablet.view.wait.WaitViewModel
@@ -25,6 +26,7 @@ class CustomOrderDeliveryDialog(
 ) : BaseDialogFragment() {
 
     private val orderDeliveryAdapter by lazy { OrderDeliveryAdapter() }
+    lateinit var deliveryInfo: DeliveryInfo
 
 
 
@@ -48,6 +50,7 @@ class CustomOrderDeliveryDialog(
         waitViewModel.fetchOrdersDeliver(PostToGetDelivery(prefs.rsno,wait.tkey))
 
         waitViewModel.deliveryInfo.observe(viewLifecycleOwner,{
+            deliveryInfo = it
             title.text = context.resources.getString(R.string.order_delivery) +" "+ it.ordersDelivery.orderNO
 
             val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
@@ -59,6 +62,15 @@ class CustomOrderDeliveryDialog(
             totalPrice.text = "總計：" + "$"+it.ordersDelivery.subtotal
         })
 
+
+        printDelivery.setOnClickListener {
+            PrintDelivery(context,deliveryInfo) { isSuccess, err ->
+                Log.e("isSuccess", isSuccess.toString())
+                if (err != null) {
+                    Log.e("err", err)
+                }
+            }.startPrint()
+        }
 
 
     }

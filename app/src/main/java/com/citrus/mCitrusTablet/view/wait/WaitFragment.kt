@@ -53,7 +53,6 @@ WaitFragment : BaseFragment() {
     private var sortOrderByTime: SortOrder = SortOrder.BY_TIME_MORE
     private var sortOrderByCount: SortOrder = SortOrder.BY_LESS
     private var filterType = Filter.SHOW_ALL
-    private var cusNumType = CusNumType.SHOW_DETAIL
     private var isHideCheck = false
     private var isSwapEmail = false
     private var cusNum = 0
@@ -63,7 +62,7 @@ WaitFragment : BaseFragment() {
     private val waitAdapter by lazy {
         WaitAdapter(
             mutableListOf(),
-            cusNumType,
+            waitViewModel.cusNumType.value!!,
             requireActivity(),
             onImgClick = { wait ->
                 waitViewModel.itemSelect(wait) },
@@ -120,7 +119,6 @@ WaitFragment : BaseFragment() {
                 layoutManager = LinearLayoutManager(requireContext())
                 waitAdapter.update(mutableListOf())
 
-
                 ItemTouchHelper(
                     object : ItemTouchHelper.SimpleCallback(
                         0,
@@ -163,15 +161,19 @@ WaitFragment : BaseFragment() {
 
 
             changeType.setOnClickListener {
-                cusNumType = when(cusNumType) {
+
+                var type =
+                    when(waitViewModel.cusNumType.value) {
                     CusNumType.SHOW_DETAIL -> {
                         CusNumType.SHOW_TOTAL
                     }
                     CusNumType.SHOW_TOTAL -> {
                         CusNumType.SHOW_DETAIL
                     }
-                }
-              waitAdapter.changeType(cusNumType)
+                        else -> {CusNumType.SHOW_DETAIL}
+                    }
+
+                waitViewModel.changeCusNumType(type)
             }
 
             sortByCount.setOnClickListener {
@@ -315,6 +317,10 @@ WaitFragment : BaseFragment() {
     }
 
     private fun initObserver() {
+
+        waitViewModel.cusNumType.observe(viewLifecycleOwner,{
+            waitAdapter.changeType(it)
+        })
 
 
         waitViewModel.resHasNewData.observe(viewLifecycleOwner, {

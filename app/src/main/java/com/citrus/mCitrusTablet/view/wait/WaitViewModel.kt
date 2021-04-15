@@ -12,6 +12,7 @@ import com.citrus.mCitrusTablet.model.vo.*
 import com.citrus.mCitrusTablet.util.Constants
 import com.citrus.mCitrusTablet.util.HideCheck
 import com.citrus.mCitrusTablet.util.SingleLiveEvent
+import com.citrus.mCitrusTablet.view.reservation.CusNumType
 import com.citrus.mCitrusTablet.view.reservation.SearchViewStatus
 import com.citrus.mCitrusTablet.view.reservation.TasksEvent
 import kotlinx.coroutines.*
@@ -74,6 +75,10 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
     val sortType: LiveData<SortOrder>
         get() = _sortType
 
+    private val _cusNumType = MutableLiveData<CusNumType>()
+    val cusNumType: LiveData<CusNumType>
+        get() = _cusNumType
+
     private val _resHasNewData = SingleLiveEvent<ReservationGuests>()
     val resHasNewData: SingleLiveEvent<ReservationGuests>
         get() = _resHasNewData
@@ -86,6 +91,10 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
     private val tasksEventChannel = Channel<TasksEvent>()
     val tasksEvent = tasksEventChannel.receiveAsFlow()
 
+
+    init{
+        _cusNumType.value = CusNumType.SHOW_DETAIL
+    }
 
 
 
@@ -525,7 +534,9 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
             changeStatus(wait,storeChangeForDelete.status)
         }
 
-
+    fun changeCusNumType(type: CusNumType) {
+        _cusNumType.postValue(type)
+    }
 
 
 }

@@ -241,7 +241,7 @@
             android:layout_marginBottom="@dimen/dp_5"
             android:background="@color/gray"
             app:layout_constraintEnd_toEndOf="@id/vMiddleLine"
-            app:layout_constraintStart_toStartOf="@+id/middleLine" />
+            app:layout_constraintStart_toStartOf="@+id/vMiddleLine" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/vMiddleLine"
