@@ -175,8 +175,6 @@ class Repository @Inject constructor(private val apiService: ApiService) {
     }.flowOn(Dispatchers.IO)
 
 
-
-
     fun fetchOrdersDeliveryData(
         url: String,
         postToGetDelivery: PostToGetDelivery,
@@ -188,6 +186,22 @@ class Repository @Inject constructor(private val apiService: ApiService) {
                 emit(data?.data)
             } else {
                 onEmpty()
+            }
+        }
+    }.flowOn(Dispatchers.IO)
+
+
+    fun setDeliveryStatus(
+        url: String,
+        postToSetDeliveryStatus: PostToSetDeliveryStatus,
+        rsno:String
+    ) = flow {
+        val jsonString = Gson().toJson(postToSetDeliveryStatus)
+        apiService.setOrdersDeliveryStatus(url,jsonString,rsno).suspendOnSuccess {
+            if(data?.status == 1){
+                emit(true)
+            }else{
+                emit(false)
             }
         }
     }.flowOn(Dispatchers.IO)

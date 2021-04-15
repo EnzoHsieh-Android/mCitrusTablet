@@ -129,4 +129,13 @@ interface ApiService {
     @ResponseFormat("json")
     @POST
     suspend fun getOrdersDeliveryData(@Url url: String, @Field("jsonData")jsonData: String):ApiResponse<OrderDelivery>
+
+
+
+    /*轉單*/
+    @FormUrlEncoded
+    @Headers("Content-Type: application/x-www-form-urlencoded")
+    @ResponseFormat("json")
+    @POST
+    suspend fun setOrdersDeliveryStatus(@Url url: String,@Field("jsonData")jsonData: String,@Field("rsno") rsno: String):ApiResponse<DeliveryStatusResult>
 }

@@ -11,6 +11,25 @@ data class PostToGetDelivery (
 )
 
 
+data class PostToSetDeliveryStatus (
+    @SerializedName("OrdersDelivery")
+    val ordersDeliveryUpdate: OrdersDeliveryUpdate
+)
+
+
+data class OrdersDeliveryUpdate (
+    @SerializedName("OrderNO")
+    val orderNO: String,
+
+    @SerializedName("ServiceOutStatus")
+    val serviceOutStatus: String,
+
+    @SerializedName("CheckMemo")
+    val checkMemo: String
+)
+
+
+
 /*input*/
 data class OrderDelivery (
     val status: Int,
@@ -76,3 +95,17 @@ data class OrdersItemDelivery (
         return this === other
     }
 }
+
+
+
+data class DeliveryStatusResult (
+    val status: Long,
+
+    @SerializedName("Data")
+    val data: DataInfo
+)
+
+
+data class DataInfo (
+    val data: Long
+)

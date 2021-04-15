@@ -3,6 +3,8 @@ package com.citrus.mCitrusTablet.view.dialog
 import android.graphics.Point
 import android.util.Log
 import android.view.Gravity
+import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -62,6 +64,15 @@ class CustomOrderDeliveryDialog(
             totalPrice.text = "總計：" + "$"+it.ordersDelivery.subtotal
         })
 
+        waitViewModel.isDeliveryStatusChange.observe(viewLifecycleOwner,{
+            if(it){
+                updateToPost.visibility = View.GONE
+                hasUpdatePost.visibility = View.VISIBLE
+            }else{
+                Toast.makeText(context,"Update Fail",Toast.LENGTH_SHORT).show()
+            }
+        })
+
 
         printDelivery.setOnClickListener {
             PrintDelivery(context,deliveryInfo) { isSuccess, err ->
@@ -70,6 +81,10 @@ class CustomOrderDeliveryDialog(
                     Log.e("err", err)
                 }
             }.startPrint()
+        }
+
+        updateToPost.setOnClickListener {
+            waitViewModel.setOrdersDeliverStatus(deliveryInfo.ordersDelivery.orderNO)
         }
 
 

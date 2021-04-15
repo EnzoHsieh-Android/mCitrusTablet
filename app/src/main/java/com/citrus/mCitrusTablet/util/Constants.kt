@@ -38,6 +38,7 @@ object Constants {
     const val GET_FLOOR = "/POSServer/UploadDataWS/Service1.asmx/GetReservationFloor"
     const val SET_RESERVATION = "/POSServer/UploadDataWS/Service1.asmx/SetReservationData"
     const val SET_WAIT = "/POSServer/UploadDataWS/Service1.asmx/SetWaitData"
+    const val SET_DELIVERY_STATUS = "http://hq.citrus.tw/citrus/Service1.asmx/UpdateOrdersDeliveryStatus"
     const val GET_STORE_INFO = "/POSServer/UploadDataWS/Service1.asmx/GetStore"
     const val GET_RESERVATION_TIME = "/POSServer/UploadDataWS/Service1.asmx/GetReservationTime"
     const val GET_ORDERS_DELIVERY= "/POSServer/UploadDataWS/Service1.asmx/GetOrdersDeliveryDataByWaitNo"
