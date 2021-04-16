@@ -3,7 +3,6 @@ package com.citrus.mCitrusTablet.model.api
 import com.citrus.mCitrusTablet.model.vo.*
 import com.citrus.mCitrusTablet.util.ResponseFormat
 import com.skydoves.sandwich.ApiResponse
-import okhttp3.ResponseBody
 import retrofit2.http.*
 
 

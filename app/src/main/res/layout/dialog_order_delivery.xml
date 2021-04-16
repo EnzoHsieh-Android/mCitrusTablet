@@ -120,6 +120,6 @@
         android:textSize="@dimen/sp_13"
         android:textStyle="bold"
         android:textColor="@color/primaryColor"
-        android:text="總計： $400"/>
+        android:text=""/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

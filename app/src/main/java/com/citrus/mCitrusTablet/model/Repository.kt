@@ -181,7 +181,6 @@ class Repository @Inject constructor(private val apiService: ApiService) {
         onEmpty: () -> Unit
     ) = flow {
         val jsonString = Gson().toJson(postToGetDelivery)
-        Log.e("Delivery",jsonString)
         apiService.getOrdersDeliveryData(url, jsonString).suspendOnSuccess {
             if (data?.status != 0) {
                 emit(data?.data)
@@ -200,10 +199,8 @@ class Repository @Inject constructor(private val apiService: ApiService) {
         val jsonString = Gson().toJson(postToSetDeliveryStatus)
         apiService.setOrdersDeliveryStatus(url,jsonString,rsno).suspendOnSuccess {
             if(data?.status == 1){
-                Log.e("success","----")
                 emit(true)
             }else{
-                Log.e("false","----")
                 emit(false)
             }
         }
