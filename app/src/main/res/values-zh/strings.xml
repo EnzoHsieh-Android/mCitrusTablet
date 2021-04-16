@@ -97,6 +97,21 @@
     <string name="waitReport">候位报表</string>
     <string name="showTotal">总人数</string>
     <string name="showDetail">详细人数</string>
+    <string name="daily">日统计</string>
+    <string name="weekly">周统计</string>
+    <string name="monthly">月统计</string>
+    <string name="print">打印</string>
+    <string name="printIp">打印 IP</string>
+    <string name="printPort">打印 Port</string>
+
+    <string name="report_checked">已入席:</string>
+    <string name="report_cancelled">已取消:</string>
+    <string name="report_wait">尚未入席:</string>
+    <string name="report_waitTime_avg">平均等待时间:</string>
+    <string name="report_group">组</string>
+    <string name="report_person">人</string>
+    <string name="report_min">分</string>
+
     <string-array name="reportType">
         <item>订位</item>
         <item>候位</item>

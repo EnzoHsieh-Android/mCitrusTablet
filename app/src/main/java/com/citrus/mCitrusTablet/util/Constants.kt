@@ -2,6 +2,8 @@ package com.citrus.mCitrusTablet.util
 
 
 
+import android.annotation.SuppressLint
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -38,18 +40,26 @@ object Constants {
     const val GET_FLOOR = "/POSServer/UploadDataWS/Service1.asmx/GetReservationFloor"
     const val SET_RESERVATION = "/POSServer/UploadDataWS/Service1.asmx/SetReservationData"
     const val SET_WAIT = "/POSServer/UploadDataWS/Service1.asmx/SetWaitData"
-    const val SET_DELIVERY_STATUS = "http://hq.citrus.tw/citrus/Service1.asmx/UpdateOrdersDeliveryStatus"
+    const val SET_DELIVERY_STATUS = "/POSServer/UploadDataWS/Service1.asmx/UpdateOrdersDeliveryStatus"
     const val GET_STORE_INFO = "/POSServer/UploadDataWS/Service1.asmx/GetStore"
     const val GET_RESERVATION_TIME = "/POSServer/UploadDataWS/Service1.asmx/GetReservationTime"
     const val GET_ORDERS_DELIVERY= "/POSServer/UploadDataWS/Service1.asmx/GetOrdersDeliveryDataByWaitNo"
     const val GET_SHORT_URL= "/POSServer/UploadDataWS/Service1.asmx/GetShortURL"
     const val SEND_SMS = "http://hq.citrus.tw/citrus/Service1.asmx/SendNewsletter_Mitake"
     const val SEND_MAIL = "http://hq.citrus.tw/citrus/Service1.asmx/SendMail"
+    var dfShow = DecimalFormat("###,###,###,##0.##")
     var dateTimeFormatSql = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
     val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
     val outputFormat = SimpleDateFormat("MM/dd HH:mm")
     var dateFormatSql = SimpleDateFormat("yyyy/MM/dd")
     var defaultTimeStr: String = dateFormatSql.format(Date())
     var TimeStrForDelete = outputFormat.format(Date())
+
+    @SuppressLint("SimpleDateFormat")
+    fun getCurrentTime(): String {
+        val currentDate = Calendar.getInstance().time
+        val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
+        return sdf.format(currentDate)
+    }
 
 }

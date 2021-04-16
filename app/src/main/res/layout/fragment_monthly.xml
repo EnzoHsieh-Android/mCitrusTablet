@@ -69,7 +69,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="入席數："
+                        android:text="@string/report_checked"
                         android:textColor="@color/chart_color_check"
                         android:textSize="@dimen/sp_12"
                         android:textStyle="bold" />
@@ -78,7 +78,7 @@
                         android:id="@+id/TvCheckNum"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="20組"
+                        android:text=""
                         android:textColor="@color/chart_color_check"
                         android:textSize="@dimen/sp_12"
                         android:textStyle="bold" />
@@ -93,7 +93,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="大人 "
+                        android:text="@string/adult"
                         android:textColor="@color/chart_color_check"
                         android:textSize="@dimen/sp_10" />
 
@@ -101,7 +101,7 @@
                         android:id="@+id/TvAdultNum"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="47人"
+                        android:text=""
                         android:textColor="@color/chart_color_check"
                         android:textSize="@dimen/sp_10" />
                 </LinearLayout>
@@ -115,7 +115,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="兒童 "
+                        android:text="@string/child"
                         android:textColor="@color/chart_color_check"
                         android:textSize="@dimen/sp_10" />
 
@@ -123,7 +123,7 @@
                         android:id="@+id/TvChildNum"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="16人"
+                        android:text=""
                         android:textColor="@color/chart_color_check"
                         android:textSize="@dimen/sp_10" />
                 </LinearLayout>
@@ -144,7 +144,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="取消數："
+                        android:text="@string/report_cancelled"
                         android:textColor="@color/chart_color_cancel"
                         android:textSize="@dimen/sp_12"
                         android:textStyle="bold" />
@@ -153,7 +153,7 @@
                         android:id="@+id/TvCancelNum"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="20組"
+                        android:text=""
                         android:textColor="@color/chart_color_cancel"
                         android:textSize="@dimen/sp_12"
                         android:textStyle="bold" />
@@ -175,7 +175,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="尚未入席："
+                        android:text="@string/report_wait"
                         android:textColor="@color/chart_color_wait"
                         android:textSize="@dimen/sp_12"
                         android:textStyle="bold" />
@@ -184,7 +184,7 @@
                         android:id="@+id/TvUnCheckNum"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="3組"
+                        android:text=""
                         android:textColor="@color/chart_color_wait"
                         android:textSize="@dimen/sp_12"
                         android:textStyle="bold" />
@@ -207,7 +207,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="平均等待時間："
+                        android:text="@string/report_waitTime_avg"
                         android:textSize="@dimen/sp_12"
                         android:textStyle="bold" />
 
@@ -215,7 +215,7 @@
                         android:id="@+id/TvWaitTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="150分"
+                        android:text=""
                         android:textSize="@dimen/sp_12"
                         android:textStyle="bold" />
                 </LinearLayout>

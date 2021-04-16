@@ -1,10 +1,9 @@
 package com.citrus.mCitrusTablet.view.report
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.ArrayAdapter
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.citrus.mCitrusTablet.R
@@ -17,6 +16,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.savvi.rangedatepicker.CalendarPickerView
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class ReportFragment : Fragment(R.layout.fragment_report) {
@@ -76,9 +76,11 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
             TabLayoutMediator(
                 binding.tabLayout, binding.viewPager
             ) { tab: TabLayout.Tab, position: Int ->
-                titles = arrayOf("單日統計", "週統計", "月統計")
+                titles = arrayOf(resources.getString(R.string.daily), resources.getString(R.string.weekly), resources.getString(R.string.monthly))
                 tab.text = titles[position]
             }.attach()
+
+
 
             val typeArray = resources.getStringArray(R.array.reportType)
             val showTypeArray = resources.getStringArray(R.array.showType)
@@ -116,12 +118,12 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
                 when (position) {
                     0 -> {
                         showTypeTextInputLayout.startIconDrawable =
-                            resources.getDrawable(R.drawable.ic_baseline_stacked_bar_chart_24,null)
+                            resources.getDrawable(R.drawable.ic_baseline_stacked_bar_chart_24, null)
                         reportViewModel.setShowTypePos(position)
                     }
                     1 -> {
                         showTypeTextInputLayout.startIconDrawable =
-                            resources.getDrawable(R.drawable.ic_baseline_text_format_24,null)
+                            resources.getDrawable(R.drawable.ic_baseline_text_format_24, null)
                         reportViewModel.setShowTypePos(position)
                     }
                 }

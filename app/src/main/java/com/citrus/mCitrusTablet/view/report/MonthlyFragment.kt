@@ -103,17 +103,17 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
 
             if (waitTime != 0) {
                 binding.waitTimeBlock.visibility = View.VISIBLE
-                binding.TvWaitTime.text = (waitTime / checkNum).toString() + " 分"
+                binding.TvWaitTime.text = (waitTime / checkNum).toString() +" "+resources.getString(R.string.report_min)
             } else {
                 binding.waitTimeBlock.visibility = View.GONE
             }
 
 
-            binding.TvCheckNum.text = checkNum.toString() + "組"
-            binding.TvAdultNum.text = adultNum.toString() + "人"
-            binding.TvChildNum.text = childNum.toString() + "人"
-            binding.TvCancelNum.text = cancelNum.toString() + "組"
-            binding.TvUnCheckNum.text = notCheckNum.toString() + "組"
+            binding.TvCheckNum.text = " "+checkNum.toString() + resources.getString(R.string.report_group)
+            binding.TvAdultNum.text = " "+adultNum.toString() + resources.getString(R.string.report_person)
+            binding.TvChildNum.text = " "+childNum.toString() + resources.getString(R.string.report_person)
+            binding.TvCancelNum.text = " "+cancelNum.toString() + resources.getString(R.string.report_group)
+            binding.TvUnCheckNum.text = " "+notCheckNum.toString() + resources.getString(R.string.report_group)
 
             resReportList = resDataList
             binding.stackedBarChart.clear()
@@ -194,7 +194,7 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
                 "OpenSans-Regular.ttf"
             )
         )
-        binding.picChart.centerText = "總計：$totalNum"
+        binding.picChart.centerText =  resources.getString(R.string.TotalForTheDay)+ totalNum
         binding.picChart.setCenterTextSize(textSp.toFloat())
 
         val l: Legend = binding.picChart.legend

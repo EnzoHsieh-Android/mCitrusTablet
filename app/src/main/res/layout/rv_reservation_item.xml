@@ -187,7 +187,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_width="0dp"
             android:layout_height="@dimen/dp_35"
-            android:gravity="center">
+            android:gravity="left|center">
             <TextView
                 android:id="@+id/seats"
                 android:layout_width="wrap_content"
@@ -262,15 +262,16 @@
 
             </LinearLayout>
 
-            <TextView
+            <Button
                 android:visibility="gone"
                 android:id="@+id/tv_check"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp_45"
+                android:layout_height="@dimen/dp_28"
                 app:layout_constraintTop_toTopOf="parent"
                 android:text="@string/checked"
-                android:textSize="@dimen/sp_10"
-                android:textStyle="bold" />
+                android:textSize="@dimen/sp_7"
+                android:textStyle="bold"
+                android:enabled="false"/>
 
             <Button
                 android:visibility="visible"

@@ -61,7 +61,7 @@
     <string name="floor">Floor</string>
     <string name="room">Room</string>
     <string name="search">Search</string>
-    <string name="order_delivery">Order Delivery No:</string>
+    <string name="order_delivery">Order No:</string>
     <string name="hide_check">Hide Check</string>
     <string name="show_check">Show Check</string>
     <string name="notice">Notice</string>
@@ -98,6 +98,21 @@
     <string name="waitReport">Wait Report</string>
     <string name="showTotal">Total</string>
     <string name="showDetail">Detail</string>
+    <string name="daily">Daily</string>
+    <string name="weekly">Weekly</string>
+    <string name="monthly">Monthly</string>
+    <string name="print">Print</string>
+    <string name="printIp">Printer IP</string>
+    <string name="printPort">Printer Port</string>
+
+    <string name="report_checked">Checked:</string>
+    <string name="report_cancelled">Cancelled:</string>
+    <string name="report_wait">Not check:</string>
+    <string name="report_waitTime_avg">Avg wait Time:</string>
+    <string name="report_group"> </string>
+    <string name="report_person"> </string>
+    <string name="report_min">min</string>
+
     <string-array name="OtherDemo">
         <item>Angela</item>
         <item>Bill</item>

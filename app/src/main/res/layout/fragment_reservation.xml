@@ -638,11 +638,12 @@
                 android:id="@+id/bt_reservation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-               android:layout_margin="@dimen/dp_10"
+                android:layout_margin="@dimen/dp_10"
                 app:sv_buttonBackgroundColor="@android:color/white"
                 app:sv_reverseSlide="false"
                 app:sv_slideTextSize="@dimen/sp_10"
                 app:sv_slideBackgroundColor="@color/primaryColor"
+                app:sv_strokeColor="@color/primaryColor"
                 app:sv_slideText="@string/slide" />
 
 

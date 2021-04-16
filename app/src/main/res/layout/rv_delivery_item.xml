@@ -28,12 +28,13 @@
             android:layout_height="wrap_content"
             tool:text="XXXXXX"
             android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
-            android:gravity="center"
+            android:gravity="right"
             android:layout_weight="1"
             android:layout_marginStart="@dimen/dp_10"
             android:id="@+id/qty"
@@ -63,8 +64,8 @@
 
     <LinearLayout
         android:gravity="start"
-        android:visibility="gone"
-        android:id="@+id/flavor"
+        android:visibility="visible"
+        android:id="@+id/addNameBlock"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/item"
@@ -72,40 +73,46 @@
         app:layout_constraintEnd_toEndOf="@id/item"
         android:orientation="horizontal"
         android:weightSum="10"
+        android:layout_marginStart="@dimen/dp_10"
         >
 
 
         <TextView
             android:layout_weight="2.5"
-            android:visibility="gone"
+            android:visibility="visible"
             android:id="@+id/addName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tool:text="加起司"
             android:textColor="@color/primaryColor"
-            android:textSize="@dimen/sp_12" />
+            android:textSize="@dimen/sp_8" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:gravity="start"
+        android:visibility="visible"
+        android:id="@+id/flavorNameBlock"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/addNameBlock"
+        app:layout_constraintStart_toStartOf="@id/item"
+        app:layout_constraintEnd_toEndOf="@id/item"
+        android:orientation="horizontal"
+        android:weightSum="10"
+        android:layout_marginStart="@dimen/dp_10"
+        >
 
         <TextView
             android:layout_weight="2.5"
-            android:visibility="gone"
             android:id="@+id/flavorName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tool:text="少鹽"
             android:textColor="@color/primaryColor"
-            android:textSize="@dimen/sp_12"
-           />
-
-        <TextView
-            android:layout_weight="5"
-            android:visibility="visible"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tool:text=""
-            android:textColor="@color/primaryColor"
-            android:textSize="@dimen/sp_16"
+            android:textSize="@dimen/sp_8"
             />
+
 
     </LinearLayout>
 

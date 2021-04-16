@@ -433,13 +433,15 @@
             android:id="@+id/tab_layout"
             style="@style/Widget.MaterialComponents.TabLayout.PrimarySurface"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dp_25"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tabIndicatorColor="@color/primaryTextColor"
+            app:tabIndicatorColor="#D1D5F6"
             app:tabRippleColor="@color/primaryTextColor"
             app:tabTextAppearance="@style/MyTabStyle"
+            app:tabSelectedTextColor="#D1D5F6"
+            app:tabIndicatorHeight="@dimen/dp_2"
             app:tabTextColor="@color/primaryTextColor" />
 
         <androidx.viewpager2.widget.ViewPager2

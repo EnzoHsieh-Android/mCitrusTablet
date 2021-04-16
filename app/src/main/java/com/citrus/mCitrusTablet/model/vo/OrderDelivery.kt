@@ -55,19 +55,22 @@ data class OrdersDelivery (
     val orderTime: String,
 
     @SerializedName("Subtotal")
-    val subtotal: Int,
+    val subtotal: Double,
 
     @SerializedName("Tax")
-    val tax: Int,
+    val tax: Double,
 
     @SerializedName("GrandTotal")
-    val grandTotal: Int,
+    val grandTotal: Double,
 
     @SerializedName("Pax")
     val pax: Int,
 
     @SerializedName("Phone")
-    val phone: String
+    val phone: String,
+
+    @SerializedName("ServiceOutStatus")
+    val serviceOutStatus:String
 )
 
 
@@ -85,7 +88,7 @@ data class OrdersItemDelivery (
     val flavorName: String,
 
     @SerializedName("Price")
-    val price: Int
+    val price: Double
 ){
     fun isSame(other: OrdersItemDelivery): Boolean {
         return gname == other.gname

@@ -81,15 +81,15 @@ class DailyFragment : Fragment(R.layout.fragment_daily) {
                 binding.picChart.clear()
             }
 
-            binding.TvCheckNum.text = guestsData.check.toString() + "組"
-            binding.TvAdultNum.text = guestsData.adult.toString() + "人"
-            binding.TvChildNum.text = guestsData.child.toString() + "人"
-            binding.TvCancelNum.text = guestsData.cancel.toString() + "組"
-            binding.TvUnCheckNum.text = guestsData.wait.toString() + "組"
+            binding.TvCheckNum.text = " "+guestsData.check.toString() + resources.getString(R.string.report_group)
+            binding.TvAdultNum.text = " "+guestsData.adult.toString() + resources.getString(R.string.report_person)
+            binding.TvChildNum.text = " "+guestsData.child.toString() + resources.getString(R.string.report_person)
+            binding.TvCancelNum.text = " "+guestsData.cancel.toString() + resources.getString(R.string.report_group)
+            binding.TvUnCheckNum.text = " "+guestsData.wait.toString() + resources.getString(R.string.report_group)
 
             if (guestsData.waitTime != 0) {
                 binding.waitTimeBlock.visibility = View.VISIBLE
-                binding.TvWaitTime.text = (guestsData.waitTime / guestsData.check).toString() + " 分"
+                binding.TvWaitTime.text = " "+(guestsData.waitTime / guestsData.check).toString() +" "+resources.getString(R.string.report_min)
             } else {
                 binding.waitTimeBlock.visibility = View.GONE
             }
@@ -185,7 +185,7 @@ class DailyFragment : Fragment(R.layout.fragment_daily) {
                 "OpenSans-Regular.ttf"
             )
         )
-        binding.picChart.centerText = "總計："+guestsData.total
+        binding.picChart.centerText = resources.getString(R.string.TotalForTheDay)+ guestsData.total
         binding.picChart.setCenterTextSize(textSp.toFloat())
 
         val l: Legend = binding.picChart.legend

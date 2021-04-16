@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.citrus.mCitrusTablet.databinding.RvDeliveryItemBinding
-import com.citrus.mCitrusTablet.model.vo.OrdersDelivery
 import com.citrus.mCitrusTablet.model.vo.OrdersItemDelivery
 import com.citrus.mCitrusTablet.util.AsyncDiffUtil
 
@@ -30,7 +29,7 @@ class OrderDeliveryAdapter :RecyclerView.Adapter<OrderDeliveryAdapter.TasksViewH
     override fun onBindViewHolder(holder: TasksViewHolder, position: Int) {
         if (position != RecyclerView.NO_POSITION) {
             val item = asyncDiffUtil.current()[position]
-            holder.bind(item,asyncDiffUtil.current())
+            holder.bind(item,asyncDiffUtil.current(),position)
         }
     }
 
@@ -41,27 +40,26 @@ class OrderDeliveryAdapter :RecyclerView.Adapter<OrderDeliveryAdapter.TasksViewH
     inner class TasksViewHolder(private val binding: RvDeliveryItemBinding) : RecyclerView.ViewHolder(
         binding.root
     ) {
-        fun bind(item: OrdersItemDelivery, currentList: List<OrdersItemDelivery>) {
+        fun bind(item: OrdersItemDelivery, currentList: List<OrdersItemDelivery>, position: Int) {
             binding.apply {
-                flavor.visibility =  View.GONE
-                gName.text = item.gname
-                price.text = "$"+item.price.toString()
+                flavorNameBlock.visibility =  View.GONE
+                addNameBlock.visibility =  View.GONE
+                gName.text = (position+1).toString()+". " + item.gname
+                price.text = "$"+item.price.toInt().toString()
                 qty.text = "x" + item.qty
 
                 if(item.addName.isNotEmpty() && item.addName != ""){
-                    flavor.visibility =  View.VISIBLE
-                    addName.visibility = View.VISIBLE
+                    addNameBlock.visibility =  View.VISIBLE
                     addName.text = item.addName
                 }else{
-                    addName.visibility = View.GONE
+                    addNameBlock.visibility = View.GONE
                 }
 
                 if(item.flavorName.isNotEmpty() && item.flavorName != ""){
-                    flavor.visibility =  View.VISIBLE
-                    flavorName.visibility = View.VISIBLE
+                    flavorNameBlock.visibility =  View.VISIBLE
                     flavorName.text = item.flavorName
                 }else{
-                    flavorName.visibility = View.GONE
+                    flavorNameBlock.visibility = View.GONE
                 }
             }
         }

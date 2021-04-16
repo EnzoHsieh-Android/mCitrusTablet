@@ -143,7 +143,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_5"
                         android:layout_marginBottom="@dimen/dp_5"
-                        android:hint="列印 IP"
+                        android:hint="@string/printIp"
                         app:startIconDrawable="@drawable/ic_baseline_print_24">
 
                         <AutoCompleteTextView
@@ -175,7 +175,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_5"
                         android:layout_marginBottom="@dimen/dp_5"
-                        android:hint="列印 Port"
+                        android:hint="@string/printPort"
                         app:startIconDrawable="@drawable/ic_baseline_print_24">
 
                         <AutoCompleteTextView

@@ -1,8 +1,10 @@
 package com.citrus.mCitrusTablet.util
 
 import androidx.fragment.app.FragmentActivity
+import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.model.vo.DeliveryInfo
+import com.citrus.mCitrusTablet.util.Constants.dfShow
 import java.io.DataOutputStream
 import java.io.IOException
 import java.io.OutputStream
@@ -23,26 +25,41 @@ class PrintDelivery(
 
         var data: ByteArray
         data = initCmd()
-        data = b(data, pageMode())
         data = b(data, fontSizeCmd(FontSize.Big))
+        data = b(data, boldCmd(true))
         data = b(data, setLineSpace(55))
-        var storeName = prefs.storeName
-        val storeNameLen = getStringPixLength(storeName, 1, 2)
-        if (storeNameLen < 15) {
-            storeName = String.format("%" + (((16 - storeNameLen) / 2) + storeName.length) + "s", storeName)
-        }
-        data = b(data, text(storeName))
+        if (prefs.storeName.isNotEmpty()) data = b(data, text(prefs.storeName))
+        data = b(data, fontSizeCmd(FontSize.Normal))
+        data = b(data, boldCmd(false))
         data = b(data, text("預點時間: " + deliveryInfo.ordersDelivery.orderTime))
         data = b(data, text("單號 " + deliveryInfo.ordersDelivery.orderNO))
+        data = b(data, text("列印時間" + ": " + Constants.getCurrentTime()))
+
         data = b(data, dashLine(false))
 
         var sum = 0
         for (item in deliveryItemList) {
-            sum += item.qty
-            val title = item.qty.toString() + "x " + item.gname + " " +item.addName+ " "+item.flavorName
-            data = b(data, twoColumn(title, item.price.toString(), false))
+
+            var itemTitle = item.qty.toString() + "x " + item.gname
+
+            if (getStringPixLength(itemTitle + dfShow.format(item.price), 12, 24) / 12 > 33) {
+                data = b(data, text(itemTitle))
+                data = b(data, twoColumn("", dfShow.format(item.price), false))
+            } else {
+                data = b(data, twoColumn(itemTitle, dfShow.format(item.price), false))
+            }
+
+            val flavorAdd =
+                if (!item.addName.isNullOrEmpty() && !item.flavorName.isNullOrEmpty()) item.addName + "/" + item.flavorName
+                else if (!item.addName.isNullOrEmpty()) item.addName
+                else if (!item.flavorName.isNullOrEmpty()) item.flavorName
+                else null
+
+            flavorAdd?.let { data = b(data, text("    #$it")) }
         }
         data = b(data, dashLine(false))
+        data = b(data, boldCmd(true))
+        data = b(data, fontSizeCmd(FontSize.Big))
         data = b(data, twoColumn("總計    " + sum + "項", deliveryInfo.ordersDelivery.subtotal.toString(), false))
         data = b(data, text("\n"))
 

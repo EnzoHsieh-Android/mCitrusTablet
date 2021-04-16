@@ -4,7 +4,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="selectColor">#e0e0e0</color>
     <color name="primaryColor">#1a237e</color>
-    <color name="primaryLightColor">#534bae</color>
+    <color name="primaryLightColor">#1a237e</color>
     <color name="primaryDarkColor">#000051</color>
     <color name="secondaryColor">#eeeeee</color>
     <color name="secondaryLightColor">#ffffff</color>
@@ -70,4 +70,12 @@
     <color name="chart_color_check">#4caf50</color>
     <color name="chart_color_cancel">#f44336</color>
     <color name="chart_color_wait">#4fc3f7</color>
+
+
+
+    <color name="mainColor">#FACCD5</color>
+    <color name="mainColor2">#395D73</color>
+    <color name="mainColor3">#60A4BF</color>
+    <color name="mainColor4">#A7CBD9</color>
+
 </resources>

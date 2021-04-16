@@ -49,6 +49,7 @@ class CustomOrderDeliveryDialog(
         }
 
 
+
         waitViewModel.fetchOrdersDeliver(PostToGetDelivery(prefs.rsno,wait.tkey))
 
         waitViewModel.deliveryInfo.observe(viewLifecycleOwner,{
@@ -61,7 +62,15 @@ class CustomOrderDeliveryDialog(
             val formattedDate = outputFormat.format(date)
             describe.text = formattedDate
             orderDeliveryAdapter.update(it.ordersItemDelivery)
-            totalPrice.text = "總計：" + "$"+it.ordersDelivery.subtotal
+            totalPrice.text = context.resources.getString(R.string.TotalForTheDay) + "$"+it.ordersDelivery.subtotal.toInt().toString()
+
+            if(deliveryInfo.ordersDelivery.serviceOutStatus == "A"){
+                updateToPost.visibility = View.GONE
+                hasUpdatePost.visibility = View.VISIBLE
+            }else{
+                updateToPost.visibility = View.VISIBLE
+                hasUpdatePost.visibility = View.GONE
+            }
         })
 
         waitViewModel.isDeliveryStatusChange.observe(viewLifecycleOwner,{
@@ -75,12 +84,16 @@ class CustomOrderDeliveryDialog(
 
 
         printDelivery.setOnClickListener {
-            PrintDelivery(context,deliveryInfo) { isSuccess, err ->
-                Log.e("isSuccess", isSuccess.toString())
-                if (err != null) {
-                    Log.e("err", err)
-                }
-            }.startPrint()
+            if(prefs.printerIP!="" && prefs.printerPort!="") {
+                PrintDelivery(context, deliveryInfo) { isSuccess, err ->
+                    Log.e("isSuccess", isSuccess.toString())
+                    if (err != null) {
+                        Log.e("err", err)
+                    }
+                }.startPrint()
+            }else{
+                Toast.makeText(context,"Please check setting and make sure printer IP & Port has enter!",Toast.LENGTH_LONG).show()
+            }
         }
 
         updateToPost.setOnClickListener {
