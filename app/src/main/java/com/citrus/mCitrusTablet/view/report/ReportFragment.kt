@@ -51,10 +51,10 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
         reportViewModel.locationPageType.observe(viewLifecycleOwner, { reportRange ->
             when (reportRange) {
                 ReportRange.BY_DAILY -> {
-                    binding.showTypeBlock.visibility = View.GONE
+                    binding.showTypeTextInputLayout.visibility = View.GONE
                 }
                 else -> {
-                    binding.showTypeBlock.visibility = View.VISIBLE
+                    binding.showTypeTextInputLayout.visibility = View.VISIBLE
                 }
             }
             reportViewModel.reFetch()
@@ -68,7 +68,11 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
         collectionAdapter = CollectionAdapter(this)
 
         binding.apply {
-            binding.reportTitle.text = resources.getString(R.string.resReport)
+            if(prefs.reportTypePos == 0) {
+                binding.reportTitle.text = resources.getString(R.string.resReport)
+            }else{
+                binding.reportTitle.text = resources.getString(R.string.waitReport)
+            }
             binding.viewPager.offscreenPageLimit = 1
             binding.viewPager.adapter = collectionAdapter
            // binding.viewPager.isUserInputEnabled = false

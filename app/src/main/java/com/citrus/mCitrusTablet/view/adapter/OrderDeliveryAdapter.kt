@@ -45,7 +45,7 @@ class OrderDeliveryAdapter :RecyclerView.Adapter<OrderDeliveryAdapter.TasksViewH
                 flavorNameBlock.visibility =  View.GONE
                 addNameBlock.visibility =  View.GONE
                 gName.text = (position+1).toString()+". " + item.gname
-                price.text = "$"+item.price.toInt().toString()
+                price.text = "$"+item.price.toString()
                 qty.text = "x" + item.qty
 
                 if(item.addName.isNotEmpty() && item.addName != ""){

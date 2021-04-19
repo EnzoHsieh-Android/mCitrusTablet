@@ -71,10 +71,10 @@ class CustomOrderDeliveryDialog(
             val outputFormat = SimpleDateFormat("yyyy/MM/dd HH:mm")
             val date = inputFormat.parse(it.ordersDelivery.orderTime)
             val formattedDate = outputFormat.format(date)
-            describe.text = context.resources.getString(R.string.orderTime) + formattedDate
+            describe.text = context.resources.getString(R.string.orderTime) +" "+ formattedDate
             orderDeliveryAdapter.update(it.ordersItemDelivery)
             tvTotalSum.text = sum.toString()
-            totalPrice.text = "$"+it.ordersDelivery.subtotal.toInt().toString()
+            totalPrice.text = "$"+it.ordersDelivery.subtotal.toString()
 
             if(deliveryInfo.ordersDelivery.serviceOutStatus == "A"){
                 updateToPost.visibility = View.GONE
