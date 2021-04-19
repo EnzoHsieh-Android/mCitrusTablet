@@ -563,6 +563,18 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
         _cusNumType.postValue(type)
     }
 
+    fun sendPrintSuccessful() {
+        viewModelScope.launch {
+            tasksEventChannel.send(TasksEvent.ShowPrintSuccessMessage)
+        }
+    }
+
+    fun sendPrintFail(err: String) {
+        viewModelScope.launch {
+            tasksEventChannel.send(TasksEvent.ShowPrintFailMessage(err))
+        }
+    }
+
 
 }
 

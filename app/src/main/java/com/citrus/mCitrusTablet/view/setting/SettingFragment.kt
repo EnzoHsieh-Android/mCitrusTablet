@@ -44,8 +44,13 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
 
         val printLan = resources.getStringArray(R.array.printLan)
         val printArrayAdapter = ArrayAdapter(requireContext(),R.layout.dropdown_item,printLan)
+
+        val printType = resources.getStringArray(R.array.printIs80)
+        val printTypeAdapter = ArrayAdapter(requireContext(),R.layout.dropdown_item,printType)
+
         binding.languagePicker.setAdapter(lanArrayAdapter)
         binding.printLan.setAdapter(printArrayAdapter)
+        binding.printIs80.setAdapter(printTypeAdapter)
     }
 
     override fun onCreateView(
@@ -134,7 +139,14 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
         val languages = resources.getStringArray(R.array.language)
 
 
+
         binding.printLan.setText(prefs.charSet,false)
+
+        if(prefs.printerIs80mm){
+            binding.printIs80.setText("80mm")
+        }else{
+            binding.printIs80.setText("58mm")
+        }
 
         if(prefs.languagePos != -1){
             binding.languagePicker.setText(languages[prefs.languagePos],false)
@@ -173,6 +185,7 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
         val printLan = binding.printLan!!.text.trim().toString()
         val printIp = binding.printIp!!.text.trim().toString()
         val printPort = binding.printPort!!.text.trim().toString()
+        val printType = binding.printIs80!!.text.trim().toString()
 
         if (storeIdText.isEmpty()) {
             YoYo.with(Techniques.Shake).duration(1000).playOn(binding.storeIdInputLayout)
@@ -188,6 +201,7 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
         hasChange =
             !(storeIdText == prefs.storeId && serverText == prefs.severDomain && chooseLan == prefs.languagePos)
 
+        prefs.printerIs80mm = printType == "80mm"
         prefs.storeId = storeIdText
         prefs.severDomain = serverText
         prefs.languagePos = chooseLan

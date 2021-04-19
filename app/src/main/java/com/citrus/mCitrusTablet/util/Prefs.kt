@@ -74,4 +74,9 @@ class Prefs(private val context: Context) {
         get() = prefs.getString(Constants.KEY_PRINTER_PORT, "") ?: ""
         set(value) = prefs.edit().putString(Constants.KEY_PRINTER_PORT, value).apply()
 
+    var printerIs80mm: Boolean
+        get() = prefs.getBoolean(Constants.KEY_PRINTER_IS80MM, false)
+        set(value) = prefs.edit().putBoolean(Constants.KEY_PRINTER_IS80MM, value).apply()
+
+
 }

@@ -2,6 +2,7 @@ package com.citrus.mCitrusTablet.view.adapter
 
 
 import android.graphics.Color
+import android.util.TypedValue
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -199,6 +200,11 @@ class ReservationAdapter(
                 itemHolder.statusBlock.visibility = View.GONE
                 itemHolder.btnCheck.visibility = View.GONE
                 itemHolder.tvCheck.visibility = View.VISIBLE
+
+                if(itemHolder.tvCheck.text.length > 5){
+                    val textSize = activity.resources.getDimensionPixelSize(R.dimen.sp_6)
+                    itemHolder.tvCheck.setTextSize(TypedValue.COMPLEX_UNIT_PX,textSize.toFloat())
+                }
             }
 
             "D" -> {
@@ -239,7 +245,7 @@ class ReservationAdapter(
         val itemReservationTime: TextView = itemView.reservationTime
         val imgMemo:ImageView = itemView.img_memo
         val btnCheck:Button = itemView.btn_check
-        val tvCheck:TextView = itemView.tv_check
+        val tvCheck:Button = itemView.tv_check
         val tvAdult:TextView = itemView.adult
         val tvChild:TextView = itemView.child
         val tvMemo:TextView = itemView.tvMemo

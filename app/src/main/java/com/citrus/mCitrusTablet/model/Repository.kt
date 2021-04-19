@@ -10,7 +10,6 @@ import com.skydoves.sandwich.suspendOnSuccess
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.onCompletion
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -181,6 +180,7 @@ class Repository @Inject constructor(private val apiService: ApiService) {
         onEmpty: () -> Unit
     ) = flow {
         val jsonString = Gson().toJson(postToGetDelivery)
+        Log.e("fetchOrdersDelivery",jsonString)
         apiService.getOrdersDeliveryData(url, jsonString).suspendOnSuccess {
             if (data?.status != 0) {
                 emit(data?.data)

@@ -18,6 +18,10 @@ import com.citrus.mCitrusTablet.util.ui.BaseDialogFragment
 import com.citrus.mCitrusTablet.view.adapter.OrderDeliveryAdapter
 import com.citrus.mCitrusTablet.view.wait.WaitViewModel
 import kotlinx.android.synthetic.main.dialog_order_delivery.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 
 
@@ -56,13 +60,21 @@ class CustomOrderDeliveryDialog(
             deliveryInfo = it
             title.text = context.resources.getString(R.string.order_delivery) +" "+ it.ordersDelivery.orderNO
 
+
+            var sum:Int = 0
+
+            for(item in deliveryInfo.ordersItemDelivery){
+                sum += item.qty
+            }
+
             val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
             val outputFormat = SimpleDateFormat("yyyy/MM/dd HH:mm")
             val date = inputFormat.parse(it.ordersDelivery.orderTime)
             val formattedDate = outputFormat.format(date)
-            describe.text = formattedDate
+            describe.text = context.resources.getString(R.string.orderTime) + formattedDate
             orderDeliveryAdapter.update(it.ordersItemDelivery)
-            totalPrice.text = context.resources.getString(R.string.TotalForTheDay) + "$"+it.ordersDelivery.subtotal.toInt().toString()
+            tvTotalSum.text = sum.toString()
+            totalPrice.text = "$"+it.ordersDelivery.subtotal.toInt().toString()
 
             if(deliveryInfo.ordersDelivery.serviceOutStatus == "A"){
                 updateToPost.visibility = View.GONE
@@ -85,14 +97,23 @@ class CustomOrderDeliveryDialog(
 
         printDelivery.setOnClickListener {
             if(prefs.printerIP!="" && prefs.printerPort!="") {
-                PrintDelivery(context, deliveryInfo) { isSuccess, err ->
-                    Log.e("isSuccess", isSuccess.toString())
-                    if (err != null) {
-                        Log.e("err", err)
-                    }
-                }.startPrint()
+                MainScope().launch(Dispatchers.IO) {
+                    PrintDelivery(context, deliveryInfo) { isSuccess, err ->
+                        if (!isSuccess) {
+                            launch(Dispatchers.Main) {
+                                if (err != null) {
+                                    waitViewModel.sendPrintFail(err)
+                                }
+                            }
+                        }else{
+                            launch(Dispatchers.Main) {
+                                waitViewModel.sendPrintSuccessful()
+                            }
+                        }
+                    }.startPrint()
+                }
             }else{
-                Toast.makeText(context,"Please check setting and make sure printer IP & Port has enter!",Toast.LENGTH_LONG).show()
+                Toast.makeText(context,context.resources.getString(R.string.checkPrint),Toast.LENGTH_LONG).show()
             }
         }
 

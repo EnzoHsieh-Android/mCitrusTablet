@@ -103,10 +103,20 @@
     <string name="print">打印</string>
     <string name="printIp">打印 IP</string>
     <string name="printPort">打印 Port</string>
+    <string name="item">品项</string>
+    <string name="qty">数量</string>
+    <string name="printSuccess">打印成功</string>
+    <string name="orderTime">预点时间:</string>
+    <string name="orderNo">单号:</string>
+    <string name="printTime">打印时间:</string>
+    <string name="printPaperType">印纸类型</string>
+    <string name="printANSI">打印ANSI类型</string>
+    <string name="checkPrint">请检查设定页并确保已设置打印机IP和端口</string>
 
     <string name="report_checked">已入席:</string>
     <string name="report_cancelled">已取消:</string>
     <string name="report_wait">尚未入席:</string>
+    <string name="chart_wait">尚未入席</string>
     <string name="report_waitTime_avg">平均等待时间:</string>
     <string name="report_group">组</string>
     <string name="report_person">人</string>

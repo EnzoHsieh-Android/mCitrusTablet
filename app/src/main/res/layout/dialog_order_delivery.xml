@@ -83,16 +83,83 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title"
+        app:layout_constraintBottom_toTopOf="@+id/topDetail"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_2"
+        android:background="@drawable/dotted"/>
+
+    <LinearLayout
+        android:layout_margin="@dimen/dp_5"
+        android:id="@+id/topDetail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/viewLine"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="horizontal"
+        android:gravity="start"
+        android:weightSum="10"
+        >
+        <TextView
+            android:layout_weight="6"
+            android:id="@+id/tvTotalTitle"
+            android:layout_width="@dimen/dp_120"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/bottomViewLine"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+            android:textColor="@color/primaryColor"
+            android:text="@string/item"/>
+
+        <TextView
+            android:gravity="right"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_weight="1"
+            android:id="@+id/tvQty"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/bottomViewLine"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+            android:textColor="@color/primaryColor"
+            android:text="@string/qty"/>
+
+        <TextView
+            android:gravity="right"
+            android:layout_weight="3"
+            android:layout_marginStart="@dimen/dp_20"
+            android:id="@+id/totalPriceTitle"
+            android:layout_width="@dimen/dp_50"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/bottomViewLine"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
+            android:textColor="@color/primaryColor"
+            android:text="@string/TotalForTheDay"/>
+    </LinearLayout>
+
+
+    <View
+        android:layout_margin="@dimen/dp_2"
+        android:id="@+id/viewLine2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topDetail"
         app:layout_constraintBottom_toTopOf="@+id/deliveryRv"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_2"
         android:background="@drawable/dotted"/>
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/deliveryRv"
-        app:layout_constraintTop_toBottomOf="@id/viewLine"
-        app:layout_constraintBottom_toTopOf="@+id/totalPrice"
+        app:layout_constraintTop_toBottomOf="@id/viewLine2"
+        app:layout_constraintBottom_toTopOf="@+id/endDetail"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="0dp"
@@ -110,16 +177,63 @@
         app:layout_constraintTop_toBottomOf="@+id/deliveryRv"
         />
 
-    <TextView
-        android:id="@+id/totalPrice"
-        android:layout_width="wrap_content"
+    
+    
+    <LinearLayout
+        android:id="@+id/endDetail"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/bottomViewLine"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:textSize="@dimen/sp_13"
-        android:textStyle="bold"
-        android:textColor="@color/primaryColor"
-        android:text=""/>
+        android:orientation="horizontal"
+        android:gravity="start"
+        android:weightSum="10"
+        android:layout_margin="@dimen/dp_5"
+        >
+        <TextView
+            android:layout_weight="6"
+            android:id="@+id/tvTotal"
+            android:layout_width="@dimen/dp_120"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/bottomViewLine"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textSize="@dimen/sp_13"
+            android:textStyle="bold"
+            android:textColor="@color/primaryColor"
+            android:text="@string/TotalForTheDay"/>
+
+        <TextView
+            android:gravity="right"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_weight="1"
+            android:id="@+id/tvTotalSum"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/bottomViewLine"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textSize="@dimen/sp_13"
+            android:textStyle="bold"
+            android:textColor="@color/primaryColor"
+            android:text=""/>
+
+        <TextView
+            android:gravity="right"
+            android:layout_weight="3"
+            android:layout_marginStart="@dimen/dp_20"
+            android:id="@+id/totalPrice"
+            android:layout_width="@dimen/dp_50"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/bottomViewLine"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textSize="@dimen/sp_13"
+            android:textStyle="bold"
+            android:textColor="@color/primaryColor"
+            android:text=""/>
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

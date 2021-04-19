@@ -11,7 +11,7 @@ import java.util.*
 enum class HideCheck { HIDE_TRUE, HIDE_FALSE }
 object Constants {
 
-
+    const val KEY_PRINTER_IS80MM = "KEY_PRINTER_IS80MM"
     const val KEY_PRINTER_IP = "KEY_PRINTER_IP"
     const val KEY_PRINTER_PORT = "KEY_PRINTER_PORT"
     const val KEY_CHART_TYPE = "KEY_CHART_TYPE"

@@ -3,6 +3,7 @@ package com.citrus.mCitrusTablet.view.adapter
 import android.content.Context
 import android.graphics.Color
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -120,14 +121,23 @@ class WaitAdapter(var waitList:MutableList<Wait>,var cusNumType: CusNumType  ,@A
                 var timeStr = formattedDate.split(" ")
                 reservationTime.text = timeStr[1]
 
+                val textSize = context.resources.getDimensionPixelSize(R.dimen.sp_6)
                 if(wait.status == "C"){
                     btnNotice.visibility = View.GONE
                     statusBlock.visibility = View.GONE
                     btnCheck.visibility = View.GONE
                     tvCheck.visibility = View.VISIBLE
 
+                    if(tvCheck.text.length > 5){
+                        tvCheck.setTextSize(TypedValue.COMPLEX_UNIT_PX,textSize.toFloat())
+                    }
+
+
                 }else{
                     btnCheck.visibility = View.VISIBLE
+                    if(btnCheck.text.length > 5){
+                        btnCheck.setTextSize(TypedValue.COMPLEX_UNIT_PX,textSize.toFloat())
+                    }
                     tvCheck.visibility = View.GONE
                 }
 

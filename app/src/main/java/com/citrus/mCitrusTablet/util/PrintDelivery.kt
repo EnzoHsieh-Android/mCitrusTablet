@@ -5,11 +5,16 @@ import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.model.vo.DeliveryInfo
 import com.citrus.mCitrusTablet.util.Constants.dfShow
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import java.io.DataOutputStream
 import java.io.IOException
 import java.io.OutputStream
+import java.lang.Exception
 import java.net.InetSocketAddress
 import java.net.Socket
+import java.net.SocketException
 
 class PrintDelivery(
     private val context: FragmentActivity,
@@ -21,6 +26,7 @@ class PrintDelivery(
 
 
     fun startPrint() {
+        val is80mm = prefs.printerIs80mm
         var deliveryItemList = deliveryInfo.ordersItemDelivery
 
         var data: ByteArray
@@ -31,22 +37,42 @@ class PrintDelivery(
         if (prefs.storeName.isNotEmpty()) data = b(data, text(prefs.storeName))
         data = b(data, fontSizeCmd(FontSize.Normal))
         data = b(data, boldCmd(false))
-        data = b(data, text("預點時間: " + deliveryInfo.ordersDelivery.orderTime))
-        data = b(data, text("單號 " + deliveryInfo.ordersDelivery.orderNO))
-        data = b(data, text("列印時間" + ": " + Constants.getCurrentTime()))
+        data = b(data, text(context.resources.getString(R.string.orderTime) + deliveryInfo.ordersDelivery.orderTime))
+        data = b(data, text(context.resources.getString(R.string.orderNo) + deliveryInfo.ordersDelivery.orderNO))
+        data = b(data, text(context.resources.getString(R.string.printTime)  + Constants.getCurrentTime()))
 
-        data = b(data, dashLine(false))
+        data = b(data, dashLine(is80mm))
+        if (is80mm) {
+            data = b(data, boldCmd(true))
+            data = b(data, twoColumn(context.getString(R.string.item), context.getString(R.string.qty) + "    " + context.getString(R.string.TotalForTheDay), is80mm))
+            data = b(data, boldCmd(false))
+            data = b(data, dashLine(is80mm))
+        }
 
         var sum = 0
         for (item in deliveryItemList) {
+            sum += item.qty
 
-            var itemTitle = item.qty.toString() + "x " + item.gname
+            if (is80mm) {
+                val priceStr = String.format("%7s", dfShow.format(item.price))
+                val qtyStr = String.format("%-3s", item.qty)
 
-            if (getStringPixLength(itemTitle + dfShow.format(item.price), 12, 24) / 12 > 33) {
-                data = b(data, text(itemTitle))
-                data = b(data, twoColumn("", dfShow.format(item.price), false))
+                //最多48個字 48-11=37
+                if (item.gname.toByteArray(charset("GBK")).size <= 37) {
+                    data = b(data, twoColumn(item.gname, qtyStr + priceStr, is80mm))
+                } else {
+                    data = b(data, text(item.gname))
+                    data = b(data, twoColumn("", qtyStr + priceStr, is80mm))
+                }
             } else {
-                data = b(data, twoColumn(itemTitle, dfShow.format(item.price), false))
+                var itemTitle = item.qty.toString() + "x " + item.gname
+
+                if (getStringPixLength(itemTitle + dfShow.format(item.price), 12, 24) / 12 > 33) {
+                    data = b(data, text(itemTitle))
+                    data = b(data, twoColumn("", dfShow.format(item.price), is80mm))
+                } else {
+                    data = b(data, twoColumn(itemTitle, dfShow.format(item.price), is80mm))
+                }
             }
 
             val flavorAdd =
@@ -55,12 +81,18 @@ class PrintDelivery(
                 else if (!item.flavorName.isNullOrEmpty()) item.flavorName
                 else null
 
-            flavorAdd?.let { data = b(data, text("    #$it")) }
+            flavorAdd?.let { data = b(data, text((if (is80mm) "  #" else "    #") + it)) }
         }
-        data = b(data, dashLine(false))
-        data = b(data, boldCmd(true))
-        data = b(data, fontSizeCmd(FontSize.Big))
-        data = b(data, twoColumn("總計    " + sum + "項", deliveryInfo.ordersDelivery.subtotal.toString(), false))
+        data = b(data, dashLine(is80mm))
+
+        var orgAmtStr = String.format("%7s", dfShow.format(deliveryInfo.ordersDelivery.subtotal))
+        val qtyStr = String.format("%-3s", sum)
+
+        data = if (is80mm) {
+            b(data, twoColumn(context.getString(R.string.TotalForTheDay), qtyStr + orgAmtStr, is80mm))
+        } else {
+            b(data, twoColumn(context.getString(R.string.TotalForTheDay), "$qtyStr $orgAmtStr", is80mm))
+        }
         data = b(data, text("\n"))
 
         if (data.isEmpty()) {
@@ -76,7 +108,12 @@ class PrintDelivery(
     private fun send(buffer: ByteArray) {
         socket = Socket()
         socket?.run {
-            connect(InetSocketAddress(prefs.printerIP, prefs.printerPort.toInt()), 5000)
+            try {
+                connect(InetSocketAddress(prefs.printerIP, prefs.printerPort.toInt()), 5000)
+            }catch (e:Exception){
+                e.message?.let { onError(it) }
+                return
+            }
             mOutputStream = DataOutputStream(getOutputStream())
 
             if (isConnected(socket)) {

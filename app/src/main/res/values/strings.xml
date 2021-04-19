@@ -107,11 +107,24 @@
 
     <string name="report_checked">Checked:</string>
     <string name="report_cancelled">Cancelled:</string>
-    <string name="report_wait">Not check:</string>
+    <string name="report_wait">Not yet seated:</string>
+    <string name="chart_wait">Not yet seated</string>
     <string name="report_waitTime_avg">Avg wait Time:</string>
     <string name="report_group"> </string>
     <string name="report_person"> </string>
     <string name="report_min">min</string>
+    <string name="item">item</string>
+    <string name="qty">qty</string>
+    <string name="printSuccess">Printed successfully</string>
+
+    <string name="checkPrint">Please check out setting and make sure printer IP &amp; Port have been set up</string>
+
+    <string name="orderTime">Order Time:</string>
+    <string name="orderNo">Order No:</string>
+    <string name="printTime">Print Time:</string>
+    <string name="printPaperType">Print Paper Type</string>
+    <string name="printANSI">Print ANSI Type</string>
+
 
     <string-array name="OtherDemo">
         <item>Angela</item>
@@ -131,6 +144,11 @@
         <item>BIG5</item>
         <item>GBK</item>
         <item>JIS</item>
+    </string-array>
+
+    <string-array name="printIs80">
+        <item>80mm</item>
+        <item>58mm</item>
     </string-array>
 
     <string-array name="language">

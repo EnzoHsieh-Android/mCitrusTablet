@@ -24,7 +24,7 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
     private var _binding: FragmentReportBinding? = null
     private val binding get() = _binding!!
     private lateinit var titles: Array<String>
-    private lateinit var collectionAdapter:CollectionAdapter
+    private  var collectionAdapter:CollectionAdapter? = null
 
 
     override fun onResume() {
@@ -173,6 +173,7 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
         reportViewModel.setTime(Constants.defaultTimeStr)
         _binding?.viewPager?.adapter = null
         _binding = null
+        collectionAdapter = null
         super.onDestroyView()
     }
 

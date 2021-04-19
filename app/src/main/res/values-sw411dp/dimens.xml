@@ -390,6 +390,7 @@
 	<dimen name="sp_2">2.2857sp</dimen>
 	<dimen name="sp_3">3.4286sp</dimen>
 	<dimen name="sp_4">4.5714sp</dimen>
+	<dimen name="sp_5">5.7143sp</dimen>
 	<dimen name="sp_6">6.8571sp</dimen>
 	<dimen name="sp_7">8.0000sp</dimen>
 	<dimen name="sp_8">9.1429sp</dimen>

@@ -107,10 +107,21 @@
     <string name="report_checked">已入席:</string>
     <string name="report_cancelled">已取消:</string>
     <string name="report_wait">尚未入席:</string>
+    <string name="chart_wait">尚未入席</string>
     <string name="report_waitTime_avg">平均等待時間:</string>
     <string name="report_group">組</string>
     <string name="report_person">人</string>
     <string name="report_min">分</string>
+    <string name="item">品項</string>
+    <string name="qty">數量</string>
+    <string name="printSuccess">列印成功</string>
+    <string name="checkPrint">請檢查設定頁並確保已設定列印設備IP和PORT</string>
+
+    <string name="orderTime">預點時間:</string>
+    <string name="orderNo">單號:</string>
+    <string name="printTime">列印時間:</string>
+    <string name="printANSI">列印ANSI類型</string>
+    <string name="printPaperType">印紙類型</string>
 
     <string-array name="reportType">
         <item>訂位</item>

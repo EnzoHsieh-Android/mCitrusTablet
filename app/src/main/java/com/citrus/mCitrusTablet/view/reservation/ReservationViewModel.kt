@@ -676,4 +676,6 @@ sealed class TasksEvent {
     data class ShowUndoDeleteTaskMessageW(val wait: Wait) : TasksEvent()
     object ShowSuccessMessage : TasksEvent()
     object ShowFailMessage : TasksEvent()
+    object ShowPrintSuccessMessage : TasksEvent()
+    data class ShowPrintFailMessage(val str:String) : TasksEvent()
 }

@@ -110,7 +110,7 @@ class DailyFragment : Fragment(R.layout.fragment_daily) {
         strings.add(
             PieEntry(
                 guestsData.wait.toFloat(),
-                if (guestsData.wait != 0) resources.getString(R.string.Waiting) else ""
+                if (guestsData.wait != 0) resources.getString(R.string.chart_wait) else ""
             )
         )
         strings.add(

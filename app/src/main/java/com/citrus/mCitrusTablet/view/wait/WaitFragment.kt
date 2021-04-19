@@ -440,6 +440,30 @@ WaitFragment : BaseFragment() {
                             }
                         adjustSnackBar(mSnackBar).show()
                     }
+
+                    is TasksEvent.ShowPrintSuccessMessage -> {
+                        var dialog = activity?.let {
+                            CustomAlertDialog(
+                                it,
+                                resources.getString(R.string.printSuccess),
+                                "",
+                                R.drawable.ic_check
+                            )
+                        }
+                        dialog!!.show()
+                    }
+
+                    is TasksEvent.ShowPrintFailMessage -> {
+                        var dialog = activity?.let {
+                            CustomAlertDialog(
+                                it,
+                              event.str,
+                                "",
+                                R.drawable.ic_baseline_clear_24
+                            )
+                        }
+                        dialog!!.show()
+                    }
                 }
             }
         }
