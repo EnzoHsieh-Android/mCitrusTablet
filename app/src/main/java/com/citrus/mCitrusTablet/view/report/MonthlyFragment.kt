@@ -13,6 +13,8 @@ import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.databinding.FragmentMonthlyBinding
 import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.model.vo.Report
+import com.citrus.mCitrusTablet.util.Constants
+import com.citrus.mCitrusTablet.util.Constants.convertPixelToDp
 import com.citrus.mCitrusTablet.util.MyMarkView
 import com.citrus.mCitrusTablet.view.adapter.ReportAdapter
 import com.github.mikephil.charting.animation.Easing
@@ -153,8 +155,8 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
         pieData.setValueTextColor(Color.BLACK)
         pieData.setValueTypeface(tf)
 
-        val textSp = resources.getDimensionPixelSize(R.dimen.sp_6)
-        val labelSp = resources.getDimensionPixelSize(R.dimen.sp_4)
+        val textSp = resources.getDimensionPixelSize(R.dimen.sp_10)
+        val labelSp = resources.getDimensionPixelSize(R.dimen.sp_8)
         val formSize = resources.getDimensionPixelSize(R.dimen.sp_4)
 
         binding.picChart.data = pieData
@@ -174,9 +176,14 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
 
         binding.picChart.description = description
         binding.picChart.setDrawCenterText(true)
-        binding.picChart.setEntryLabelTextSize(labelSp.toFloat())
+        binding.picChart.setEntryLabelTextSize(convertPixelToDp(labelSp.toFloat(),requireContext()))
         binding.picChart.setEntryLabelColor(Color.BLACK)
-        binding.picChart.data.setValueTextSize(textSp.toFloat())
+        binding.picChart.data.setValueTextSize(
+            convertPixelToDp(
+                textSp.toFloat(),
+                requireContext()
+            )
+        )
 
         binding.picChart.data.setValueFormatter { value, entry, dataSetIndex, viewPortHandler ->
             var drawValue = "0"
@@ -195,7 +202,7 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
             )
         )
         binding.picChart.centerText =  resources.getString(R.string.TotalForTheDay)+ totalNum
-        binding.picChart.setCenterTextSize(textSp.toFloat())
+        binding.picChart.setCenterTextSize(convertPixelToDp(textSp.toFloat(), requireContext()))
 
         val l: Legend = binding.picChart.legend
         l.isEnabled = false
@@ -209,9 +216,9 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
     }
 
     private fun drawBarChart() {
-        val textSp = resources.getDimensionPixelSize(R.dimen.sp_16)
-        val formSize = resources.getDimensionPixelSize(R.dimen.sp_6)
-        val valueSp = resources.getDimensionPixelSize(R.dimen.sp_3)
+        val textSp = convertPixelToDp(resources.getDimensionPixelSize(R.dimen.sp_12).toFloat(),requireContext())
+        val formSize = convertPixelToDp(resources.getDimensionPixelSize(R.dimen.sp_6).toFloat(),requireContext())
+        val valueSp = convertPixelToDp(resources.getDimensionPixelSize(R.dimen.sp_6).toFloat(),requireContext())
         val chart = binding.stackedBarChart
         chart.xAxis.apply {
             textColor = getResourceColor(R.color.primaryColor)
@@ -230,11 +237,11 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
 
             /** legend- 底下色塊描述設定*/
             legend.isEnabled = true
-            legend.textSize = textSp.toFloat()
-            legend.formSize = formSize.toFloat()
+            legend.textSize = textSp
+            legend.formSize = formSize
 
             axisRight.isEnabled = false
-            axisLeft.textSize = textSp.toFloat()
+            axisLeft.textSize = textSp
             setScaleEnabled(false)
         }
 
@@ -247,7 +254,7 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
         }
         /** X軸標籤Rotation*/
         chart.xAxis.labelRotationAngle = 70f
-        chart.xAxis.textSize = valueSp.toFloat()
+        chart.xAxis.textSize = valueSp
 
         /** 點擊呈現MarkView相關*/
         var axisValueFormatter =  chart.xAxis.valueFormatter

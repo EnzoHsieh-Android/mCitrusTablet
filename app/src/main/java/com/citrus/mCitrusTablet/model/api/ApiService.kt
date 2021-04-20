@@ -132,6 +132,8 @@ interface ApiService {
 
 
     /*轉單*/
+    /*Flag狀態（A：新增；E：修改；D：刪除；N：暫存）*/
+    /*ServiceOutStatus狀態（A：待確認；B：駁回；C：已結帳；W：待送 */
     @FormUrlEncoded
     @Headers("Content-Type: application/x-www-form-urlencoded")
     @ResponseFormat("json")

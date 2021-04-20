@@ -3,6 +3,7 @@ package com.citrus.mCitrusTablet.util
 
 
 import android.annotation.SuppressLint
+import android.content.Context
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -74,6 +75,15 @@ object Constants {
         val currentDate = Calendar.getInstance().time
         val sdf = dateTimeFormatSql
         return sdf.format(currentDate)
+    }
+
+     fun convertPixelToDp(px: Float, context: Context): Float {
+        return px / getDensity(context)
+    }
+
+     private fun getDensity(context: Context): Float {
+        val metrics = context.resources.displayMetrics
+        return metrics.density
     }
 
 }

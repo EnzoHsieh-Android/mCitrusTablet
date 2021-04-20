@@ -12,6 +12,8 @@ import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.databinding.FragmentWeeklyBinding
 import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.model.vo.Report
+import com.citrus.mCitrusTablet.util.Constants
+import com.citrus.mCitrusTablet.util.Constants.convertPixelToDp
 import com.citrus.mCitrusTablet.util.MyMarkView
 import com.citrus.mCitrusTablet.view.adapter.ReportAdapter
 import com.github.mikephil.charting.animation.Easing
@@ -172,9 +174,9 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
         pieData.setValueTextColor(Color.BLACK)
         pieData.setValueTypeface(tf)
 
-        val textSp = resources.getDimensionPixelSize(R.dimen.sp_6)
-        val labelSp = resources.getDimensionPixelSize(R.dimen.sp_4)
-        val formSize = resources.getDimensionPixelSize(R.dimen.sp_4)
+        val textSp = convertPixelToDp(resources.getDimensionPixelSize(R.dimen.sp_10).toFloat(),requireContext())
+        val labelSp = convertPixelToDp(resources.getDimensionPixelSize(R.dimen.sp_8).toFloat(),requireContext())
+
 
         binding.picChart.data = pieData
         val description = Description()
@@ -193,9 +195,9 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
 
         binding.picChart.description = description
         binding.picChart.setDrawCenterText(true)
-        binding.picChart.setEntryLabelTextSize(labelSp.toFloat())
+        binding.picChart.setEntryLabelTextSize(labelSp)
         binding.picChart.setEntryLabelColor(Color.BLACK)
-        binding.picChart.data.setValueTextSize(textSp.toFloat())
+        binding.picChart.data.setValueTextSize(textSp)
 
         binding.picChart.data.setValueFormatter { value, entry, dataSetIndex, viewPortHandler ->
             var drawValue = "0"
@@ -214,7 +216,7 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
             )
         )
         binding.picChart.centerText = resources.getString(R.string.TotalForTheDay)+ totalNum
-        binding.picChart.setCenterTextSize(textSp.toFloat())
+        binding.picChart.setCenterTextSize(textSp)
 
         val l: Legend = binding.picChart.legend
         l.isEnabled = false
@@ -228,12 +230,11 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
     }
 
     private fun drawBarChart() {
-        val textSp = resources.getDimensionPixelSize(R.dimen.sp_12)
-        val formSize = resources.getDimensionPixelSize(R.dimen.sp_6)
-        val valueSp = resources.getDimensionPixelSize(R.dimen.sp_4)
+        val textSp = convertPixelToDp(resources.getDimensionPixelSize(R.dimen.sp_12).toFloat(),requireContext())
+        val formSize = convertPixelToDp(resources.getDimensionPixelSize(R.dimen.sp_6).toFloat(),requireContext())
         val chart = binding.stackedBarChart
         chart.xAxis.apply {
-            textSize  = textSp.toFloat()
+            textSize  = textSp
             textColor = getResourceColor(R.color.primaryColor)
             valueFormatter = IndexAxisValueFormatter(titleEntity)
             labelCount = titleEntity.size
@@ -248,10 +249,10 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
             description.isEnabled = false
             isClickable = true
             legend.isEnabled = true
-            legend.textSize = textSp.toFloat()
-            legend.formSize = formSize.toFloat()
+            legend.textSize = textSp
+            legend.formSize = formSize
             axisRight.isEnabled = false
-            axisLeft.textSize = textSp.toFloat()
+            axisLeft.textSize = textSp
             setScaleEnabled(false)
         }
 
@@ -264,7 +265,7 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
 
                 drawValue
             }
-            setValueTextSize(valueSp.toFloat())
+            //setValueTextSize(valueSp.toFloat())
             setDrawValues(false)
         }
         var axisValueFormatter =  chart.xAxis.valueFormatter

@@ -33,7 +33,7 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
         val showType = resources.getStringArray(R.array.showType)
         val typeArrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, type)
         val showTypeArrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, showType)
-
+        binding.time.setText(Constants.getCurrentDate(), false)
         binding.reportType.setAdapter(typeArrayAdapter)
         binding.showType.setAdapter(showTypeArrayAdapter)
     }

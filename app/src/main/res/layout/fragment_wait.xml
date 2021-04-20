@@ -289,7 +289,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:id="@+id/nameTextInputLayout"
                 android:layout_width="@dimen/dp_125"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/horizontal_TimeStr40"
@@ -331,16 +331,22 @@
             />
 
 
+        <LinearLayout
+            android:id="@id/phoneBlock"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/horizontal_TimeStr50"
+            app:layout_constraintBottom_toTopOf="@id/horizontal_TimeStr60"
+            android:orientation="horizontal"
+            >
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:id="@+id/phoneTextInputLayout"
                 android:layout_width="@dimen/dp_125"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/horizontal_TimeStr50"
-                app:layout_constraintBottom_toTopOf="@id/horizontal_TimeStr60"
                 android:layout_marginTop="@dimen/dp_5"
                 android:layout_marginBottom="@dimen/dp_5"
                 android:hint="@string/phone_number"
@@ -370,10 +376,6 @@
                 android:id="@+id/mailTextInputLayout"
                 android:layout_width="@dimen/dp_125"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/horizontal_TimeStr50"
-                app:layout_constraintBottom_toTopOf="@id/horizontal_TimeStr60"
                 android:layout_marginTop="@dimen/dp_5"
                 android:layout_marginBottom="@dimen/dp_5"
                 android:hint="E-mail"
@@ -396,14 +398,14 @@
                     android:singleLine="true"
                     />
             </com.google.android.material.textfield.TextInputLayout>
-
+        </LinearLayout>
 
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:id="@+id/memoTextInputLayout"
                 android:layout_width="@dimen/dp_125"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/horizontal_TimeStr60"
@@ -437,7 +439,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:id="@+id/seatTextInputLayout"
                 android:layout_width="@dimen/dp_125"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/horizontal_TimeStr70"

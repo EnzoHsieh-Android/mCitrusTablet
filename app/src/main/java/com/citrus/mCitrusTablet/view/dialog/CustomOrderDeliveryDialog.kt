@@ -76,13 +76,29 @@ class CustomOrderDeliveryDialog(
             tvTotalSum.text = sum.toString()
             totalPrice.text = "$"+it.ordersDelivery.subtotal.toString()
 
-            if(deliveryInfo.ordersDelivery.flag == "A"){
-                updateToPost.visibility = View.GONE
-                hasUpdatePost.visibility = View.VISIBLE
-            }else{
-                updateToPost.visibility = View.VISIBLE
-                hasUpdatePost.visibility = View.GONE
+
+
+            when(deliveryInfo.ordersDelivery.flag){
+                "A" -> {
+                    updateToPost.visibility = View.GONE
+                    hasUpdatePost.visibility = View.VISIBLE
+                    hasUpdatePost.text = "已轉單"
+                }
+                "E" -> {
+                    updateToPost.visibility = View.GONE
+                    hasUpdatePost.visibility = View.VISIBLE
+                    when(deliveryInfo.ordersDelivery.serviceOutStatus){
+                        "W" -> hasUpdatePost.text = "已接單"
+                        "B" -> hasUpdatePost.text = "已取消"
+                        "C" -> hasUpdatePost.text = "已結帳"
+                    }
+                }
+                else -> {
+                    updateToPost.visibility = View.VISIBLE
+                    hasUpdatePost.visibility = View.GONE
+                }
             }
+
         })
 
         waitViewModel.isDeliveryStatusChange.observe(viewLifecycleOwner,{

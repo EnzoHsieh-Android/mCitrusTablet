@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
@@ -180,12 +181,14 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
 
     private fun applyChangesToSharedPref(): Boolean {
 
-        val storeIdText = binding.etStoreId!!.text.trim().toString()
-        val serverText = binding.etServerIp!!.text.trim().toString()
-        val printLan = binding.printLan!!.text.trim().toString()
-        val printIp = binding.printIp!!.text.trim().toString()
-        val printPort = binding.printPort!!.text.trim().toString()
-        val printType = binding.printIs80!!.text.trim().toString()
+        val storeIdText = binding.etStoreId!!.text.toString().replace(" ","")
+        val serverText = binding.etServerIp!!.text.toString().replace(" ","")
+        val printLan = binding.printLan!!.text.toString().replace(" ","")
+        val printIp = binding.printIp!!.text.toString().replace(" ","")
+        val printPort = binding.printPort!!.text.toString().replace(" ","")
+        val printType = binding.printIs80!!.text.toString().replace(" ","")
+
+
 
         if (storeIdText.isEmpty()) {
             YoYo.with(Techniques.Shake).duration(1000).playOn(binding.storeIdInputLayout)

@@ -44,7 +44,7 @@
             android:id="@+id/hasUpdatePost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="已轉單"
+            android:text=""
             android:textStyle="bold"
             android:textSize="@dimen/sp_10"
             android:enabled="false"

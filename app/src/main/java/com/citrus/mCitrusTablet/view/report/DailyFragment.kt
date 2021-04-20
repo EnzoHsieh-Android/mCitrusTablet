@@ -1,5 +1,6 @@
 package com.citrus.mCitrusTablet.view.report
 
+import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.databinding.FragmentDailyBinding
 import com.citrus.mCitrusTablet.model.vo.Report
+import com.citrus.mCitrusTablet.util.Constants.convertPixelToDp
 import com.citrus.mCitrusTablet.view.adapter.ReportAdapter
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.Description
@@ -81,15 +83,23 @@ class DailyFragment : Fragment(R.layout.fragment_daily) {
                 binding.picChart.clear()
             }
 
-            binding.TvCheckNum.text = " "+guestsData.check.toString() + resources.getString(R.string.report_group)
-            binding.TvAdultNum.text = " "+guestsData.adult.toString() + resources.getString(R.string.report_person)
-            binding.TvChildNum.text = " "+guestsData.child.toString() + resources.getString(R.string.report_person)
-            binding.TvCancelNum.text = " "+guestsData.cancel.toString() + resources.getString(R.string.report_group)
-            binding.TvUnCheckNum.text = " "+guestsData.wait.toString() + resources.getString(R.string.report_group)
+            binding.TvCheckNum.text =
+                " " + guestsData.check.toString() + resources.getString(R.string.report_group)
+            binding.TvAdultNum.text =
+                " " + guestsData.adult.toString() + resources.getString(R.string.report_person)
+            binding.TvChildNum.text =
+                " " + guestsData.child.toString() + resources.getString(R.string.report_person)
+            binding.TvCancelNum.text =
+                " " + guestsData.cancel.toString() + resources.getString(R.string.report_group)
+            binding.TvUnCheckNum.text =
+                " " + guestsData.wait.toString() + resources.getString(R.string.report_group)
 
             if (guestsData.waitTime != 0) {
                 binding.waitTimeBlock.visibility = View.VISIBLE
-                binding.TvWaitTime.text = " "+(guestsData.waitTime / guestsData.check).toString() +" "+resources.getString(R.string.report_min)
+                binding.TvWaitTime.text =
+                    " " + (guestsData.waitTime / guestsData.check).toString() + " " + resources.getString(
+                        R.string.report_min
+                    )
             } else {
                 binding.waitTimeBlock.visibility = View.GONE
             }
@@ -144,9 +154,9 @@ class DailyFragment : Fragment(R.layout.fragment_daily) {
         pieData.setValueTextColor(Color.BLACK)
         pieData.setValueTypeface(tf)
 
-        val textSp = resources.getDimensionPixelSize(R.dimen.sp_6)
-        val labelSp = resources.getDimensionPixelSize(R.dimen.sp_4)
-        val formSize = resources.getDimensionPixelSize(R.dimen.sp_4)
+        val textSp = convertPixelToDp(resources.getDimensionPixelSize(R.dimen.sp_10).toFloat(),requireContext())
+        val labelSp = convertPixelToDp(resources.getDimensionPixelSize(R.dimen.sp_8).toFloat(),requireContext())
+
 
         binding.picChart.data = pieData
         val description = Description()
@@ -165,9 +175,9 @@ class DailyFragment : Fragment(R.layout.fragment_daily) {
 
         binding.picChart.description = description
         binding.picChart.setDrawCenterText(true)
-        binding.picChart.setEntryLabelTextSize(labelSp.toFloat())
+        binding.picChart.setEntryLabelTextSize(labelSp)
         binding.picChart.setEntryLabelColor(Color.BLACK)
-        binding.picChart.data.setValueTextSize(textSp.toFloat())
+        binding.picChart.data.setValueTextSize(textSp)
 
         binding.picChart.data.setValueFormatter { value, entry, dataSetIndex, viewPortHandler ->
             var drawValue = "0"
@@ -186,7 +196,7 @@ class DailyFragment : Fragment(R.layout.fragment_daily) {
             )
         )
         binding.picChart.centerText = resources.getString(R.string.TotalForTheDay)+ guestsData.total
-        binding.picChart.setCenterTextSize(textSp.toFloat())
+        binding.picChart.setCenterTextSize(textSp)
 
         val l: Legend = binding.picChart.legend
         l.isEnabled = false
@@ -213,4 +223,6 @@ class DailyFragment : Fragment(R.layout.fragment_daily) {
 //        removeObservers(owner)
 //        observe(owner, { t -> func(t) })
 //    }
+
+
 }

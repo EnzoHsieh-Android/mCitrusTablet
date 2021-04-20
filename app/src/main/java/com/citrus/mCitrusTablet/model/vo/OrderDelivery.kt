@@ -18,7 +18,7 @@ data class PostToSetDeliveryStatus (
 
 
 
-/**狀態（A：新增；E：修改；D：刪除；N：暫存）*/
+
 data class OrdersDeliveryUpdate (
     @SerializedName("OrderNO")
     val orderNO: String,
