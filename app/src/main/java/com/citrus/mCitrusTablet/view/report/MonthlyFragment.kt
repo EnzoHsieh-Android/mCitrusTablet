@@ -127,7 +127,7 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
     private fun drawPieChart(totalNum: Int, checkNum: Int, notCheckNum: Int, cancelNum: Int) {
         val strings: MutableList<PieEntry> = ArrayList()
         strings.add(PieEntry(checkNum.toFloat(), if(checkNum!=0) resources.getString(R.string.checked) else ""))
-        strings.add(PieEntry(notCheckNum.toFloat(), if(notCheckNum!=0) resources.getString(R.string.Waiting) else ""))
+        strings.add(PieEntry(notCheckNum.toFloat(), if(notCheckNum!=0) resources.getString(R.string.chart_wait) else ""))
         strings.add(PieEntry(cancelNum.toFloat(), if(cancelNum!=0) resources.getString(R.string.delete) else ""))
 
         val dataSet = PieDataSet(strings, "")

@@ -17,15 +17,14 @@ data class PostToSetDeliveryStatus (
 )
 
 
+
+/**狀態（A：新增；E：修改；D：刪除；N：暫存）*/
 data class OrdersDeliveryUpdate (
     @SerializedName("OrderNO")
     val orderNO: String,
 
-    @SerializedName("ServiceOutStatus")
-    val serviceOutStatus: String,
-
-    @SerializedName("CheckMemo")
-    val checkMemo: String
+    @SerializedName("Flag")
+    val flag: String
 )
 
 
@@ -70,7 +69,10 @@ data class OrdersDelivery (
     val phone: String,
 
     @SerializedName("ServiceOutStatus")
-    val serviceOutStatus:String
+    val serviceOutStatus:String,
+
+    @SerializedName("Flag")
+    val flag:String
 )
 
 

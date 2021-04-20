@@ -101,7 +101,7 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
                 showType.setText(showTypeArray[0], false)
             }
 
-            time.setText(Constants.defaultTimeStr, false)
+            time.setText(Constants.getCurrentDate(), false)
 
 
             reportType.setOnItemClickListener { _, _, position, _ ->
@@ -140,7 +140,7 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
                             it,
                             CalendarType.NeedHistoryForDate,
                             CalendarPickerView.SelectionMode.SINGLE,
-                            Constants.defaultTimeStr,
+                            Constants.getCurrentDate(),
                             ""
                         ) { _, startTime, _, _, _, _ ->
                             time.setText(startTime)
@@ -174,7 +174,7 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
 
 
     override fun onDestroyView() {
-        reportViewModel.setTime(Constants.defaultTimeStr)
+        reportViewModel.setTime(Constants.getCurrentDate())
         _binding?.viewPager?.adapter = null
         _binding = null
         collectionAdapter = null

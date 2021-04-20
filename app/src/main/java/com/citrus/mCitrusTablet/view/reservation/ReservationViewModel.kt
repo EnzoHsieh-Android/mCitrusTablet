@@ -13,8 +13,6 @@ import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.model.Repository
 import com.citrus.mCitrusTablet.model.vo.*
 import com.citrus.mCitrusTablet.util.Constants
-import com.citrus.mCitrusTablet.util.Constants.TimeStrForDelete
-import com.citrus.mCitrusTablet.util.Constants.defaultTimeStr
 import com.citrus.mCitrusTablet.util.Constants.inputFormat
 import com.citrus.mCitrusTablet.util.HideCheck
 import com.citrus.mCitrusTablet.util.MailContentBuild
@@ -134,7 +132,7 @@ class ReservationViewModel @ViewModelInject constructor(
     private fun createFetchJob(): Flow<Job> = flow {
         while (true) {
             if (_dateRange.value == null) {
-                emit(fetchAllData(defaultTimeStr, defaultTimeStr))
+                emit(fetchAllData(Constants.getCurrentDate(), Constants.getCurrentDate()))
             } else {
                 _dateRange.value?.get(0)?.let { emit(fetchAllData(it, _dateRange.value?.get(1)!!)) }
             }
@@ -158,7 +156,7 @@ class ReservationViewModel @ViewModelInject constructor(
     fun reload() {
         isReload = true
         if (_dateRange.value == null) {
-            fetchAllData(defaultTimeStr, defaultTimeStr)
+            fetchAllData(Constants.getCurrentDate(), Constants.getCurrentDate())
         } else {
             _dateRange.value?.get(0)?.let { fetchAllData(it, _dateRange.value?.get(1)!!) }
         }
@@ -271,7 +269,7 @@ class ReservationViewModel @ViewModelInject constructor(
                         storageList = newList
 
                         /**判斷日期為本日才具備新增提醒功能*/
-                        if (startTime == defaultTimeStr) {
+                        if (startTime == Constants.getCurrentDate()) {
                             if (prefs.storageReservationNum < storageList.size) {
                                 var distance = storageList.size - prefs.storageReservationNum
 
@@ -439,7 +437,7 @@ class ReservationViewModel @ViewModelInject constructor(
                     1 -> {
                         var index = storageList.indexOf(guest)
                         if (status == Constants.CANCEL) {
-                            storageList[index].updateDate = TimeStrForDelete
+                            storageList[index].updateDate = Constants.getSpecCurrentTime()
                             showUndoToast(storageList[index])
                         }
 

@@ -1,6 +1,5 @@
 package com.citrus.mCitrusTablet.model
 
-import android.util.Log
 import com.citrus.mCitrusTablet.model.api.ApiService
 import com.citrus.mCitrusTablet.model.vo.*
 import com.citrus.mCitrusTablet.util.Constants
@@ -45,7 +44,7 @@ class Repository @Inject constructor(private val apiService: ApiService) {
                     oData.data?.let { list ->
                         if (fetchType == "reservation") {
                             /**只提示今天的外部新增候位通知*/
-                            if(postToGetAllData.startDate == Constants.defaultTimeStr){
+                            if(postToGetAllData.startDate == Constants.getCurrentDate()){
                                 onWaitCount(list.wait.size,if (list.wait.isNotEmpty()) list.wait.last() else null)
                             }else{
                                 onWaitCount(-1,null)

@@ -23,7 +23,6 @@ import com.citrus.mCitrusTablet.model.vo.ReservationClass
 import com.citrus.mCitrusTablet.model.vo.PostToSetReservation
 import com.citrus.mCitrusTablet.model.vo.ReservationGuests
 import com.citrus.mCitrusTablet.util.Constants
-import com.citrus.mCitrusTablet.util.Constants.defaultTimeStr
 import com.citrus.mCitrusTablet.util.HideCheck
 import com.citrus.mCitrusTablet.util.onSafeClick
 import com.citrus.mCitrusTablet.util.ui.BaseFragment
@@ -212,7 +211,7 @@ class ReservationFragment : BaseFragment() {
                         it,
                         CalendarType.NoTimePickerForSearchReservation,
                         mode,
-                        reservationFragmentViewModel.dateRange.value?.get(0) ?: defaultTimeStr,
+                        reservationFragmentViewModel.dateRange.value?.get(0) ?: Constants.getCurrentDate(),
                         reservationFragmentViewModel.dateRange.value?.get(1) ?: ""
                     ) { _, startTime, endTime, _ ,_ , _->
                         reservationFragmentViewModel.setDateArray(arrayOf(startTime, endTime))
@@ -229,7 +228,7 @@ class ReservationFragment : BaseFragment() {
                         it,
                         CalendarType.OneTimePickerForReservation,
                         mode,
-                        reservationFragmentViewModel.dateRange.value?.get(0) ?: defaultTimeStr,
+                        reservationFragmentViewModel.dateRange.value?.get(0) ?: Constants.getCurrentDate(),
                         reservationFragmentViewModel.dateRange.value?.get(1) ?: ""
                     ) { cusCount, startTime, _, _ ,adultCount, childCount ->
                         searchSeat(cusCount, startTime, "", true,adultCount,childCount)
@@ -247,8 +246,8 @@ class ReservationFragment : BaseFragment() {
             }
 
             animationReload.setOnClickListener {
-                reservationFragmentViewModel.setDateArray(arrayOf(defaultTimeStr, defaultTimeStr))
-                date2Day(defaultTimeStr)
+                reservationFragmentViewModel.setDateArray(arrayOf(Constants.getCurrentDate(), Constants.getCurrentDate()))
+                date2Day(Constants.getCurrentDate())
             }
 
 

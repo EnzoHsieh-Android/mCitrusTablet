@@ -129,7 +129,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
             model.fetchAllData(
                 serverDomain + Constants.GET_ALL_DATA,
                 "wait",
-                PostToGetAllData(prefs.rsno, Constants.defaultTimeStr, Constants.defaultTimeStr),
+                PostToGetAllData(prefs.rsno, Constants.getCurrentDate(), Constants.getCurrentDate()),
                 onCusCount = { cusCount ->
                     _cusCount.postValue(cusCount)
                 }, onReservationCount = { num, res ->
@@ -324,7 +324,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
         viewModelScope.launch {
             model.setDeliveryStatus(
                 serverDomain + Constants.SET_DELIVERY_STATUS,
-                PostToSetDeliveryStatus(OrdersDeliveryUpdate(orderNo, "A", "")),
+                PostToSetDeliveryStatus(OrdersDeliveryUpdate(orderNo, "A")),
                 prefs.rsno
             ).collect {
                 if(it){

@@ -139,7 +139,7 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
         strings.add(
             PieEntry(
                 notCheckNum.toFloat(),
-                if (notCheckNum != 0) resources.getString(R.string.Waiting) else ""
+                if (notCheckNum != 0) resources.getString(R.string.chart_wait) else ""
             )
         )
         strings.add(

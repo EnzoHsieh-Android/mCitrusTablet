@@ -13,7 +13,7 @@
         <ScrollView
             android:id="@+id/scView"
             android:layout_width="@dimen/dp_300"
-            android:layout_height="@dimen/dp_150"
+            android:layout_height="@dimen/dp_200"
             android:layout_margin="@dimen/dp_20"
             app:layout_constraintBottom_toBottomOf="@id/horizontalBottomGuideline"
             app:layout_constraintEnd_toEndOf="parent"
@@ -27,11 +27,6 @@
                 android:orientation="vertical">
 
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_margin="@dimen/dp_5">
 
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -42,7 +37,8 @@
                         android:layout_marginBottom="@dimen/dp_5"
                         android:hint="@string/rsno"
                         app:endIconMode="clear_text"
-                        app:startIconDrawable="@drawable/ic_baseline_store_24">
+                        app:startIconDrawable="@drawable/ic_baseline_store_24"
+                        android:layout_margin="@dimen/dp_5">
 
                         <AutoCompleteTextView
                             android:id="@+id/etStoreId"
@@ -60,13 +56,9 @@
                             />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_margin="@dimen/dp_5">
+
+
 
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -77,7 +69,8 @@
                         android:layout_marginBottom="@dimen/dp_5"
                         android:hint="Server IP"
                         app:endIconMode="clear_text"
-                        app:startIconDrawable="@drawable/ic_baseline_computer_24">
+                        app:startIconDrawable="@drawable/ic_baseline_computer_24"
+                        android:layout_margin="@dimen/dp_5">
 
                         <AutoCompleteTextView
                             android:id="@+id/etServerIp"
@@ -95,14 +88,8 @@
                             />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                </LinearLayout>
 
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_margin="@dimen/dp_5">
 
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
@@ -112,7 +99,8 @@
                         android:layout_marginTop="@dimen/dp_5"
                         android:layout_marginBottom="@dimen/dp_5"
                         android:hint="@string/language"
-                        app:startIconDrawable="@drawable/ic_baseline_language_24">
+                        app:startIconDrawable="@drawable/ic_baseline_language_24"
+                        android:layout_margin="@dimen/dp_5">
 
                         <AutoCompleteTextView
                             android:id="@+id/language_picker"
@@ -128,13 +116,7 @@
                             />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_margin="@dimen/dp_5">
 
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -145,7 +127,8 @@
                         android:layout_marginBottom="@dimen/dp_5"
                         android:hint="@string/printIp"
                         app:endIconMode="clear_text"
-                        app:startIconDrawable="@drawable/ic_baseline_print_24">
+                        app:startIconDrawable="@drawable/ic_baseline_print_24"
+                        android:layout_margin="@dimen/dp_5">
 
                         <AutoCompleteTextView
                             android:id="@+id/printIp"
@@ -162,13 +145,8 @@
                             />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_margin="@dimen/dp_5">
+
 
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -179,7 +157,8 @@
                         android:layout_marginBottom="@dimen/dp_5"
                         android:hint="@string/printPort"
                         app:endIconMode="clear_text"
-                        app:startIconDrawable="@drawable/ic_baseline_print_24">
+                        app:startIconDrawable="@drawable/ic_baseline_print_24"
+                        android:layout_margin="@dimen/dp_5">
 
                         <AutoCompleteTextView
                             android:id="@+id/printPort"
@@ -196,13 +175,7 @@
                             />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_margin="@dimen/dp_5">
 
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
@@ -212,7 +185,8 @@
                         android:layout_marginTop="@dimen/dp_5"
                         android:layout_marginBottom="@dimen/dp_5"
                         android:hint="@string/printANSI"
-                        app:startIconDrawable="@drawable/ic_baseline_print_24">
+                        app:startIconDrawable="@drawable/ic_baseline_print_24"
+                        android:layout_margin="@dimen/dp_5">
 
                         <AutoCompleteTextView
                             android:id="@+id/printLan"
@@ -228,13 +202,6 @@
                             />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_margin="@dimen/dp_5">
 
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
@@ -244,7 +211,8 @@
                         android:layout_marginTop="@dimen/dp_5"
                         android:layout_marginBottom="@dimen/dp_5"
                         android:hint="@string/printPaperType"
-                        app:startIconDrawable="@drawable/ic_baseline_print_24">
+                        app:startIconDrawable="@drawable/ic_baseline_print_24"
+                        android:layout_margin="@dimen/dp_5">
 
                         <AutoCompleteTextView
                             android:id="@+id/printIs80"
@@ -259,8 +227,6 @@
                             android:inputType="none"
                             />
                     </com.google.android.material.textfield.TextInputLayout>
-
-                </LinearLayout>
             </LinearLayout>
         </ScrollView>
 

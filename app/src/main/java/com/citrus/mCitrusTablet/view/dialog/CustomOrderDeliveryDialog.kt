@@ -76,7 +76,7 @@ class CustomOrderDeliveryDialog(
             tvTotalSum.text = sum.toString()
             totalPrice.text = "$"+it.ordersDelivery.subtotal.toString()
 
-            if(deliveryInfo.ordersDelivery.serviceOutStatus == "A"){
+            if(deliveryInfo.ordersDelivery.flag == "A"){
                 updateToPost.visibility = View.GONE
                 hasUpdatePost.visibility = View.VISIBLE
             }else{

@@ -119,7 +119,7 @@ class CustomSearchTableDialog(
                         it,
                         CalendarType.NoTimePickerForSearchReservation,
                         CalendarPickerView.SelectionMode.SINGLE,
-                        Constants.defaultTimeStr,
+                        Constants.getCurrentDate(),
                         ""
                     ) { _, startTime, _, _, _, _ ->
                         llDate.setText(startTime)

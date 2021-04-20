@@ -24,7 +24,7 @@ enum class ReportRange { BY_DAILY, BY_WEEKLY, BY_MONTHLY }
 class ReportViewModel @ViewModelInject constructor(private val model: Repository) :
     ViewModel() {
     private var serverDomain = "https://" + prefs.severDomain
-    private var storageTime = Constants.defaultTimeStr
+    private var storageTime = Constants.getCurrentDate()
 
 
     private val _chartTypeChange = MutableLiveData<Int>()
