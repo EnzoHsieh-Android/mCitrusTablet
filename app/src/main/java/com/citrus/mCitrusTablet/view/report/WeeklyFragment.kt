@@ -235,7 +235,7 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
         val chart = binding.stackedBarChart
         chart.xAxis.apply {
             textSize  = textSp
-            textColor = getResourceColor(R.color.primaryColor)
+            textColor = getResourceColor(R.color.primaryDarkColor)
             valueFormatter = IndexAxisValueFormatter(titleEntity)
             labelCount = titleEntity.size
             position = XAxis.XAxisPosition.BOTTOM_INSIDE

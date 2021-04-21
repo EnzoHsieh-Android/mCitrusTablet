@@ -221,7 +221,7 @@ class MonthlyFragment : Fragment(R.layout.fragment_monthly) {
         val valueSp = convertPixelToDp(resources.getDimensionPixelSize(R.dimen.sp_6).toFloat(),requireContext())
         val chart = binding.stackedBarChart
         chart.xAxis.apply {
-            textColor = getResourceColor(R.color.primaryColor)
+            textColor = getResourceColor(R.color.primaryDarkColor)
             valueFormatter = IndexAxisValueFormatter(titleEntity)
             labelCount = titleEntity.size
             position = XAxis.XAxisPosition.BOTTOM_INSIDE

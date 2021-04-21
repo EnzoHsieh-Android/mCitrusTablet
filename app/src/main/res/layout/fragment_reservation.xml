@@ -110,7 +110,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/today"
                 android:textSize="@dimen/sp_7"
-                android:textColor="@color/primaryColor"
+                android:textColor="@color/primaryDarkColor"
                 android:textStyle="bold"
                 />
 
@@ -139,7 +139,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/search_seat"
                 android:textSize="@dimen/sp_7"
-                android:textColor="@color/primaryColor"
+                android:textColor="@color/primaryDarkColor"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -169,7 +169,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/hide_check"
                 android:textSize="@dimen/sp_7"
-                android:textColor="@color/primaryColor"
+                android:textColor="@color/primaryDarkColor"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -201,7 +201,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/refresh"
                 android:textSize="@dimen/sp_7"
-                android:textColor="@color/primaryColor"
+                android:textColor="@color/primaryDarkColor"
                 android:textStyle="bold" />
 
         </LinearLayout>

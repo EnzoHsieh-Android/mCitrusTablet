@@ -204,7 +204,7 @@
                 android:id="@+id/count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/primaryLightColor"
+                android:textColor="@color/primaryDarkColor"
                 android:text="3"
                 android:textSize="@dimen/sp_14"
                 android:textStyle="bold" />

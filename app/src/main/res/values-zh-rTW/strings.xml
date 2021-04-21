@@ -78,8 +78,8 @@
     <string name="refresh">重新整理</string>
     <string name="search_text">電話號碼或Email</string>
     <string name="select_cusNum">選擇人數</string>
-    <string name="child">兒童</string>
-    <string name="adult">成人</string>
+    <string name="child">小孩</string>
+    <string name="adult">大人</string>
     <string name="num_of_person">人數</string>
     <string name="FinishMsg">預約已取消</string>
     <string name="Undo">還原</string>

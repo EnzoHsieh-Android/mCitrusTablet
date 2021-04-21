@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity() {
             resAlert.visibility = View.INVISIBLE
             report_block.setBackgroundResource(0)
             wait_block.setBackgroundResource(0)
-            reservation_block.setBackgroundResource(R.drawable.bg_menu_select)
+            reservation_block.setBackgroundResource(R.drawable.bg_menu_select2)
             navigateToTarget(R.id.reservationFragment)
         }
 
@@ -100,14 +100,14 @@ class MainActivity : AppCompatActivity() {
             waitAlert.visibility = View.INVISIBLE
             report_block.setBackgroundResource(0)
             reservation_block.setBackgroundResource(0)
-            wait_block.setBackgroundResource(R.drawable.bg_menu_select)
+            wait_block.setBackgroundResource(R.drawable.bg_menu_select2)
             navigateToTarget(R.id.waitFragment)
         }
 
         report_block.setOnClickListener {
             wait_block.setBackgroundResource(0)
             reservation_block.setBackgroundResource(0)
-            report_block.setBackgroundResource(R.drawable.bg_menu_select)
+            report_block.setBackgroundResource(R.drawable.bg_menu_select2)
             navigateToTarget(R.id.reportFragment)
         }
 

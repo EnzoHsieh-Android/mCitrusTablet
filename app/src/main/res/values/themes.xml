@@ -2,9 +2,9 @@
     <!-- Base application theme. -->
     <style name="Theme.MCitrusTablet" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/primaryColor</item>
-        <item name="colorPrimaryVariant">@color/primaryLightColor</item>
-        <item name="colorOnPrimary">@color/primaryDarkColor</item>
+        <item name="colorPrimary">@color/mainColor3</item>
+        <item name="colorPrimaryVariant">@color/mainColor3</item>
+        <item name="colorOnPrimary">@color/mainColor2</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/primaryDarkColor</item>
         <item name="colorSecondaryVariant">@color/primaryLightColor</item>

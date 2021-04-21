@@ -10,7 +10,7 @@
         android:id="@+id/menuConstraint"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:background="@color/primaryColor"
+        android:background="@color/mainColor3"
         app:layout_constraintEnd_toEndOf="@id/menuBorder"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -29,7 +29,7 @@
             />
 
         <LinearLayout
-            android:background="@drawable/bg_menu_select"
+            android:background="@drawable/bg_menu_select2"
             android:id="@+id/reservation_block"
             android:layout_width="match_parent"
             android:layout_height="0dp"
