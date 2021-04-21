@@ -17,7 +17,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.view.dialog.CustomAlertDialog
-import com.citrus.util.ui.LoadingDialog
 
 
 import org.jetbrains.anko.backgroundResource

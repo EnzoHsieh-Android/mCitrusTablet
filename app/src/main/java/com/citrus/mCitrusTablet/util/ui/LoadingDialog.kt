@@ -1,4 +1,4 @@
-package com.citrus.util.ui
+package com.citrus.mCitrusTablet.util.ui
 
 import android.content.Context
 import android.os.Bundle

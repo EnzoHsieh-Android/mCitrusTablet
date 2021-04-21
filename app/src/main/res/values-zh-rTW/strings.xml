@@ -76,7 +76,7 @@
     <string name="filter_confirm">顯示已確認</string>
     <string name="filter_wait">顯示未通知</string>
     <string name="refresh">重新整理</string>
-    <string name="search_text">電話號碼或Email</string>
+    <string name="search_text">電話或Email</string>
     <string name="select_cusNum">選擇人數</string>
     <string name="child">小孩</string>
     <string name="adult">大人</string>

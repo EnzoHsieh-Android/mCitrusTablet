@@ -105,6 +105,7 @@ class CustomOrderDeliveryDialog(
             if(it){
                 updateToPost.visibility = View.GONE
                 hasUpdatePost.visibility = View.VISIBLE
+                hasUpdatePost.text = "已轉單"
             }else{
                 Toast.makeText(context,"Update Fail",Toast.LENGTH_SHORT).show()
             }
