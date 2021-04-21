@@ -142,9 +142,12 @@
                 android:orientation="horizontal"
                 android:layout_weight="1"
                 android:weightSum="2"
+                android:layout_marginRight="@dimen/dp_3"
+                android:layout_marginLeft="@dimen/dp_3"
+                android:layout_marginBottom="@dimen/dp_1_5"
+                android:layout_marginTop="@dimen/dp_1_5"
                 >
                 <ImageView
-                    android:layout_margin="@dimen/dp_1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:src="@drawable/parents"
@@ -154,12 +157,11 @@
 
                 <TextView
                     android:id="@+id/adult"
-                    android:layout_margin="@dimen/dp_1"
                     android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2"
-                    android:textSize="@dimen/sp_12"
+                    android:textSize="@dimen/sp_10"
                     android:textStyle="bold"
                     android:gravity="center"
                     android:textColor="@color/primaryDarkColor"
@@ -175,9 +177,12 @@
                 android:orientation="horizontal"
                 android:layout_weight="1"
                 android:weightSum="2"
+                android:layout_marginRight="@dimen/dp_3"
+                android:layout_marginLeft="@dimen/dp_3"
+                android:layout_marginBottom="@dimen/dp_3"
+                android:layout_marginTop="@dimen/dp_1_5"
                 >
                 <ImageView
-                    android:layout_margin="@dimen/dp_1"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -187,12 +192,11 @@
 
                 <TextView
                     android:id="@+id/child"
-                    android:layout_margin="@dimen/dp_1"
                     android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="1"
-                    android:textSize="@dimen/sp_12"
+                    android:textSize="@dimen/sp_10"
                     android:textStyle="bold"
                     android:gravity="center"
                     android:textColor="@color/primaryDarkColor"

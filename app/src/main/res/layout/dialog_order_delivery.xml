@@ -110,7 +110,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:textSize="@dimen/sp_12"
             android:textStyle="bold"
-            android:textColor="@color/primaryColor"
+            android:textColor="@color/primaryDarkColor"
             android:text="@string/item"/>
 
         <TextView
@@ -125,7 +125,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:textSize="@dimen/sp_12"
             android:textStyle="bold"
-            android:textColor="@color/primaryColor"
+            android:textColor="@color/primaryDarkColor"
             android:text="@string/qty"/>
 
         <TextView
@@ -140,7 +140,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:textSize="@dimen/sp_12"
             android:textStyle="bold"
-            android:textColor="@color/primaryColor"
+            android:textColor="@color/primaryDarkColor"
             android:text="@string/TotalForTheDay"/>
     </LinearLayout>
 
@@ -201,7 +201,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:textSize="@dimen/sp_13"
             android:textStyle="bold"
-            android:textColor="@color/primaryColor"
+            android:textColor="@color/primaryDarkColor"
             android:text="@string/TotalForTheDay"/>
 
         <TextView
@@ -216,7 +216,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:textSize="@dimen/sp_13"
             android:textStyle="bold"
-            android:textColor="@color/primaryColor"
+            android:textColor="@color/primaryDarkColor"
             android:text=""/>
 
         <TextView
@@ -231,7 +231,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:textSize="@dimen/sp_13"
             android:textStyle="bold"
-            android:textColor="@color/primaryColor"
+            android:textColor="@color/primaryDarkColor"
             android:text=""/>
     </LinearLayout>
 

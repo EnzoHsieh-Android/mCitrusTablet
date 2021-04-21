@@ -41,6 +41,7 @@
             android:textSize="@dimen/sp_16"
             android:textStyle="bold"
             android:text="Reservation Report"
+            android:textColor="@color/primaryDarkColor"
             />
 
         <ImageView
@@ -396,20 +397,21 @@
         >
 
         <com.google.android.material.tabs.TabLayout
-            android:layout_marginRight="2dp"
-            android:layout_marginLeft="2dp"
             android:id="@+id/tab_layout"
             style="@style/Widget.MaterialComponents.TabLayout.PrimarySurface"
             android:layout_width="0dp"
             android:layout_height="@dimen/dp_25"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:background="@color/primaryLightColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tabIndicatorColor="#D1D5F6"
-            app:tabRippleColor="@color/primaryTextColor"
-            app:tabTextAppearance="@style/MyTabStyle"
-            app:tabSelectedTextColor="#D1D5F6"
+            app:tabIndicatorColor="@color/primaryDarkColor"
             app:tabIndicatorHeight="@dimen/dp_2"
+            app:tabRippleColor="@color/primaryTextColor"
+            app:tabSelectedTextColor="@color/primaryDarkColor"
+            app:tabTextAppearance="@style/MyTabStyle"
             app:tabTextColor="@color/primaryTextColor" />
 
         <androidx.viewpager2.widget.ViewPager2

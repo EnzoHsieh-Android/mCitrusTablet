@@ -42,6 +42,7 @@
             android:layout_height="wrap_content"
             tool:text="x1"
             android:textSize="@dimen/sp_12"
+            android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/gName"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -54,6 +55,7 @@
             android:layout_width="@dimen/dp_50"
             android:layout_height="wrap_content"
             tool:text="x1"
+            android:textStyle="bold"
             android:textSize="@dimen/sp_12"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/gName"

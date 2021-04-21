@@ -67,9 +67,9 @@
     <color name="ds_list_bg">#ffffff</color>
 
 
-    <color name="chart_color_check">#4caf50</color>
-    <color name="chart_color_cancel">#f44336</color>
-    <color name="chart_color_wait">#4fc3f7</color>
+    <color name="chart_color_check">#81c784</color>
+    <color name="chart_color_cancel">#ff575c</color>
+    <color name="chart_color_wait">#60A4BF</color>
 
 
 

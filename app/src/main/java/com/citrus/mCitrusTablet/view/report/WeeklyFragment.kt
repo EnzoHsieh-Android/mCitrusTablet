@@ -344,7 +344,7 @@ class WeeklyFragment : Fragment(R.layout.fragment_weekly) {
     private fun getCusStackLabels(): Array<String>? {
         return arrayOf(
             getString(R.string.cancel),
-            getString(R.string.Waiting),
+            getString(R.string.chart_wait),
             getString(R.string.check)
         )
     }

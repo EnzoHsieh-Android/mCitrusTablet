@@ -589,6 +589,7 @@
                 app:sv_buttonBackgroundColor="@android:color/white"
                 app:sv_reverseSlide="false"
                 app:sv_slideTextSize="@dimen/sp_10"
+                app:sv_buttonImage="@drawable/ic_baseline_double_arrow_24"
                 app:sv_slideBackgroundColor="@color/primaryColor"
                 app:sv_strokeColor="@color/primaryColor"
                 app:sv_slideText="@string/slide" />
