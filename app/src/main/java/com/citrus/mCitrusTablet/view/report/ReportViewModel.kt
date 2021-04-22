@@ -70,7 +70,6 @@ class ReportViewModel @ViewModelInject constructor(private val model: Repository
 
 
 
-
     private fun fetchReportData(startTime: String, endTime: String) =
         viewModelScope.launch {
             model.fetchAllDataForReport(

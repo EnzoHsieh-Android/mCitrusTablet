@@ -181,7 +181,5 @@ class ReportFragment : Fragment(R.layout.fragment_report) {
         super.onDestroyView()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
+
 }

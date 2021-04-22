@@ -126,7 +126,6 @@ class ReservationViewModel @ViewModelInject constructor(
 
 
     init {
-        model.getShortURL(serverDomain+Constants.GET_SHORT_URL,"https://cms.citrus.tw/CelaviLAB/waiting/#/NSBJNXThDZ+jIn87eb+44A==/confirm?key=HLXGP3Eb3SzboF0jBN3X2eK42bWuxu0ae9NuOtuC6I528fVdi0WAp3sI6rM6bZifvOZYrK%2FavPBP0u8InU32GSgRrhPoWmW97FUEpoq55W%2B4n4asfsv5ke1AMy3Bc4dP")
         if (prefs.storeName == "") {
             fetchStoreInfo()
         }
@@ -438,7 +437,6 @@ class ReservationViewModel @ViewModelInject constructor(
                 serverDomain + Constants.CHANGE_STATUS,
                 PostToChangeStatus(Reservation(guest.tkey, status))
             ).collect { result ->
-
                 when (result) {
                     1 -> {
                         var index = storageList.indexOf(guest)
