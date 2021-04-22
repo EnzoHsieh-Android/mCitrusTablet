@@ -1,6 +1,7 @@
 package com.citrus.mCitrusTablet.view.wait
 
 
+import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -38,6 +39,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
 
     /**記憶體暫存 Data List*/
     private var storageList: MutableList<Wait> = mutableListOf()
+    private var searchList: MutableList<Wait> = mutableListOf()
 
     /**記憶體暫存memo展開的item*/
     private var expendList = mutableListOf<String>()
@@ -83,6 +85,10 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
     val cusNumType: LiveData<CusNumType>
         get() = _cusNumType
 
+    private val _isLoading = SingleLiveEvent<Boolean>()
+    val isLoading: SingleLiveEvent<Boolean>
+        get() = _isLoading
+
     private val _resHasNewData = SingleLiveEvent<ReservationGuests>()
     val resHasNewData: SingleLiveEvent<ReservationGuests>
         get() = _resHasNewData
@@ -126,6 +132,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
     /**撈取今日wait資料*/
     private fun fetchAllData() =
         viewModelScope.launch {
+            _isLoading.postValue(true)
             model.fetchAllData(
                 serverDomain + Constants.GET_ALL_DATA,
                 "wait",
@@ -140,6 +147,7 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
                 }, onWaitCount = { _, _ ->
 
                 }).collect { list ->
+                _isLoading.postValue(false)
                 if (list.isNotEmpty()) {
                     /**第二次撈取後以儲存的當日訂位人數來比對是否有來自外部的新增資料*/
                     prefs.storageReservationNum =
@@ -386,13 +394,16 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
     /**字串搜尋功能*/
     fun searchForStr(status: SearchViewStatus) {
         when (status) {
-            is SearchViewStatus.IsEmpty -> _allData.postValue(
-                getSortRequirement(
-                    sortOrder,
-                    storageList
-                )
-            )
+            is SearchViewStatus.IsEmpty -> {
+                searchList.clear()
 
+                _allData.postValue(
+                    getSortRequirement(
+                        sortOrder,
+                        storageList
+                    )
+                )
+            }
             is SearchViewStatus.NeedChange -> {
                 var tempGuestsList = mutableListOf<Wait>()
                 for (item: Wait in storageList) {
@@ -403,6 +414,9 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
                         tempGuestsList.add(item)
                     }
                 }
+
+                searchList.clear()
+                searchList.addAll(tempGuestsList)
                 refreshAllData(tempGuestsList)
             }
         }
@@ -545,7 +559,16 @@ class WaitViewModel @ViewModelInject constructor(private val model: Repository) 
             expendList.remove(wait.tkey)
         }
 
-        refreshAllData(storageList)
+        if(searchList.isNotEmpty()){
+            for (item in searchList) {
+                item.isSelect = item == wait
+            }
+            refreshAllData(searchList)
+        }else{
+            refreshAllData(storageList)
+        }
+
+
     }
 
     private fun showUndoToast(wait: Wait) = viewModelScope.launch {

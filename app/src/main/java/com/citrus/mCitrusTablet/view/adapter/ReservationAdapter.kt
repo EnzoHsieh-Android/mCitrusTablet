@@ -122,6 +122,10 @@ class ReservationAdapter(
 
         itemHolder.itemRoot.setBackgroundColor(Color.WHITE)
         itemHolder.itemName.text = guest.mName
+        if(itemHolder.itemName.text.length>6){
+            val textSize = activity.resources.getDimensionPixelSize(R.dimen.sp_8)
+            itemHolder.itemName.setTextSize(TypedValue.COMPLEX_UNIT_PX,textSize.toFloat())
+        }
         itemHolder.itemPhone.text = guest.phone
         if(guest.phone != null && guest.phone != ""){
             itemHolder.itemEmail.visibility = View.GONE

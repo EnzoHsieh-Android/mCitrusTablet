@@ -104,6 +104,10 @@ class ReservationViewModel @ViewModelInject constructor(
     val waitHasNewData: SingleLiveEvent<Wait>
         get() = _waitHasNewData
 
+    private val _isLoading = SingleLiveEvent<Boolean>()
+    val isLoading: SingleLiveEvent<Boolean>
+        get() = _isLoading
+
     private val _isFirst = SingleLiveEvent<Boolean>()
     val isFirst: SingleLiveEvent<Boolean>
         get() = _isFirst
@@ -222,6 +226,7 @@ class ReservationViewModel @ViewModelInject constructor(
     /**撈取今日reservation資料*/
     private fun fetchAllData(startTime: String, endTime: String) =
         viewModelScope.launch {
+            _isLoading.postValue(true)
             model.fetchAllData(
                 serverDomain + Constants.GET_ALL_DATA,
                 "reservation",
@@ -238,6 +243,7 @@ class ReservationViewModel @ViewModelInject constructor(
                 }, onReservationCount = { _, _ ->
 
                 }).collect { list ->
+                _isLoading.postValue(false)
                 if (list.isNotEmpty()) {
 
                     /**第二次撈取後以儲存的候位人數來比對是否有來自外部的新增資料*/
@@ -533,6 +539,8 @@ class ReservationViewModel @ViewModelInject constructor(
                 postData,
                 onEmpty = {
                     _orderDateDatum.postValue(mutableListOf())
+                },OnErrorReceive = {
+
                 }).collect {
                 _orderDateDatum.postValue(it)
             }

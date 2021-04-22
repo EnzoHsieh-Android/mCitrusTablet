@@ -2,6 +2,8 @@ package com.citrus.mCitrusTablet.model.api
 
 import android.app.Application
 import android.widget.Toast
+import com.citrus.mCitrusTablet.di.errorManager
+import com.citrus.mCitrusTablet.util.TriggerMode
 import com.skydoves.sandwich.ApiResponse
 import com.skydoves.sandwich.StatusCode
 import com.skydoves.sandwich.map
@@ -23,8 +25,8 @@ class GlobalResponseOperator<T> constructor(
     override suspend fun onError(apiResponse: ApiResponse.Failure.Error<T>) {
         withContext(Dispatchers.Main) {
             apiResponse.run {
+                errorManager.setTriggerMode(TriggerMode.START)
                 Timber.d(message())
-
                 // handling error based on status code.
                 when (statusCode) {
                     StatusCode.InternalServerError -> toast("InternalServerError")
@@ -45,6 +47,7 @@ class GlobalResponseOperator<T> constructor(
     // e.g., network connection error.
     override suspend fun onException(apiResponse: ApiResponse.Failure.Exception<T>) {
         withContext(Dispatchers.Main) {
+            errorManager.setTriggerMode(TriggerMode.START)
             apiResponse.run {
                 Timber.d(message())
                 toast(message())

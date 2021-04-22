@@ -7,11 +7,14 @@ import android.view.Gravity
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.GridLayoutManager
 import com.citrus.mCitrusTablet.R
+import com.citrus.mCitrusTablet.di.errorManager
 import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.model.vo.*
 import com.citrus.mCitrusTablet.util.Constants
+import com.citrus.mCitrusTablet.util.TriggerMode
 import com.citrus.mCitrusTablet.util.ui.BaseDialogFragment
 import com.citrus.mCitrusTablet.view.adapter.OtherSeatAdapter
 import com.citrus.mCitrusTablet.view.adapter.OtherTimeAdapter
@@ -24,7 +27,11 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapt
 import kotlinx.android.synthetic.main.dailog_date_picker.*
 import kotlinx.android.synthetic.main.dialog_other_seat.*
 import kotlinx.android.synthetic.main.dialog_search_table.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.support.v4.toast
+import timber.log.Timber
 import java.text.SimpleDateFormat
 
 
@@ -210,12 +217,12 @@ class CustomSearchTableDialog(
                 )
             }
 
-            showLoadingDialog()
+            loading.visibility = View.VISIBLE
             viewModel.fetchReservationTime(jsonStr)
         }
 
         viewModel.orderDateDatum.observe(viewLifecycleOwner, {
-            hideLoadingDialog()
+            loading.visibility = View.GONE
             otherTimeAdapter.removeAllSections()
             if (it.isNotEmpty()) {
                 title.add(mContext.resources.getString(R.string.pick_time_hint))
@@ -253,6 +260,21 @@ class CustomSearchTableDialog(
 
                         }
                     ).show()
+                }
+            }
+        })
+
+
+        errorManager.uiModeFlow.asLiveData().observe(viewLifecycleOwner,{ triggerMode ->
+            when(triggerMode){
+                TriggerMode.START -> {
+                    loading.visibility = View.GONE
+                    MainScope().launch(Dispatchers.IO){
+                        errorManager.setTriggerMode(TriggerMode.END)
+                    }
+                }
+                TriggerMode.END -> {
+                    Timber.d("Has deal")
                 }
             }
         })

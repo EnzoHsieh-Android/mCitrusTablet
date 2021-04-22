@@ -11,6 +11,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
@@ -18,12 +19,14 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.databinding.FragmentReservationBinding
+import com.citrus.mCitrusTablet.di.errorManager
 import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.model.vo.ReservationClass
 import com.citrus.mCitrusTablet.model.vo.PostToSetReservation
 import com.citrus.mCitrusTablet.model.vo.ReservationGuests
 import com.citrus.mCitrusTablet.util.Constants
 import com.citrus.mCitrusTablet.util.HideCheck
+import com.citrus.mCitrusTablet.util.TriggerMode
 import com.citrus.mCitrusTablet.util.onSafeClick
 import com.citrus.mCitrusTablet.util.ui.BaseFragment
 import com.citrus.mCitrusTablet.view.SharedViewModel
@@ -37,8 +40,15 @@ import com.savvi.rangedatepicker.CalendarPickerView
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter
 import kotlinx.android.synthetic.main.dailog_date_picker.*
+import kotlinx.android.synthetic.main.dialog_search_table.*
 import kotlinx.android.synthetic.main.fragment_reservation.*
+import kotlinx.android.synthetic.main.fragment_reservation.loading
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -456,6 +466,13 @@ class ReservationFragment : BaseFragment() {
             binding.tvTotal.text = resources.getString(R.string.TotalForTheDay) + " " + cusCount
         })
 
+        reservationFragmentViewModel.isLoading.observe(viewLifecycleOwner,{
+            if(it){
+                loading.visibility = View.VISIBLE
+            }else{
+                loading.visibility = View.GONE
+            }
+        })
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             reservationFragmentViewModel.tasksEvent.collect { event ->
@@ -493,6 +510,25 @@ class ReservationFragment : BaseFragment() {
                 }
             }
         }
+
+
+
+        errorManager.uiModeFlow.asLiveData().observe(viewLifecycleOwner,{ triggerMode ->
+            when(triggerMode){
+                TriggerMode.START -> {
+                    loading.visibility = View.GONE
+                    MainScope().launch(Dispatchers.IO){
+                        errorManager.setTriggerMode(TriggerMode.END)
+                    }
+                }
+                TriggerMode.END -> {
+                    Timber.d("Has deal")
+                }
+            }
+        })
+
+
+
     }
 
     private fun searchSeat(cusCount: String, dateStr: String, seat: String, isSearch: Boolean, adultCount:String, childCount:String) {

@@ -17,7 +17,7 @@
         android:maxLines="1"
         android:textStyle="bold"
         android:textSize="@dimen/sp_8"
-        android:textColor="@color/primaryColor"
+        android:textColor="@color/primaryDarkColor"
         android:backgroundTint="@color/gray"
         android:shadowColor="@color/black"
         tools:text="A-001" />

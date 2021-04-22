@@ -60,6 +60,11 @@ class WaitAdapter(var waitList:MutableList<Wait>,var cusNumType: CusNumType  ,@A
                 recoveryItemView()
 
                 name.text = wait.mName
+                if( name.text.length>6){
+                    val textSize = context.resources.getDimensionPixelSize(R.dimen.sp_8)
+                    name.setTextSize(TypedValue.COMPLEX_UNIT_PX,textSize.toFloat())
+                }
+
                 if(wait.phone != null && wait.phone != ""){
                     mail.visibility = View.GONE
                     phone.visibility = View.VISIBLE

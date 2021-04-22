@@ -1,9 +1,11 @@
 package com.citrus.mCitrusTablet.model
 
+import android.util.Log
 import com.citrus.mCitrusTablet.model.api.ApiService
 import com.citrus.mCitrusTablet.model.vo.*
 import com.citrus.mCitrusTablet.util.Constants
 import com.google.gson.Gson
+import com.skydoves.sandwich.onError
 import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.suspendOnSuccess
 import kotlinx.coroutines.Dispatchers
@@ -152,7 +154,7 @@ class Repository @Inject constructor(private val apiService: ApiService) {
             }
     }.flowOn(Dispatchers.IO)
 
-    fun fetchReservationTime(url: String, PostData: String, onEmpty: () -> Unit) = flow {
+    fun fetchReservationTime(url: String, PostData: String, onEmpty: () -> Unit,OnErrorReceive: () -> Unit) = flow {
         apiService.getReservationTime(url, PostData)
             .suspendOnSuccess {
                 if (data?.status != 0) {
@@ -160,6 +162,8 @@ class Repository @Inject constructor(private val apiService: ApiService) {
                 } else {
                     onEmpty()
                 }
+            }.onError {
+                OnErrorReceive()
             }
     }.flowOn(Dispatchers.IO)
 

@@ -149,10 +149,8 @@ abstract class BaseDialogFragment : SwipeDialogFragment() {
 
 
     fun showLoadingDialog() {
+        hideLoadingDialog()
         if (isActive) {
-            if (loadingDialog.isAdded) {
-                parentFragmentManager.beginTransaction().remove(loadingDialog).commit()
-            }
             loadingDialog.show(parentFragmentManager, "LoadingDialog")
         }
     }
