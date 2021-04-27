@@ -41,7 +41,6 @@ import kotlin.system.exitProcess
 @AndroidEntryPoint
 @Suppress("DEPRECATED_IDENTITY_EQUALS", "DEPRECATION")
 class MainActivity : AppCompatActivity() {
-    val TAG ="MainActivity"
     private var currentApiVersion: Int = 0
     private val sharedViewModel: SharedViewModel by viewModels()
 
@@ -183,7 +182,6 @@ class MainActivity : AppCompatActivity() {
         })
 
         sharedViewModel.setLanguageTrigger.observe(this, {
-         //   triggerRestart(this)
             val intent = intent
             finish()
             overridePendingTransition(R.anim.nav_default_enter_anim, R.anim.nav_default_exit_anim)
@@ -373,6 +371,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+    /**重啟application*/
     private fun triggerRestart(context: Activity) {
         val intent = Intent(context, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

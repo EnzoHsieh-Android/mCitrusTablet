@@ -1,9 +1,8 @@
 package com.citrus.mCitrusTablet.util
 
 import android.content.Context
-import android.util.Log
 import com.citrus.mCitrusTablet.R
-import com.citrus.mCitrusTablet.di.resource
+
 
 
 open class MailContentBuild(context: Context) {

@@ -94,7 +94,6 @@ class ReservationFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        context?.let { reservationFragmentViewModel.setContext(it) }
         _binding = FragmentReservationBinding.bind(view)
         initView()
         initObserver()

@@ -2,24 +2,25 @@ package com.citrus.mCitrusTablet.util
 
 import android.annotation.TargetApi
 import android.content.Context
-import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Build
+import com.citrus.mCitrusTablet.di.prefs
+import com.yariksoffice.lingver.Lingver
 import java.util.*
 
 object LocaleHelper {
 
     fun onAttach(context: Context?): Context? {
-        val prefs: SharedPreferences = context!!.getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-        var lan = prefs.getInt(Constants.KEY_LANGUAGE, -1)
 
         var newLocale =
-        when (prefs.getInt(Constants.KEY_LANGUAGE, -1)) {
+        when (prefs.languagePos) {
             0 ->  Locale.SIMPLIFIED_CHINESE
             1 ->  Locale.TRADITIONAL_CHINESE
             2 ->  Locale.US
             else -> {Locale.getDefault()}
         }
+
+        Lingver.getInstance().setLocale(context!!, newLocale)
         return initLocale(context, newLocale)
     }
 

@@ -24,6 +24,7 @@ import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.view.SharedViewModel
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
+import com.yariksoffice.lingver.Lingver
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -33,9 +34,9 @@ class SettingFragment : DialogFragment(R.layout.fragment_setting) {
     private var _binding: FragmentSettingBinding? = null
     private val binding get() = _binding!!
     private val requestStorageCode = 888
-    var isLanChange = false
-    var hasChange = true
-    var chooseLan = prefs.languagePos
+    private var isLanChange = false
+    private var hasChange = true
+    private var chooseLan = prefs.languagePos
 
 
     override fun onResume() {

@@ -1,13 +1,11 @@
 package com.citrus.mCitrusTablet.view.reservation
 
 
+import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.citrus.mCitrusTablet.R
 import com.citrus.mCitrusTablet.di.prefs
 import com.citrus.mCitrusTablet.model.Repository
@@ -28,11 +26,11 @@ enum class SortOrder { BY_LESS, BY_TIME, BY_MORE }
 enum class CancelFilter { SHOW_CANCELLED, HIDE_CANCELLED }
 enum class CusNumType { SHOW_TOTAL, SHOW_DETAIL }
 class ReservationViewModel @ViewModelInject constructor(
-    private val model: Repository
+    private val model: Repository, application: Application
 ) :
-    ViewModel() {
+    AndroidViewModel(application) {
 
-    private lateinit var context:Context
+    private var context:Context = application.applicationContext
 
     private var serverDomain =
         "https://" + prefs.severDomain
