@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.citrus.mCitrusTablet.util.Constants.KEY_RESERVATION_NUM
 import com.citrus.mCitrusTablet.util.Constants.KEY_WAIT_NUM
-import com.google.gson.Gson
+
 
 
 class Prefs(private val context: Context) {
