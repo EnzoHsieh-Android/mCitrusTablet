@@ -400,6 +400,7 @@
                 app:startIconDrawable="@drawable/ic_baseline_phone_android_24">
 
                 <AutoCompleteTextView
+                    android:autofillHints=""
                     android:id="@+id/phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

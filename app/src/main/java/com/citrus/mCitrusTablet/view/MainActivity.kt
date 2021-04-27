@@ -1,12 +1,10 @@
 package com.citrus.mCitrusTablet.view
 
-import android.annotation.TargetApi
 import android.app.*
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.media.RingtoneManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -37,11 +35,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import java.util.*
+import kotlin.system.exitProcess
 
 
 @AndroidEntryPoint
 @Suppress("DEPRECATED_IDENTITY_EQUALS", "DEPRECATION")
 class MainActivity : AppCompatActivity() {
+    val TAG ="MainActivity"
     private var currentApiVersion: Int = 0
     private val sharedViewModel: SharedViewModel by viewModels()
 
@@ -54,6 +54,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var storageRes:ReservationGuests
     private fun isResInit()=::storageRes.isInitialized
 
+
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase))
+    }
 
     override fun onResume() {
         super.onResume()
@@ -76,7 +80,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         BackgroundLibrary.inject(this)
         super.onCreate(savedInstanceState)
-        updateLanguage(applicationContext)
         setContentView(R.layout.activity_main)
         val navController: NavController
         val navHostFragment =
@@ -132,8 +135,8 @@ class MainActivity : AppCompatActivity() {
 
                     var wait = map[Constants.KEY_WAIT_NUM] as Wait
 
-                    if(isWaitInit()){
-                        if(wait.tkey == storageWait.tkey)
+                    if (isWaitInit()) {
+                        if (wait.tkey == storageWait.tkey)
                             return@observe
                     }
 
@@ -145,8 +148,8 @@ class MainActivity : AppCompatActivity() {
                 Constants.KEY_RESERVATION_NUM -> {
                     var res = map[Constants.KEY_RESERVATION_NUM] as ReservationGuests
 
-                    if(isResInit()){
-                        if(res.tkey == storageRes.tkey)
+                    if (isResInit()) {
+                        if (res.tkey == storageRes.tkey)
                             return@observe
                     }
 
@@ -180,6 +183,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         sharedViewModel.setLanguageTrigger.observe(this, {
+         //   triggerRestart(this)
             val intent = intent
             finish()
             overridePendingTransition(R.anim.nav_default_enter_anim, R.anim.nav_default_exit_anim)
@@ -201,67 +205,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun attachBaseContext(newBase: Context?) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            var newLocale = Locale.getDefault()
-            when (prefs.languagePos) {
-                0 -> newLocale = Locale.SIMPLIFIED_CHINESE
-                1 -> newLocale = Locale.TRADITIONAL_CHINESE
-                2 -> newLocale = Locale.US
-            }
-            newBase?.let {
-                val context: Context = MyContextWrapper.wrap(it, newLocale)
-                super.attachBaseContext(context)
-            }
-        } else {
-            super.attachBaseContext(newBase)
-        }
-    }
-
-    private fun updateLanguage(context: Context): Context {
-        val newLocale = when (prefs.languagePos) {
-            0 -> Locale.SIMPLIFIED_CHINESE
-            1 -> Locale.TRADITIONAL_CHINESE
-            2 -> Locale.ENGLISH
-            else -> {
-                when (Locale.getDefault().country) {
-                    "CN" -> {
-                        prefs.languagePos = 0
-                        Locale.SIMPLIFIED_CHINESE
-                    }
-
-                    "TW" -> {
-                        prefs.languagePos = 1
-                        Locale.TRADITIONAL_CHINESE
-                    }
-                    else -> {
-                        prefs.languagePos = 2
-                        Locale.ENGLISH
-                    }
-                }
-            }
-        }
-        Locale.setDefault(newLocale)
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            updateResourcesLocale(context, newLocale)
-        } else updateResourcesLocaleLegacy(context, newLocale)
-    }
-
-    @TargetApi(Build.VERSION_CODES.N)
-    private fun updateResourcesLocale(context: Context, locale: Locale): Context {
-        val configuration = context.resources.configuration
-        configuration.setLocale(locale)
-        return context.createConfigurationContext(configuration)
-    }
-
-    @SuppressWarnings("deprecation")
-    private fun updateResourcesLocaleLegacy(context: Context, locale: Locale): Context {
-        val resources = context.resources
-        val configuration = resources.configuration
-        configuration.locale = locale
-        resources.updateConfiguration(configuration, resources.displayMetrics)
-        return context
-    }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
@@ -428,5 +371,16 @@ class MainActivity : AppCompatActivity() {
         } catch (e: Exception) {
             true
         }
+
+
+    private fun triggerRestart(context: Activity) {
+        val intent = Intent(context, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
+        if (context is Activity) {
+            (context as Activity).finish()
+        }
+        Runtime.getRuntime().exit(0)
+    }
 
 }
